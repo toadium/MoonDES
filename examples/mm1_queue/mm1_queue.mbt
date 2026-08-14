@@ -22,18 +22,20 @@ fn main {
           server.release()
         }),
       )
-      p.timeout(env, 10.0)
-      queue_len = queue_len + 1
-      if queue_len > max_queue {
-        max_queue = queue_len
-      }
-      ignore(
-        server.request(pid=p.id(), callback=fn() {
-          queue_len = queue_len - 1
-          served = served + 1
-          server.release()
-        }),
-      )
+      @process.Timeout(duration=10.0, next=fn() {
+        queue_len = queue_len + 1
+        if queue_len > max_queue {
+          max_queue = queue_len
+        }
+        ignore(
+          server.request(pid=p.id(), callback=fn() {
+            queue_len = queue_len - 1
+            served = served + 1
+            server.release()
+          }),
+        )
+        @process.Done
+      })
     }),
   )
   env.run()

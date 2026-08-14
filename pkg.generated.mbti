@@ -18,7 +18,7 @@ pub fn new_exclusive(name~ : String) -> @resource.Resource
 
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
-pub fn process(@core.SimulationEnv, name? : String, behavior~ : (@process.Process) -> Unit) -> @process.Process
+pub fn process(@core.SimulationEnv, name? : String, behavior~ : (@process.Process) -> @process.ProcessAction) -> @process.Process
 
 pub fn version() -> String
 

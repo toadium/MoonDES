@@ -42,10 +42,16 @@ pub fn new_exclusive(name~ : String) -> @resource.Resource {
 
 ///|
 /// 创建进程（便捷入口，转发至 process 层）
+///
+/// behavior 返回 `ProcessAction` 描述进程的下一步行为：
+/// - `Done`：进程完成
+/// - `Timeout(duration=, next=)`：延时后执行 next
+/// - `WaitEvent(event=, next=)`：等待事件后执行 next
+/// - `Terminate`：立即终止
 pub fn process(
   env : @core.SimulationEnv,
   name? : String = "anonymous",
-  behavior~ : (@process.Process) -> Unit,
+  behavior~ : (@process.Process) -> @process.ProcessAction,
 ) -> @process.Process {
   @process.process(env, name~, behavior~)
 }
