@@ -68,7 +68,11 @@ pub fn EventQueue::remove_canceled(self : EventQueue) -> Unit {
     }
   }
   self.heap = active
-  // 重新建堆：从最后一个非叶节点开始下沉
+  // 元素少于 2 个时已是堆，无需调整
+  if self.heap.length() < 2 {
+    return
+  }
+  // 重新建堆：从最后一个非叶节点顺序下沉到根
   let start = self.heap.length() / 2 - 1
   for i in 0..<=start {
     self._sift_down(start - i)

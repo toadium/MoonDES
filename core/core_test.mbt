@@ -122,3 +122,73 @@ test "event add_callback appends multiple callbacks" {
   assert_eq(log[0], "first")
   assert_eq(log[1], "second")
 }
+
+///|
+test "remove_canceled on empty queue" {
+  let q = @core.new_queue()
+  q.remove_canceled()
+  assert_true(q.is_empty())
+}
+
+///|
+test "remove_canceled on single element" {
+  let q = @core.new_queue()
+  let e = @core.new_event(id=0, time=1.0, callback=fn() { () })
+  q.push(e)
+  q.remove_canceled()
+  assert_eq(q.length(), 1)
+}
+
+///|
+test "remove_canceled removes all canceled" {
+  let q = @core.new_queue()
+  let e1 = @core.new_event(id=0, time=1.0, callback=fn() { () })
+  let e2 = @core.new_event(id=1, time=2.0, callback=fn() { () })
+  let e3 = @core.new_event(id=2, time=3.0, callback=fn() { () })
+  e1.cancel()
+  e3.cancel()
+  q.push(e1)
+  q.push(e2)
+  q.push(e3)
+  q.remove_canceled()
+  assert_eq(q.length(), 1)
+  match q.pop() {
+    Some(e) => inspect(e.time, content="2")
+    None => fail("expected event")
+  }
+}
+
+///|
+test "remove_canceled preserves heap property" {
+  let q = @core.new_queue()
+  let e1 = @core.new_event(id=0, time=5.0, callback=fn() { () })
+  let e2 = @core.new_event(id=1, time=1.0, callback=fn() { () })
+  let e3 = @core.new_event(id=2, time=3.0, callback=fn() { () })
+  let e4 = @core.new_event(id=3, time=7.0, callback=fn() { () })
+  let e5 = @core.new_event(id=4, time=2.0, callback=fn() { () })
+  e2.cancel()
+  q.push(e1)
+  q.push(e2)
+  q.push(e3)
+  q.push(e4)
+  q.push(e5)
+  q.remove_canceled()
+  assert_eq(q.length(), 4)
+  // 弹出顺序应为 time=2, 3, 5, 7
+  match q.pop() {
+    Some(e) => inspect(e.time, content="2")
+    None => fail("expected event")
+  }
+  match q.pop() {
+    Some(e) => inspect(e.time, content="3")
+    None => fail("expected event")
+  }
+  match q.pop() {
+    Some(e) => inspect(e.time, content="5")
+    None => fail("expected event")
+  }
+  match q.pop() {
+    Some(e) => inspect(e.time, content="7")
+    None => fail("expected event")
+  }
+}
