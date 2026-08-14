@@ -165,6 +165,46 @@ pub fn SimulationEnv::run(self : SimulationEnv) -> Unit {
 }
 
 ///|
+/// 环境状态快照（用于断点回滚）
+///
+/// 捕获仿真环境的可变状态，可通过 `restore` 恢复。
+/// 注意：仅恢复时钟、状态、ID 计数器，不恢复事件队列与回调。
+pub(all) struct EnvSnapshot {
+  now : Double
+  status : EnvStatus
+  next_event_id : EventId
+  next_process_id : ProcessId
+} derive(Debug, Eq)
+
+///|
+/// 获取已注册的事件总数
+pub fn SimulationEnv::event_count(self : SimulationEnv) -> Int {
+  self.events.length()
+}
+
+///|
+/// 捕获环境当前状态快照
+pub fn SimulationEnv::snapshot(self : SimulationEnv) -> EnvSnapshot {
+  {
+    now: self.now,
+    status: self.status,
+    next_event_id: self.next_event_id,
+    next_process_id: self.next_process_id,
+  }
+}
+
+///|
+/// 从快照恢复环境状态
+///
+/// 恢复时钟、状态、ID 计数器。事件队列与回调不恢复。
+pub fn SimulationEnv::restore(self : SimulationEnv, snap : EnvSnapshot) -> Unit {
+  self.now = snap.now
+  self.status = snap.status
+  self.next_event_id = snap.next_event_id
+  self.next_process_id = snap.next_process_id
+}
+
+///|
 /// 单步推进：处理下一个事件（用于调试和插件控制）
 pub fn SimulationEnv::step(self : SimulationEnv) -> Bool {
   while !self.queue.is_empty() {

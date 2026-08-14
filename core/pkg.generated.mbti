@@ -15,6 +15,13 @@ pub fn new_queue() -> EventQueue
 // Errors
 
 // Types and methods
+pub(all) struct EnvSnapshot {
+  now : Double
+  status : EnvStatus
+  next_event_id : Int
+  next_process_id : Int
+} derive(Eq, @debug.Debug)
+
 pub(all) enum EnvStatus {
   Initialized
   Running
@@ -61,11 +68,14 @@ pub(all) struct SimulationEnv {
 pub fn SimulationEnv::_alloc_event_id(Self) -> Int
 pub fn SimulationEnv::_alloc_process_id(Self) -> Int
 pub fn SimulationEnv::_register_event(Self, Event) -> Unit
+pub fn SimulationEnv::event_count(Self) -> Int
 pub fn SimulationEnv::get_event(Self, Int) -> Event?
 pub fn SimulationEnv::is_finished(Self) -> Bool
 pub fn SimulationEnv::now(Self) -> Double
+pub fn SimulationEnv::restore(Self, EnvSnapshot) -> Unit
 pub fn SimulationEnv::run(Self) -> Unit
 pub fn SimulationEnv::schedule(Self, time~ : Double, priority? : Int, callback~ : () -> Unit) -> Event
+pub fn SimulationEnv::snapshot(Self) -> EnvSnapshot
 pub fn SimulationEnv::step(Self) -> Bool
 pub fn SimulationEnv::timeout(Self, Double) -> Event
 

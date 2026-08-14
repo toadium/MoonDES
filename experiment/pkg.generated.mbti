@@ -13,6 +13,8 @@ pub fn new_config(until~ : Double, seed? : Int) -> ExpConfig
 
 pub fn param_sweep(base~ : ExpConfig, param_name~ : String, values~ : Array[Double]) -> Array[ExpConfig]
 
+pub fn rollback(@core.SimulationEnv, Snapshot) -> Unit
+
 pub fn run_experiment(ExpConfig) -> ExpResult
 
 pub fn snapshot(@core.SimulationEnv) -> Snapshot
@@ -37,7 +39,8 @@ pub(all) struct ExpResult {
 pub(all) struct Snapshot {
   time : Double
   event_count : Int
-}
+  env_snapshot : @core.EnvSnapshot
+} derive(@debug.Debug)
 
 // Type aliases
 

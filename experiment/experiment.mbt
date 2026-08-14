@@ -17,10 +17,13 @@ pub(all) struct ExpResult {
 
 ///|
 /// 仿真快照
+///
+/// 捕获仿真环境状态，可用于断点回滚。
 pub(all) struct Snapshot {
   time : Double
   event_count : Int
-}
+  env_snapshot : @core.EnvSnapshot
+} derive(Debug)
 
 ///|
 /// 创建实验配置
@@ -40,10 +43,18 @@ pub fn ExpConfig::set_param(
 
 ///|
 /// 运行单次仿真实验
+///
+/// 创建仿真环境并运行至终止时间，返回实验结果。
+/// `event_count` 为仿真过程中注册的事件总数。
 pub fn run_experiment(config : ExpConfig) -> ExpResult {
   let env = @core.new_env(until=config.until)
   env.run()
-  { config, final_time: env.now(), event_count: 0, metrics: Map([]) }
+  {
+    config,
+    final_time: env.now(),
+    event_count: env.event_count(),
+    metrics: Map([]),
+  }
 }
 
 ///|
@@ -58,8 +69,23 @@ pub fn batch_run(configs : Array[ExpConfig]) -> Array[ExpResult] {
 
 ///|
 /// 保存仿真快照
+///
+/// 捕获当前仿真时间、事件数与环境内部状态，可用于 `rollback`。
 pub fn snapshot(env : @core.SimulationEnv) -> Snapshot {
-  { time: env.now(), event_count: 0 }
+  {
+    time: env.now(),
+    event_count: env.event_count(),
+    env_snapshot: env.snapshot(),
+  }
+}
+
+///|
+/// 断点回滚：从快照恢复环境状态
+///
+/// 恢复仿真时钟、环境状态、ID 计数器。
+/// 注意：事件队列与回调不恢复，回滚后需重新调度后续事件。
+pub fn rollback(env : @core.SimulationEnv, snap : Snapshot) -> Unit {
+  env.restore(snap.env_snapshot)
 }
 
 ///|
