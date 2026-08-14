@@ -1,0 +1,194 @@
+///|
+/// 仿真环境状态
+pub(all) enum EnvStatus {
+  Initialized
+  Running
+  Finished
+} derive(Debug, Eq)
+
+///|
+/// 全局仿真环境
+///
+/// 管理虚拟仿真时钟、事件队列和主仿真循环。
+/// 内核完全无全局可变共享状态，天然支持多实例并行仿真。
+pub(all) struct SimulationEnv {
+  mut now : Double
+  until : Double
+  queue : EventQueue
+  mut status : EnvStatus
+  mut next_event_id : EventId
+  mut next_process_id : ProcessId
+  // 事件注册表：id -> Event
+  events : Map[EventId, Event]
+}
+
+///|
+/// 创建仿真环境，指定仿真终止时间
+///
+/// # Example
+/// ```mbt check
+/// test {
+///   let env = @core.new_env(until=100.0)
+///   inspect(env.now(), content="0")
+///   inspect(env.until, content="100")
+/// }
+/// ```
+pub fn new_env(until~ : Double) -> SimulationEnv {
+  {
+    now: 0.0,
+    until,
+    queue: new_queue(),
+    status: Initialized,
+    next_event_id: 0,
+    next_process_id: 0,
+    events: Map([]),
+  }
+}
+
+///|
+/// 获取当前仿真时间
+pub fn SimulationEnv::now(self : SimulationEnv) -> Double {
+  self.now
+}
+
+///|
+/// 仿真是否已结束
+pub fn SimulationEnv::is_finished(self : SimulationEnv) -> Bool {
+  self.status is Finished
+}
+
+///|
+/// 分配新的事件 ID
+pub fn SimulationEnv::_alloc_event_id(self : SimulationEnv) -> EventId {
+  let id = self.next_event_id
+  self.next_event_id = id + 1
+  id
+}
+
+///|
+/// 分配新的进程 ID
+pub fn SimulationEnv::_alloc_process_id(self : SimulationEnv) -> ProcessId {
+  let id = self.next_process_id
+  self.next_process_id = id + 1
+  id
+}
+
+///|
+/// 调度一个事件在指定时间触发
+///
+/// 返回创建的事件对象，可用于后续等待或取消。
+pub fn SimulationEnv::schedule(
+  self : SimulationEnv,
+  time~ : Double,
+  priority? : EventPriority = 0,
+  callback~ : () -> Unit,
+) -> Event {
+  let id = self._alloc_event_id()
+  let event = new_event(id~, time~, priority~, callback~)
+  self.events[id] = event
+  self.queue.push(event)
+  event
+}
+
+///|
+/// 创建一个超时事件：在当前时间 + duration 后触发
+///
+/// # Example
+/// ```mbt check
+/// test {
+///   let env = @core.new_env(until=10.0)
+///   let ev = env.timeout(5.0)
+///   inspect(ev.time, content="5")
+///   inspect(ev.is_pending(), content="true")
+/// }
+/// ```
+pub fn SimulationEnv::timeout(self : SimulationEnv, duration : Double) -> Event {
+  self.schedule(time=self.now + duration, callback=() => ())
+}
+
+///|
+/// 注册事件到环境（供外部创建的 Event 加入队列）
+pub fn SimulationEnv::_register_event(
+  self : SimulationEnv,
+  event : Event,
+) -> Unit {
+  self.events[event.id] = event
+  self.queue.push(event)
+}
+
+///|
+/// 按事件 ID 查找事件
+pub fn SimulationEnv::get_event(self : SimulationEnv, id : EventId) -> Event? {
+  self.events.get(id)
+}
+
+///|
+/// 主仿真循环：按时间顺序处理所有事件直到队列为空或到达终止时间
+///
+/// # Example
+/// ```mbt check
+/// test {
+///   let env = @core.new_env(until=10.0)
+///   let log : Array[String] = []
+///   ignore(env.schedule(time=2.0, callback=fn() { log.push("A") }))
+///   ignore(env.schedule(time=1.0, callback=fn() { log.push("B") }))
+///   env.run()
+///   assert_eq(log[0], "B")
+///   assert_eq(log[1], "A")
+/// }
+/// ```
+pub fn SimulationEnv::run(self : SimulationEnv) -> Unit {
+  self.status = Running
+  while !self.queue.is_empty() {
+    match self.queue.pop() {
+      Some(event) =>
+        match event.status {
+          Pending => {
+            if event.time > self.until {
+              self.now = self.until
+              break
+            }
+            self.now = event.time
+            event.trigger()
+          }
+          _ => continue
+        }
+      None => break
+    }
+  }
+  if self.now < self.until {
+    self.now = self.until
+  } else if self.now > self.until {
+    self.now = self.until
+  }
+  self.status = Finished
+}
+
+///|
+/// 单步推进：处理下一个事件（用于调试和插件控制）
+pub fn SimulationEnv::step(self : SimulationEnv) -> Bool {
+  while !self.queue.is_empty() {
+    match self.queue.pop() {
+      Some(event) =>
+        match event.status {
+          Pending => {
+            if event.time > self.until {
+              self.now = self.until
+              self.status = Finished
+              return false
+            }
+            self.now = event.time
+            event.trigger()
+            return true
+          }
+          _ => continue
+        }
+      None => {
+        self.status = Finished
+        return false
+      }
+    }
+  }
+  self.status = Finished
+  false
+}

@@ -1,0 +1,35 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes/plugin"
+
+import {
+  "moondes/moondes/core",
+}
+
+// Values
+pub fn attach(@core.SimulationEnv, PluginManager) -> Unit
+
+pub fn new_manager() -> PluginManager
+
+pub fn null_callbacks() -> PluginCallbacks
+
+// Errors
+
+// Types and methods
+pub(all) struct PluginCallbacks {
+  on_step : (@core.SimulationEnv, Double) -> Unit
+  on_event : (@core.SimulationEnv, @core.Event) -> Unit
+  on_finish : (@core.SimulationEnv) -> Unit
+}
+
+pub(all) struct PluginManager {
+  plugins : Array[PluginCallbacks]
+}
+pub fn PluginManager::length(Self) -> Int
+pub fn PluginManager::notify_event(Self, @core.SimulationEnv, @core.Event) -> Unit
+pub fn PluginManager::notify_finish(Self, @core.SimulationEnv) -> Unit
+pub fn PluginManager::notify_step(Self, @core.SimulationEnv, Double) -> Unit
+pub fn PluginManager::register(Self, PluginCallbacks) -> Unit
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  check-and-test:
+    name: Check & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> $GITHUB_PATH
+
+      - name: Print MoonBit version
+        run: moon version
+
+      - name: Type check
+        run: moon check
+
+      - name: Type check (all targets)
+        run: moon check --target all
+
+      - name: Run tests (native)
+        run: moon test --target native
+
+      - name: Generate API info
+        run: moon info
+
+      - name: Verify API consistency
+        run: |
+          git diff --exit-code -- '**/pkg.generated.mbti' || {
+            echo "::error::pkg.generated.mbti 已过期，请运行 'moon info' 并提交变更"
+            exit 1
+          }
+
+  fmt-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> $GITHUB_PATH
+
+      - name: Check formatting
+        run: |
+          moon fmt
+          git diff --exit-code -- '*.mbt' || {
+            echo "::error::代码格式不一致，请运行 'moon fmt' 并提交变更"
+            exit 1
+          }

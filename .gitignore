@@ -1,0 +1,28 @@
+# MoonBit 构建产物
+_build/
+target/
+
+# MoonBit 包缓存
+.mooncakes/
+.repos/
+
+# MoonBit 覆盖率与性能分析
+*.profraw
+*.trace
+profile.json
+
+# 编辑器与系统文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 临时文件
+tmp/
+temp/

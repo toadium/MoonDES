@@ -1,0 +1,45 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes/resource"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn new_capacity(name~ : String, capacity~ : Int) -> Resource
+
+pub fn new_exclusive(name~ : String) -> Resource
+
+pub fn new_preemptive(name~ : String) -> Resource
+
+// Errors
+
+// Types and methods
+pub(all) struct Resource {
+  name : String
+  kind : ResourceKind
+  mut capacity : Int
+  mut in_use : Int
+  wait_queue : Array[ResourceRequest]
+}
+pub fn Resource::in_use_count(Self) -> Int
+pub fn Resource::is_available(Self) -> Bool
+pub fn Resource::queue_length(Self) -> Int
+pub fn Resource::release(Self) -> Unit
+pub fn Resource::request(Self, pid~ : Int, priority? : Int, callback~ : () -> Unit) -> Bool
+
+pub(all) enum ResourceKind {
+  Exclusive
+  Capacity(Int)
+  Preemptive
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ResourceRequest {
+  process_id : Int
+  priority : Int
+  callback : () -> Unit
+}
+
+// Type aliases
+
+// Traits

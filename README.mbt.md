@@ -32,10 +32,24 @@ moon add moondes/moondes
 
 ### 最小示例
 
-```moonbit
-let env = @moondes.new_env(until=10.0)
-ignore(env.schedule(time=2.0, callback=fn() { println("event@2.0") }))
-env.run()
+```mbt check
+///|
+test {
+  inspect(version(), content="0.1.0")
+}
+```
+
+```mbt check
+///|
+test {
+  let env = new_env(until=10.0)
+  let log : Array[String] = []
+  ignore(env.schedule(time=2.0, callback=fn() { log.push("event@2.0") }))
+  ignore(env.schedule(time=1.0, callback=fn() { log.push("event@1.0") }))
+  env.run()
+  assert_eq(log[0], "event@1.0")
+  assert_eq(log[1], "event@2.0")
+}
 ```
 
 ### 运行示例工程

@@ -1,0 +1,79 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes/core"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn new_env(until~ : Double) -> SimulationEnv
+
+pub fn new_event(id~ : Int, time~ : Double, priority? : Int, callback~ : () -> Unit) -> Event
+
+pub fn new_queue() -> EventQueue
+
+// Errors
+
+// Types and methods
+pub(all) enum EnvStatus {
+  Initialized
+  Running
+  Finished
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Event {
+  id : Int
+  time : Double
+  priority : Int
+  mut status : EventStatus
+  callbacks : Array[() -> Unit]
+}
+pub fn Event::add_callback(Self, () -> Unit) -> Unit
+pub fn Event::cancel(Self) -> Unit
+pub fn Event::is_pending(Self) -> Bool
+pub fn Event::trigger(Self) -> Unit
+
+pub(all) struct EventQueue {
+  mut heap : Array[Event]
+}
+pub fn EventQueue::is_empty(Self) -> Bool
+pub fn EventQueue::length(Self) -> Int
+pub fn EventQueue::peek(Self) -> Event?
+pub fn EventQueue::pop(Self) -> Event?
+pub fn EventQueue::push(Self, Event) -> Unit
+pub fn EventQueue::remove_canceled(Self) -> Unit
+
+pub(all) enum EventStatus {
+  Pending
+  Triggered
+  Canceled
+} derive(Eq, @debug.Debug)
+
+pub(all) struct SimulationEnv {
+  mut now : Double
+  until : Double
+  queue : EventQueue
+  mut status : EnvStatus
+  mut next_event_id : Int
+  mut next_process_id : Int
+  events : Map[Int, Event]
+}
+pub fn SimulationEnv::_alloc_event_id(Self) -> Int
+pub fn SimulationEnv::_alloc_process_id(Self) -> Int
+pub fn SimulationEnv::_register_event(Self, Event) -> Unit
+pub fn SimulationEnv::get_event(Self, Int) -> Event?
+pub fn SimulationEnv::is_finished(Self) -> Bool
+pub fn SimulationEnv::now(Self) -> Double
+pub fn SimulationEnv::run(Self) -> Unit
+pub fn SimulationEnv::schedule(Self, time~ : Double, priority? : Int, callback~ : () -> Unit) -> Event
+pub fn SimulationEnv::step(Self) -> Bool
+pub fn SimulationEnv::timeout(Self, Double) -> Event
+
+// Type aliases
+pub type EventId = Int
+
+pub type EventPriority = Int
+
+pub type ProcessId = Int
+
+// Traits

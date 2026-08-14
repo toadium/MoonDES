@@ -1,0 +1,44 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes/experiment"
+
+import {
+  "moonbitlang/core/debug",
+  "moondes/moondes/core",
+}
+
+// Values
+pub fn batch_run(Array[ExpConfig]) -> Array[ExpResult]
+
+pub fn new_config(until~ : Double, seed? : Int) -> ExpConfig
+
+pub fn param_sweep(base~ : ExpConfig, param_name~ : String, values~ : Array[Double]) -> Array[ExpConfig]
+
+pub fn run_experiment(ExpConfig) -> ExpResult
+
+pub fn snapshot(@core.SimulationEnv) -> Snapshot
+
+// Errors
+
+// Types and methods
+pub(all) struct ExpConfig {
+  until : Double
+  seed : Int
+  params : Map[String, Double]
+} derive(@debug.Debug)
+pub fn ExpConfig::set_param(Self, String, value~ : Double) -> Unit
+
+pub(all) struct ExpResult {
+  config : ExpConfig
+  final_time : Double
+  event_count : Int
+  metrics : Map[String, Double]
+} derive(@debug.Debug)
+
+pub(all) struct Snapshot {
+  time : Double
+  event_count : Int
+}
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,37 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes/process"
+
+import {
+  "moonbitlang/core/debug",
+  "moondes/moondes/core",
+}
+
+// Values
+pub fn process(@core.SimulationEnv, name? : String, behavior~ : (Process) -> Unit) -> Process
+
+// Errors
+
+// Types and methods
+pub(all) struct Process {
+  id : Int
+  name : String
+  mut status : ProcessStatus
+  behavior : (Process) -> Unit
+}
+pub fn Process::id(Self) -> Int
+pub fn Process::is_alive(Self) -> Bool
+pub fn Process::name(Self) -> String
+pub fn Process::terminate(Self) -> Unit
+pub fn Process::timeout(Self, @core.SimulationEnv, Double) -> Unit
+pub fn Process::wait_event(Self, @core.SimulationEnv, @core.Event) -> Unit
+
+pub(all) enum ProcessStatus {
+  Created
+  Running
+  Suspended
+  Terminated
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

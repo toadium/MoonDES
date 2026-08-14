@@ -1,0 +1,31 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moondes/moondes"
+
+import {
+  "moondes/moondes/core",
+  "moondes/moondes/experiment",
+  "moondes/moondes/plugin",
+  "moondes/moondes/process",
+  "moondes/moondes/resource",
+}
+
+// Values
+pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
+
+pub fn new_env(until~ : Double) -> @core.SimulationEnv
+
+pub fn new_exclusive(name~ : String) -> @resource.Resource
+
+pub fn new_plugin_manager() -> @plugin.PluginManager
+
+pub fn process(@core.SimulationEnv, name? : String, behavior~ : (@process.Process) -> Unit) -> @process.Process
+
+pub fn version() -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
