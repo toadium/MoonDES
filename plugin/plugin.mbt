@@ -82,13 +82,14 @@ pub fn PluginManager::notify_finish(
 }
 
 ///|
-/// 将插件管理器注册到仿真环境
+/// 将插件管理器挂载到仿真环境
 ///
-/// 在仿真结束时通知所有插件
+/// 挂载后，引擎在 `run` / `step` 中自动调用：
+/// - `on_step`：每个事件处理前
+/// - `on_event`：事件触发后
+/// - `on_finish`：仿真结束时（仅一次）
 pub fn attach(env : @core.SimulationEnv, manager : PluginManager) -> Unit {
-  ignore(
-    env.schedule(time=env.until, priority=999999, callback=fn() {
-      manager.notify_finish(env)
-    }),
-  )
+  env._set_on_step_hook(Some(fn(e, t) { manager.notify_step(e, t) }))
+  env._set_on_event_hook(Some(fn(e, ev) { manager.notify_event(e, ev) }))
+  env._set_on_finish_hook(Some(fn(e) { manager.notify_finish(e) }))
 }

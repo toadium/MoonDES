@@ -64,10 +64,16 @@ pub(all) struct SimulationEnv {
   mut next_event_id : Int
   mut next_process_id : Int
   events : Map[Int, Event]
+  mut on_step_hook : ((SimulationEnv, Double) -> Unit)?
+  mut on_event_hook : ((SimulationEnv, Event) -> Unit)?
+  mut on_finish_hook : ((SimulationEnv) -> Unit)?
 }
 pub fn SimulationEnv::_alloc_event_id(Self) -> Int
 pub fn SimulationEnv::_alloc_process_id(Self) -> Int
 pub fn SimulationEnv::_register_event(Self, Event) -> Unit
+pub fn SimulationEnv::_set_on_event_hook(Self, ((Self, Event) -> Unit)?) -> Unit
+pub fn SimulationEnv::_set_on_finish_hook(Self, ((Self) -> Unit)?) -> Unit
+pub fn SimulationEnv::_set_on_step_hook(Self, ((Self, Double) -> Unit)?) -> Unit
 pub fn SimulationEnv::event_count(Self) -> Int
 pub fn SimulationEnv::get_event(Self, Int) -> Event?
 pub fn SimulationEnv::is_finished(Self) -> Bool

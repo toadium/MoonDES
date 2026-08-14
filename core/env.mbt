@@ -11,6 +11,7 @@ pub(all) enum EnvStatus {
 ///
 /// 管理虚拟仿真时钟、事件队列和主仿真循环。
 /// 内核完全无全局可变共享状态，天然支持多实例并行仿真。
+/// 支持插件钩子：on_step / on_event / on_finish，由 plugin::attach 设置。
 pub(all) struct SimulationEnv {
   mut now : Double
   until : Double
@@ -20,6 +21,10 @@ pub(all) struct SimulationEnv {
   mut next_process_id : ProcessId
   // 事件注册表：id -> Event
   events : Map[EventId, Event]
+  // 插件钩子（由 plugin::attach 设置）
+  mut on_step_hook : ((SimulationEnv, Double) -> Unit)?
+  mut on_event_hook : ((SimulationEnv, Event) -> Unit)?
+  mut on_finish_hook : ((SimulationEnv) -> Unit)?
 }
 
 ///|
@@ -42,6 +47,9 @@ pub fn new_env(until~ : Double) -> SimulationEnv {
     next_event_id: 0,
     next_process_id: 0,
     events: Map([]),
+    on_step_hook: None,
+    on_event_hook: None,
+    on_finish_hook: None,
   }
 }
 
@@ -123,6 +131,69 @@ pub fn SimulationEnv::get_event(self : SimulationEnv, id : EventId) -> Event? {
 }
 
 ///|
+/// 设置 on_step 钩子（每个事件处理前调用）
+pub fn SimulationEnv::_set_on_step_hook(
+  self : SimulationEnv,
+  hook : ((SimulationEnv, Double) -> Unit)?,
+) -> Unit {
+  self.on_step_hook = hook
+}
+
+///|
+/// 设置 on_event 钩子（事件触发后调用）
+pub fn SimulationEnv::_set_on_event_hook(
+  self : SimulationEnv,
+  hook : ((SimulationEnv, Event) -> Unit)?,
+) -> Unit {
+  self.on_event_hook = hook
+}
+
+///|
+/// 设置 on_finish 钩子（仿真结束时调用）
+pub fn SimulationEnv::_set_on_finish_hook(
+  self : SimulationEnv,
+  hook : ((SimulationEnv) -> Unit)?,
+) -> Unit {
+  self.on_finish_hook = hook
+}
+
+///|
+/// 触发 on_step 钩子
+fn SimulationEnv::_fire_on_step(self : SimulationEnv) -> Unit {
+  match self.on_step_hook {
+    Some(hook) => hook(self, self.now)
+    None => ()
+  }
+}
+
+///|
+/// 触发 on_event 钩子
+fn SimulationEnv::_fire_on_event(self : SimulationEnv, event : Event) -> Unit {
+  match self.on_event_hook {
+    Some(hook) => hook(self, event)
+    None => ()
+  }
+}
+
+///|
+/// 触发 on_finish 钩子（仅一次）
+fn SimulationEnv::_fire_on_finish(self : SimulationEnv) -> Unit {
+  match self.on_finish_hook {
+    Some(hook) => hook(self)
+    None => ()
+  }
+}
+
+///|
+/// 结束仿真：调用 on_finish 钩子并设置状态（保证仅一次）
+fn SimulationEnv::_finish(self : SimulationEnv) -> Unit {
+  if !(self.status is Finished) {
+    self._fire_on_finish()
+    self.status = Finished
+  }
+}
+
+///|
 /// 主仿真循环：按时间顺序处理所有事件直到队列为空或到达终止时间
 ///
 /// # Example
@@ -149,7 +220,9 @@ pub fn SimulationEnv::run(self : SimulationEnv) -> Unit {
               break
             }
             self.now = event.time
+            self._fire_on_step()
             event.trigger()
+            self._fire_on_event(event)
           }
           _ => continue
         }
@@ -161,7 +234,38 @@ pub fn SimulationEnv::run(self : SimulationEnv) -> Unit {
   } else if self.now > self.until {
     self.now = self.until
   }
-  self.status = Finished
+  self._finish()
+}
+
+///|
+/// 单步推进：处理下一个事件（用于调试和插件控制）
+pub fn SimulationEnv::step(self : SimulationEnv) -> Bool {
+  while !self.queue.is_empty() {
+    match self.queue.pop() {
+      Some(event) =>
+        match event.status {
+          Pending => {
+            if event.time > self.until {
+              self.now = self.until
+              self._finish()
+              return false
+            }
+            self.now = event.time
+            self._fire_on_step()
+            event.trigger()
+            self._fire_on_event(event)
+            return true
+          }
+          _ => continue
+        }
+      None => {
+        self._finish()
+        return false
+      }
+    }
+  }
+  self._finish()
+  false
 }
 
 ///|
@@ -202,33 +306,4 @@ pub fn SimulationEnv::restore(self : SimulationEnv, snap : EnvSnapshot) -> Unit 
   self.status = snap.status
   self.next_event_id = snap.next_event_id
   self.next_process_id = snap.next_process_id
-}
-
-///|
-/// 单步推进：处理下一个事件（用于调试和插件控制）
-pub fn SimulationEnv::step(self : SimulationEnv) -> Bool {
-  while !self.queue.is_empty() {
-    match self.queue.pop() {
-      Some(event) =>
-        match event.status {
-          Pending => {
-            if event.time > self.until {
-              self.now = self.until
-              self.status = Finished
-              return false
-            }
-            self.now = event.time
-            event.trigger()
-            return true
-          }
-          _ => continue
-        }
-      None => {
-        self.status = Finished
-        return false
-      }
-    }
-  }
-  self.status = Finished
-  false
 }
