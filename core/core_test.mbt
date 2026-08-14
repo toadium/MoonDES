@@ -192,3 +192,81 @@ test "remove_canceled preserves heap property" {
     None => fail("expected event")
   }
 }
+
+///|
+test "empty env with until=0" {
+  let env = @core.new_env(until=0.0)
+  env.run()
+  inspect(env.now(), content="0")
+  inspect(env.is_finished(), content="true")
+}
+
+///|
+test "zero duration event" {
+  let env = @core.new_env(until=10.0)
+  let log : Array[String] = []
+  ignore(env.schedule(time=0.0, callback=fn() { log.push("immediate") }))
+  env.run()
+  assert_eq(log.length(), 1)
+  assert_eq(log[0], "immediate")
+}
+
+///|
+test "negative priority orders first" {
+  let env = @core.new_env(until=10.0)
+  let log : Array[String] = []
+  ignore(
+    env.schedule(time=1.0, priority=0, callback=fn() { log.push("normal") }),
+  )
+  ignore(
+    env.schedule(time=1.0, priority=-1, callback=fn() { log.push("urgent") }),
+  )
+  ignore(env.schedule(time=1.0, priority=1, callback=fn() { log.push("low") }))
+  env.run()
+  assert_eq(log[0], "urgent")
+  assert_eq(log[1], "normal")
+  assert_eq(log[2], "low")
+}
+
+///|
+test "multiple env instances run independently" {
+  let env1 = @core.new_env(until=5.0)
+  let env2 = @core.new_env(until=10.0)
+  let log1 : Array[String] = []
+  let log2 : Array[String] = []
+  ignore(env1.schedule(time=3.0, callback=fn() { log1.push("env1@3") }))
+  ignore(env2.schedule(time=7.0, callback=fn() { log2.push("env2@7") }))
+  env1.run()
+  env2.run()
+  assert_eq(log1.length(), 1)
+  assert_eq(log2.length(), 1)
+  inspect(env1.now(), content="5")
+  inspect(env2.now(), content="10")
+}
+
+///|
+test "1000 events stress test" {
+  let env = @core.new_env(until=1000.0)
+  let mut count = 0
+  for i in 0..<1000 {
+    ignore(
+      env.schedule(time=i.to_double(), callback=fn() { count = count + 1 }),
+    )
+  }
+  env.run()
+  assert_eq(count, 1000)
+  inspect(env.now(), content="1000")
+}
+
+///|
+test "snapshot and restore roundtrip" {
+  let env = @core.new_env(until=20.0)
+  ignore(env.schedule(time=5.0, callback=fn() { () }))
+  ignore(env.step())
+  inspect(env.now(), content="5")
+  let snap = env.snapshot()
+  env.run()
+  inspect(env.now(), content="20")
+  env.restore(snap)
+  inspect(env.now(), content="5")
+}
