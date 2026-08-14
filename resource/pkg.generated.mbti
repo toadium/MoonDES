@@ -21,12 +21,13 @@ pub(all) struct Resource {
   mut capacity : Int
   mut in_use : Int
   wait_queue : Array[ResourceRequest]
+  mut holder : ResourceRequest?
 }
 pub fn Resource::in_use_count(Self) -> Int
 pub fn Resource::is_available(Self) -> Bool
 pub fn Resource::queue_length(Self) -> Int
 pub fn Resource::release(Self) -> Unit
-pub fn Resource::request(Self, pid~ : Int, priority? : Int, callback~ : () -> Unit) -> Bool
+pub fn Resource::request(Self, pid~ : Int, priority? : Int, callback~ : () -> Unit, on_preempt? : () -> Unit) -> Bool
 
 pub(all) enum ResourceKind {
   Exclusive
@@ -38,6 +39,7 @@ pub(all) struct ResourceRequest {
   process_id : Int
   priority : Int
   callback : () -> Unit
+  on_preempt : () -> Unit
 }
 
 // Type aliases

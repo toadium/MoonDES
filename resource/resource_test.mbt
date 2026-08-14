@@ -63,3 +63,66 @@ test "priority queue ordering" {
   assert_eq(log[0], "holder")
   assert_eq(log[1], "high")
 }
+
+///|
+test "preemptive resource preempts lower priority" {
+  let res = @resource.new_preemptive(name="channel")
+  let log : Array[String] = []
+  // 低优先级进程先获取资源
+  let granted = res.request(
+    pid=1,
+    priority=5,
+    callback=fn() { log.push("low acquired") },
+    on_preempt=fn() { log.push("low preempted") },
+  )
+  assert_true(granted)
+  assert_eq(log[0], "low acquired")
+  // 高优先级进程抢占
+  let preempted = res.request(
+    pid=2,
+    priority=1,
+    callback=fn() { log.push("high acquired") },
+    on_preempt=fn() { log.push("high preempted") },
+  )
+  assert_true(preempted)
+  assert_eq(log[1], "low preempted")
+  assert_eq(log[2], "high acquired")
+  assert_eq(res.in_use_count(), 1)
+  // 高优先级释放，低优先级重新获取
+  res.release()
+  assert_eq(log[3], "low acquired")
+  assert_eq(res.in_use_count(), 1)
+}
+
+///|
+test "preemptive resource queues when lower priority" {
+  let res = @resource.new_preemptive(name="channel")
+  let log : Array[String] = []
+  // 高优先级先获取
+  ignore(
+    res.request(pid=1, priority=1, callback=fn() { log.push("high acquired") }),
+  )
+  // 低优先级请求，不能抢占，排队
+  let queued = res.request(pid=2, priority=5, callback=fn() {
+    log.push("low acquired")
+  })
+  assert_false(queued)
+  assert_eq(res.queue_length(), 1)
+  // 高优先级释放，低优先级获取
+  res.release()
+  assert_eq(log[1], "low acquired")
+}
+
+///|
+test "preemptive resource non-preemptive when equal priority" {
+  let res = @resource.new_preemptive(name="channel")
+  let log : Array[String] = []
+  // 优先级 1 持有
+  ignore(res.request(pid=1, priority=1, callback=fn() { log.push("first") }))
+  // 同优先级请求，排队而非抢占
+  let queued = res.request(pid=2, priority=1, callback=fn() {
+    log.push("second")
+  })
+  assert_false(queued)
+  assert_eq(res.queue_length(), 1)
+}
