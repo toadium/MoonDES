@@ -1,0 +1,140 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/monitor"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/moondes/plugin",
+}
+
+// Values
+pub fn new_logger(min_level~ : LogLevel) -> SimLogger
+
+pub fn new_metrics() -> MetricsCollector
+
+pub fn new_tracer() -> TraceExporter
+
+// Errors
+
+// Types and methods
+pub(all) struct HistogramSummary {
+  count : Int
+  sum : Double
+  mean : Double
+  min : Double
+  max : Double
+} derive(Eq, @debug.Debug)
+
+pub(all) struct LogEntry {
+  time : Double
+  level : LogLevel
+  message : String
+  source : String?
+} derive(Eq, @debug.Debug)
+pub fn LogEntry::format(Self) -> String
+
+pub(all) enum LogLevel {
+  Debug
+  Info
+  Warn
+  Error
+} derive(Eq, @debug.Debug)
+pub fn LogLevel::from_string(String) -> Self?
+pub fn LogLevel::to_string(Self) -> String
+
+pub(all) struct MetricEntry {
+  name : String
+  kind : MetricKind
+  value : Double
+} derive(Eq, @debug.Debug)
+
+pub(all) enum MetricKind {
+  Counter
+  Gauge
+  Histogram
+} derive(Eq, @debug.Debug)
+
+pub(all) struct MetricsCollector {
+  counters : Map[String, Double]
+  gauges : Map[String, Double]
+  histograms : Map[String, Array[Double]]
+}
+pub fn MetricsCollector::as_plugin(Self) -> @plugin.PluginCallbacks
+pub fn MetricsCollector::counter_count(Self) -> Int
+pub fn MetricsCollector::export_json(Self) -> String
+pub fn MetricsCollector::gauge_count(Self) -> Int
+pub fn MetricsCollector::get_counter(Self, String) -> Double?
+pub fn MetricsCollector::get_gauge(Self, String) -> Double?
+pub fn MetricsCollector::get_histogram(Self, String) -> Array[Double]?
+pub fn MetricsCollector::histogram_count(Self) -> Int
+pub fn MetricsCollector::histogram_summary(Self, String) -> HistogramSummary?
+pub fn MetricsCollector::incr(Self, String, by? : Double) -> Unit
+pub fn MetricsCollector::observe(Self, String, value~ : Double) -> Unit
+pub fn MetricsCollector::reset(Self) -> Unit
+pub fn MetricsCollector::set_gauge(Self, String, value~ : Double) -> Unit
+pub fn MetricsCollector::snapshot(Self) -> Array[MetricEntry]
+
+pub(all) struct SimLogger {
+  mut min_level : LogLevel
+  entries : Array[LogEntry]
+  mut sink : ((LogEntry) -> Unit)?
+}
+pub fn SimLogger::as_plugin(Self) -> @plugin.PluginCallbacks
+pub fn SimLogger::clear(Self) -> Unit
+pub fn SimLogger::count_by_level(Self, LogLevel) -> Int
+pub fn SimLogger::debug(Self, String, time? : Double, source? : String?) -> Unit
+pub fn SimLogger::entries(Self) -> Array[LogEntry]
+pub fn SimLogger::error(Self, String, time? : Double, source? : String?) -> Unit
+pub fn SimLogger::export_json(Self) -> String
+pub fn SimLogger::export_text(Self) -> String
+pub fn SimLogger::filter_by_level(Self, LogLevel) -> Array[LogEntry]
+pub fn SimLogger::filter_by_time(Self, start~ : Double, end~ : Double) -> Array[LogEntry]
+pub fn SimLogger::info(Self, String, time? : Double, source? : String?) -> Unit
+pub fn SimLogger::length(Self) -> Int
+pub fn SimLogger::log(Self, LogLevel, String, time? : Double, source? : String?) -> Unit
+pub fn SimLogger::set_level(Self, LogLevel) -> Unit
+pub fn SimLogger::set_sink(Self, ((LogEntry) -> Unit)?) -> Unit
+pub fn SimLogger::should_log(Self, LogLevel) -> Bool
+pub fn SimLogger::warn(Self, String, time? : Double, source? : String?) -> Unit
+
+pub(all) struct TraceEvent {
+  name : String
+  cat : String
+  ph : TracePhase
+  ts : Double
+  dur : Double?
+  pid : Int
+  tid : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct TraceExporter {
+  events : Array[TraceEvent]
+  mut next_pid : Int
+  mut next_tid : Int
+}
+pub fn TraceExporter::alloc_pid(Self) -> Int
+pub fn TraceExporter::alloc_tid(Self) -> Int
+pub fn TraceExporter::as_plugin(Self) -> @plugin.PluginCallbacks
+pub fn TraceExporter::begin(Self, String, ts~ : Double, cat? : String, pid? : Int, tid? : Int) -> Unit
+pub fn TraceExporter::clear(Self) -> Unit
+pub fn TraceExporter::complete(Self, String, ts~ : Double, dur~ : Double, cat? : String, pid? : Int, tid? : Int) -> Unit
+pub fn TraceExporter::count_by_category(Self, String) -> Int
+pub fn TraceExporter::count_by_name(Self, String) -> Int
+pub fn TraceExporter::end(Self, String, ts~ : Double, cat? : String, pid? : Int, tid? : Int) -> Unit
+pub fn TraceExporter::events(Self) -> Array[TraceEvent]
+pub fn TraceExporter::export_csv(Self) -> String
+pub fn TraceExporter::export_json(Self) -> String
+pub fn TraceExporter::instant(Self, String, ts~ : Double, cat? : String, pid? : Int, tid? : Int) -> Unit
+pub fn TraceExporter::length(Self) -> Int
+pub fn TraceExporter::set_pid_tid(Self, pid~ : Int, tid~ : Int) -> Unit
+
+pub(all) enum TracePhase {
+  Begin
+  End
+  Complete
+  Instant
+} derive(Eq, @debug.Debug)
+pub fn TracePhase::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

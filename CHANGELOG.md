@@ -4,9 +4,27 @@
 
 ## [Unreleased]
 
-### 计划变更（v1.3.0 — 监控与可观测）
+### 计划变更（v1.4.0 — 分布式仿真）
 
-- 仿真日志、指标采集、trace 导出
+- 多环境并行、任务队列调度
+
+## [1.3.0] - 2026-08-16
+
+### 监控与可观测
+
+#### Added
+- `SimLogger`：分级日志（Debug/Info/Warn/Error），支持 `set_sink` 实时输出回调、`filter_by_level`/`filter_by_time` 过滤、`export_text`/`export_json` 导出
+- `MetricsCollector`：指标采集器，Counter（累加）/Gauge（瞬时值）/Histogram（观测序列），支持 `histogram_summary` 统计摘要、`snapshot` 快照、`export_json` 导出
+- `TraceExporter`：Chrome Trace Event 格式导出器，支持 `begin`/`end`/`complete`/`instant` 四类事件、`export_json`（chrome://tracing 兼容）/`export_csv` 导出
+- 三组件均支持 `as_plugin()` 挂载为 `PluginCallbacks`，自动采集仿真步、事件、结束数据
+- 根包便捷入口 `new_logger` / `new_metrics` / `new_tracer`
+- 28 个新测试
+- `monitor/README.mbt.md` 文档
+
+#### 验证
+
+- `moon test --target all` 138/138 全通过（三后端）
+- `moon check` 0 警告
 
 ## [1.2.0] - 2026-08-16
 

@@ -6,5 +6,6 @@ import {
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/random",
   "walkzzz/moondes/stats",
+  "walkzzz/moondes/monitor",
   "moonbitlang/core/random" @rand,
 }

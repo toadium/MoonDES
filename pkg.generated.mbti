@@ -5,6 +5,7 @@ import {
   "moonbitlang/core/random",
   "walkzzz/moondes/core",
   "walkzzz/moondes/experiment",
+  "walkzzz/moondes/monitor",
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
@@ -18,9 +19,15 @@ pub fn new_env(until~ : Double) -> @core.SimulationEnv
 
 pub fn new_exclusive(name~ : String) -> @resource.Resource
 
+pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger
+
+pub fn new_metrics() -> @monitor.MetricsCollector
+
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
 pub fn new_rng() -> @random.Rand
+
+pub fn new_tracer() -> @monitor.TraceExporter
 
 pub fn process(@core.SimulationEnv, name? : String, behavior~ : (@process.Process) -> @process.ProcessAction) -> @process.Process
 

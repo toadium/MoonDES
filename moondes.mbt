@@ -1,7 +1,7 @@
 ///|
 /// MoonDES 通用离散事件仿真引擎
 ///
-/// 基于 MoonBit 构建的通用离散事件仿真底座，提供七层模块化架构：
+/// 基于 MoonBit 构建的通用离散事件仿真底座，提供八层模块化架构：
 /// - Core 仿真内核层：事件队列、仿真环境、主循环
 /// - Process 协程进程调度层：进程创建、延时、等待
 /// - Resource 资源管理层：独占/容量/抢占三类资源
@@ -9,6 +9,7 @@
 /// - Plugin 插件接口层：标准化扩展接口
 /// - Random 随机数层：分布采样（均匀/指数/正态/泊松）
 /// - Stats 统计层：均值/方差/直方图/相关系数
+/// - Monitor 监控层：仿真日志、指标采集、trace 导出
 ///
 /// # Example
 /// ```mbt check
@@ -21,7 +22,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "1.2.0"
+  "1.3.0"
 }
 
 ///|
@@ -74,4 +75,22 @@ pub fn new_rng() -> @rand.Rand {
 /// 统计摘要（便捷入口，转发至 stats 层）
 pub fn summary(data : Array[Double]) -> @stats.Summary {
   @stats.summary(data)
+}
+
+///|
+/// 创建仿真日志器（便捷入口，转发至 monitor 层）
+pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger {
+  @monitor.new_logger(min_level~)
+}
+
+///|
+/// 创建指标采集器（便捷入口，转发至 monitor 层）
+pub fn new_metrics() -> @monitor.MetricsCollector {
+  @monitor.new_metrics()
+}
+
+///|
+/// 创建 Trace 导出器（便捷入口，转发至 monitor 层）
+pub fn new_tracer() -> @monitor.TraceExporter {
+  @monitor.new_tracer()
 }
