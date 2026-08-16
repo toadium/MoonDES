@@ -10,11 +10,29 @@ pub fn new_capacity(name~ : String, capacity~ : Int) -> Resource
 
 pub fn new_exclusive(name~ : String) -> Resource
 
+pub fn new_group() -> ResourceGroup
+
+pub fn new_pool(name~ : String, size~ : Int) -> ResourcePool
+
 pub fn new_preemptive(name~ : String) -> Resource
+
+pub fn new_reentrant(name~ : String) -> ReentrantResource
 
 // Errors
 
 // Types and methods
+pub(all) struct ReentrantResource {
+  name : String
+  mut holder_pid : Int
+  mut hold_count : Int
+  wait_queue : Array[(Int, () -> Unit)]
+}
+pub fn ReentrantResource::hold_count_of(Self, pid~ : Int) -> Int
+pub fn ReentrantResource::is_free(Self) -> Bool
+pub fn ReentrantResource::queue_length(Self) -> Int
+pub fn ReentrantResource::release(Self, pid~ : Int) -> Unit
+pub fn ReentrantResource::request(Self, pid~ : Int, callback~ : () -> Unit) -> Bool
+
 pub(all) struct Resource {
   name : String
   kind : ResourceKind
@@ -29,11 +47,32 @@ pub fn Resource::queue_length(Self) -> Int
 pub fn Resource::release(Self) -> Unit
 pub fn Resource::request(Self, pid~ : Int, priority? : Int, callback~ : () -> Unit, on_preempt? : () -> Unit) -> Bool
 
+pub(all) struct ResourceGroup {
+  resources : Array[Resource]
+  mut acquired : Array[Bool]
+}
+pub fn ResourceGroup::acquired_count(Self) -> Int
+pub fn ResourceGroup::add(Self, Resource) -> Unit
+pub fn ResourceGroup::release_all(Self) -> Unit
+pub fn ResourceGroup::request_all(Self, pid~ : Int, callback~ : () -> Unit) -> Bool
+pub fn ResourceGroup::size(Self) -> Int
+
 pub(all) enum ResourceKind {
   Exclusive
   Capacity(Int)
   Preemptive
 } derive(Eq, @debug.Debug)
+
+pub(all) struct ResourcePool {
+  name : String
+  resources : Array[Resource]
+  mut holders : Array[Int]
+}
+pub fn ResourcePool::available_count(Self) -> Int
+pub fn ResourcePool::holder_slot(Self, pid~ : Int) -> Int
+pub fn ResourcePool::release(Self, pid~ : Int) -> Unit
+pub fn ResourcePool::request(Self, pid~ : Int, callback~ : () -> Unit) -> Bool
+pub fn ResourcePool::size(Self) -> Int
 
 pub(all) struct ResourceRequest {
   process_id : Int

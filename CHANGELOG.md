@@ -4,7 +4,24 @@
 
 ## [Unreleased]
 
-### 计划变更（v1.2.0 — 高级资源）
+### 计划变更（v1.3.0 — 监控与可观测）
+
+- 仿真日志、指标采集、trace 导出
+
+## [1.2.0] - 2026-08-16
+
+### 高级资源
+
+#### Added
+- `ResourcePool`：多同类资源池，自动分配空闲槽位，`request`/`release`/`available_count`/`holder_slot`
+- `ReentrantResource`：可重入资源，同进程多次获取（计数累加），对应次数释放，`hold_count_of`/`is_free`
+- `ResourceGroup`：资源组，原子批量获取/释放（任一不可用则全部不获取），`request_all`/`release_all`/`acquired_count`
+- 8 个新测试
+
+#### 验证
+
+- `moon test --target all` 106/106 全通过（三后端）
+- `moon check` 0 警告
 
 - 资源池、可重入资源、资源组
 

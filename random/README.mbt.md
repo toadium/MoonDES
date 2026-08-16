@@ -7,6 +7,7 @@
 ### 创建 RNG
 
 ```mbt check
+///|
 test {
   let rng = @random.new_rng()
   let x = @random.uniform(rng, min=0.0, max=1.0)
