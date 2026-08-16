@@ -1,7 +1,7 @@
 import {
-  "moondes/moondes/core",
-  "moondes/moondes/process",
-  "moondes/moondes/resource",
-  "moondes/moondes/experiment",
-  "moondes/moondes/plugin",
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/process",
+  "walkzzz/moondes/resource",
+  "walkzzz/moondes/experiment",
+  "walkzzz/moondes/plugin",
 }

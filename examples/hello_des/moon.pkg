@@ -1,5 +1,5 @@
 import {
-  "moondes/moondes/core",
+  "walkzzz/moondes/core",
 }
 
 pkgtype(kind: "executable")

@@ -1,12 +1,12 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moondes/moondes"
+package "walkzzz/moondes"
 
 import {
-  "moondes/moondes/core",
-  "moondes/moondes/experiment",
-  "moondes/moondes/plugin",
-  "moondes/moondes/process",
-  "moondes/moondes/resource",
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/experiment",
+  "walkzzz/moondes/plugin",
+  "walkzzz/moondes/process",
+  "walkzzz/moondes/resource",
 }
 
 // Values

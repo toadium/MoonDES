@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moondes/moondes/core"
+package "walkzzz/moondes/core"
 
 import {
   "moonbitlang/core/debug",

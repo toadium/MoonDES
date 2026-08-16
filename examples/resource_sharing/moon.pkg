@@ -1,7 +1,7 @@
 import {
-  "moondes/moondes/core",
-  "moondes/moondes/experiment",
-  "moondes/moondes/plugin",
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/experiment",
+  "walkzzz/moondes/plugin",
 }
 
 pkgtype(kind: "executable")

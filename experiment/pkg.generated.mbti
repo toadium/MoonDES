@@ -1,9 +1,9 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moondes/moondes/experiment"
+package "walkzzz/moondes/experiment"
 
 import {
   "moonbitlang/core/debug",
-  "moondes/moondes/core",
+  "walkzzz/moondes/core",
 }
 
 // Values

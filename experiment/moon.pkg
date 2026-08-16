@@ -1,4 +1,4 @@
 import {
-  "moondes/moondes/core",
+  "walkzzz/moondes/core",
   "moonbitlang/core/json",
 }
