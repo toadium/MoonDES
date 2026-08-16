@@ -1,0 +1,43 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/stats"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn correlation(Array[Double], Array[Double]) -> Double
+
+pub fn covariance(Array[Double], Array[Double]) -> Double
+
+pub fn histogram(Array[Double], Int) -> Array[Int]
+
+pub fn max(Array[Double]) -> Double
+
+pub fn mean(Array[Double]) -> Double
+
+pub fn min(Array[Double]) -> Double
+
+pub fn stddev(Array[Double]) -> Double
+
+pub fn sum(Array[Double]) -> Double
+
+pub fn summary(Array[Double]) -> Summary
+
+pub fn variance(Array[Double]) -> Double
+
+// Errors
+
+// Types and methods
+pub(all) struct Summary {
+  count : Int
+  mean : Double
+  stddev : Double
+  min : Double
+  max : Double
+  sum : Double
+} derive(@debug.Debug)
+
+// Type aliases
+
+// Traits

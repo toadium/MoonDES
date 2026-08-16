@@ -35,7 +35,7 @@ moon add moondes/moondes
 ```mbt check
 ///|
 test {
-  inspect(version(), content="0.1.0")
+  inspect(version(), content="1.1.0")
 }
 ```
 

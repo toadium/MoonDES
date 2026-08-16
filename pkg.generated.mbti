@@ -2,11 +2,13 @@
 package "walkzzz/moondes"
 
 import {
+  "moonbitlang/core/random",
   "walkzzz/moondes/core",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
+  "walkzzz/moondes/stats",
 }
 
 // Values
@@ -18,7 +20,11 @@ pub fn new_exclusive(name~ : String) -> @resource.Resource
 
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
+pub fn new_rng() -> @random.Rand
+
 pub fn process(@core.SimulationEnv, name? : String, behavior~ : (@process.Process) -> @process.ProcessAction) -> @process.Process
+
+pub fn summary(Array[Double]) -> @stats.Summary
 
 pub fn version() -> String
 

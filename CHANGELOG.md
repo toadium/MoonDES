@@ -4,11 +4,31 @@
 
 ## [Unreleased]
 
-### 计划变更（v1.x — 生态拓展）
+### 计划变更（v1.2.0 — 高级资源）
 
-- 随机数与统计（RNG 抽象、分布采样）
-- 高级资源（资源池、可重入资源）
-- 监控与可观测（仿真日志、指标采集）
+- 资源池、可重入资源、资源组
+
+## [1.1.0] - 2026-08-16
+
+### 随机数与统计
+
+#### Added
+- 新增 `random` 包：基于标准库 ChaCha8 的分布采样
+  - `uniform` / `exponential` / `normal`（Box-Muller）/ `poisson`（Knuth）/ `bernoulli` / `randint`
+- 新增 `stats` 包：统计聚合
+  - `sum` / `mean` / `variance` / `stddev` / `min` / `max` / `histogram` / `summary` / `covariance` / `correlation`
+- 根包新增便捷入口 `new_rng` / `summary`
+- 15 个新测试（random 6 + stats 9）
+- README.mbt.md（random + stats）
+
+#### Changed
+- 版本号更新为 1.1.0
+- 根包导入新增 `random` / `stats` / `moonbitlang/core/random`
+
+#### 验证
+
+- `moon test --target all` 90/90 全通过（三后端）
+- `moon check` 0 警告
 
 ## [1.0.0] - 2026-08-15
 

@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/random"
+
+// Values
+pub fn bernoulli(@moonbitlang/core/random.Rand, p~ : Double) -> Bool
+
+pub fn exponential(@moonbitlang/core/random.Rand, lambda~ : Double) -> Double
+
+pub fn new_rng() -> @moonbitlang/core/random.Rand
+
+pub fn normal(@moonbitlang/core/random.Rand, mean~ : Double, std~ : Double) -> Double
+
+pub fn poisson(@moonbitlang/core/random.Rand, lambda~ : Double) -> Int
+
+pub fn randint(@moonbitlang/core/random.Rand, min~ : Int, max~ : Int) -> Int
+
+pub fn uniform(@moonbitlang/core/random.Rand, min~ : Double, max~ : Double) -> Double
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

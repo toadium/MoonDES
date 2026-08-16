@@ -4,4 +4,7 @@ import {
   "walkzzz/moondes/resource",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/plugin",
+  "walkzzz/moondes/random",
+  "walkzzz/moondes/stats",
+  "moonbitlang/core/random" @rand,
 }
