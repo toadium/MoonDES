@@ -1,0 +1,6 @@
+import {
+  "moondes/moondes/core",
+  "moondes/moondes/process",
+}
+
+pkgtype(kind: "executable")

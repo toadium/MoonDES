@@ -4,7 +4,25 @@ pub(all) enum EnvStatus {
   Initialized
   Running
   Finished
-} derive(Debug, Eq)
+} derive(Debug, Eq, ToJson)
+
+///|
+/// 从 JSON 反序列化 EnvStatus
+pub impl FromJson for EnvStatus with fn from_json(json, path) {
+  match json {
+    Json::String(s) =>
+      match s {
+        "Initialized" => Initialized
+        "Running" => Running
+        "Finished" => Finished
+        _ =>
+          raise @json.JsonDecodeError::JsonDecodeError(
+            (path, "unknown EnvStatus"),
+          )
+      }
+    _ => raise @json.JsonDecodeError::JsonDecodeError((path, "expected string"))
+  }
+}
 
 ///|
 /// 全局仿真环境
@@ -229,9 +247,7 @@ pub fn SimulationEnv::run(self : SimulationEnv) -> Unit {
       None => break
     }
   }
-  if self.now < self.until {
-    self.now = self.until
-  } else if self.now > self.until {
+  if self.now != self.until {
     self.now = self.until
   }
   self._finish()
@@ -278,7 +294,28 @@ pub(all) struct EnvSnapshot {
   status : EnvStatus
   next_event_id : EventId
   next_process_id : ProcessId
-} derive(Debug, Eq)
+} derive(Debug, Eq, ToJson)
+
+///|
+/// 从 JSON 反序列化 EnvSnapshot
+pub impl FromJson for EnvSnapshot with fn from_json(json, path) {
+  match json {
+    Json::Object(map) =>
+      {
+        now: @json.from_json(map["now"], path=path.add_key("now")),
+        status: @json.from_json(map["status"], path=path.add_key("status")),
+        next_event_id: @json.from_json(
+          map["next_event_id"],
+          path=path.add_key("next_event_id"),
+        ),
+        next_process_id: @json.from_json(
+          map["next_process_id"],
+          path=path.add_key("next_process_id"),
+        ),
+      }
+    _ => raise @json.JsonDecodeError::JsonDecodeError((path, "expected object"))
+  }
+}
 
 ///|
 /// 获取已注册的事件总数

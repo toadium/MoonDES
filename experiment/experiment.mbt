@@ -4,7 +4,21 @@ pub(all) struct ExpConfig {
   until : Double
   seed : Int
   params : Map[String, Double]
-} derive(Debug)
+} derive(Debug, ToJson)
+
+///|
+/// 从 JSON 反序列化 ExpConfig
+impl FromJson for ExpConfig with fn from_json(json, path) {
+  match json {
+    Json::Object(map) =>
+      {
+        until: @json.from_json(map["until"], path=path.add_key("until")),
+        seed: @json.from_json(map["seed"], path=path.add_key("seed")),
+        params: @json.from_json(map["params"], path=path.add_key("params")),
+      }
+    _ => raise @json.JsonDecodeError::JsonDecodeError((path, "expected object"))
+  }
+}
 
 ///|
 /// 仿真实验结果
@@ -13,7 +27,28 @@ pub(all) struct ExpResult {
   final_time : Double
   event_count : Int
   metrics : Map[String, Double]
-} derive(Debug)
+} derive(Debug, ToJson)
+
+///|
+/// 从 JSON 反序列化 ExpResult
+impl FromJson for ExpResult with fn from_json(json, path) {
+  match json {
+    Json::Object(map) =>
+      {
+        config: @json.from_json(map["config"], path=path.add_key("config")),
+        final_time: @json.from_json(
+          map["final_time"],
+          path=path.add_key("final_time"),
+        ),
+        event_count: @json.from_json(
+          map["event_count"],
+          path=path.add_key("event_count"),
+        ),
+        metrics: @json.from_json(map["metrics"], path=path.add_key("metrics")),
+      }
+    _ => raise @json.JsonDecodeError::JsonDecodeError((path, "expected object"))
+  }
+}
 
 ///|
 /// 仿真快照
@@ -23,7 +58,27 @@ pub(all) struct Snapshot {
   time : Double
   event_count : Int
   env_snapshot : @core.EnvSnapshot
-} derive(Debug)
+} derive(Debug, ToJson)
+
+///|
+/// 从 JSON 反序列化 Snapshot
+impl FromJson for Snapshot with fn from_json(json, path) {
+  match json {
+    Json::Object(map) =>
+      {
+        time: @json.from_json(map["time"], path=path.add_key("time")),
+        event_count: @json.from_json(
+          map["event_count"],
+          path=path.add_key("event_count"),
+        ),
+        env_snapshot: @json.from_json(
+          map["env_snapshot"],
+          path=path.add_key("env_snapshot"),
+        ),
+      }
+    _ => raise @json.JsonDecodeError::JsonDecodeError((path, "expected object"))
+  }
+}
 
 ///|
 /// 创建实验配置
@@ -105,4 +160,40 @@ pub fn param_sweep(
     configs.push(cfg)
   }
   configs
+}
+
+///|
+/// 将 ExpConfig 序列化为 JSON 字符串
+pub fn ExpConfig::to_json_string(self : ExpConfig) -> String {
+  @json.to_json(self).stringify(indent=2)
+}
+
+///|
+/// 从 JSON 字符串反序列化 ExpConfig
+pub fn ExpConfig::from_json_string(s : String) -> ExpConfig raise {
+  @json.from_json(@json.parse(s))
+}
+
+///|
+/// 将 ExpResult 序列化为 JSON 字符串
+pub fn ExpResult::to_json_string(self : ExpResult) -> String {
+  @json.to_json(self).stringify(indent=2)
+}
+
+///|
+/// 从 JSON 字符串反序列化 ExpResult
+pub fn ExpResult::from_json_string(s : String) -> ExpResult raise {
+  @json.from_json(@json.parse(s))
+}
+
+///|
+/// 将 Snapshot 序列化为 JSON 字符串
+pub fn Snapshot::to_json_string(self : Snapshot) -> String {
+  @json.to_json(self).stringify(indent=2)
+}
+
+///|
+/// 从 JSON 字符串反序列化 Snapshot
+pub fn Snapshot::from_json_string(s : String) -> Snapshot raise {
+  @json.from_json(@json.parse(s))
 }

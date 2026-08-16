@@ -26,21 +26,27 @@ pub(all) struct ExpConfig {
   until : Double
   seed : Int
   params : Map[String, Double]
-} derive(@debug.Debug)
+} derive(ToJson, @debug.Debug)
+pub fn ExpConfig::from_json_string(String) -> Self raise
 pub fn ExpConfig::set_param(Self, String, value~ : Double) -> Unit
+pub fn ExpConfig::to_json_string(Self) -> String
 
 pub(all) struct ExpResult {
   config : ExpConfig
   final_time : Double
   event_count : Int
   metrics : Map[String, Double]
-} derive(@debug.Debug)
+} derive(ToJson, @debug.Debug)
+pub fn ExpResult::from_json_string(String) -> Self raise
+pub fn ExpResult::to_json_string(Self) -> String
 
 pub(all) struct Snapshot {
   time : Double
   event_count : Int
   env_snapshot : @core.EnvSnapshot
-} derive(@debug.Debug)
+} derive(ToJson, @debug.Debug)
+pub fn Snapshot::from_json_string(String) -> Self raise
+pub fn Snapshot::to_json_string(Self) -> String
 
 // Type aliases
 

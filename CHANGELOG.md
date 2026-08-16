@@ -4,12 +4,88 @@
 
 ## [Unreleased]
 
-### 计划变更（v0.4.0 — 测试与文档完善）
+### 计划变更（v1.x — 生态拓展）
 
-- 为每个包添加黑盒测试 `*_wbtest.mbt`
-- 为每个包创建 `README.mbt.md`（含 `mbt check` 可执行示例）
-- 覆盖率分析，目标 ≥96%
-- 边界测试与并发压力测试
+- 随机数与统计（RNG 抽象、分布采样）
+- 高级资源（资源池、可重入资源）
+- 监控与可观测（仿真日志、指标采集）
+
+## [1.0.0] - 2026-08-15
+
+### 正式版发布（API 冻结）
+
+#### Added
+- 撰写发布说明 `RELEASE_NOTES_v1.0.0.md`
+- README 徽章更新：version 1.0.0 / tests 70 / backends native|wasm-gc|wasm
+
+#### Changed
+- `moon.mod` 版本号从 `0.1.0` 更新为 `1.0.0`
+
+#### API 审查结论
+
+- 公共 API 经审查冻结，后续 v1.x 保持向后兼容
+- 无需要标注 `#deprecated` 的旧别名
+- 五层模块公共 API 表面：
+  - **core**：SimulationEnv / EventQueue / Event / EnvSnapshot / EnvStatus
+  - **process**：Process / ProcessAction / ProcessStatus
+  - **resource**：Resource / ResourceRequest / ResourceKind
+  - **experiment**：ExpConfig / ExpResult / Snapshot（含序列化）
+  - **plugin**：PluginManager / PluginCallbacks
+
+#### 验证
+
+- `moon check` 通过，0 警告
+- `moon test --target all` 70/70 全通过（三后端）
+- `moon fmt` 通过
+- `moon info` API 接口已生成并纳入版本控制
+
+## [0.5.0] - 2026-08-15
+
+### 性能优化与跨后端验证（修复 P1-4 序列化补齐）
+
+#### Added
+- 引入 `@json` 依赖（core + experiment 包），实现序列化/反序列化
+- `ExpConfig` / `ExpResult` / `Snapshot` derive(ToJson) + impl FromJson
+- `EnvSnapshot` / `EnvStatus` derive(ToJson) + impl FromJson
+- 便捷函数 `to_json_string` / `from_json_string`（ExpConfig / ExpResult / Snapshot）
+- `EventQueue::new_queue_with_capacity` 预分配容量构造函数
+- 基准测试示例 `examples/benchmark`：100000 事件调度 + 10000 并发进程 + M/M/1 排队
+- 4 个序列化往返测试
+
+#### Changed
+- `EventQueue::pop` 用 `Array::pop()` 代替 `Array::remove(n-1)`（O(1) 移除末尾）
+- `EventQueue::_sift_down` 用 `for ;;` 代替 `while true`
+- `SimulationEnv::run` 合并双分支时间校正为单 `!=` 判断
+
+#### 验证
+
+- `moon check --target all` 三后端编译通过（native / wasm-gc / wasm）
+- `moon test --target all` 70/70 全通过（三后端）
+- 基准测试：100000 事件 + 10000 进程正确调度
+- 序列化往返测试通过
+
+## [0.4.0] - 2026-08-15
+
+### 测试与文档完善（修复 P2-1 ~ P2-6）
+
+#### Added
+- 为 5 个子包（core / process / resource / experiment / plugin）创建 `README.mbt.md`，含 `mbt check` 可执行示例
+- 为根包创建 `README.mbt.md`，含 `mbt check` 可执行示例
+- 新增 `moondes_test.mbt` 根包便捷入口测试（6 个）
+- 补充边界测试：空环境、零时长、负优先级、多实例独立运行
+- 补充压力测试：1000 事件调度
+- 补充快照-回滚往返测试
+
+#### Changed
+- 测试数 45 → 66，全部通过
+- `moon coverage analyze` 完成：42 行未覆盖，均为边界 None 分支 / peek-pop 空队列 / 示例 main
+
+### 验证
+
+- `moon check` 通过，0 警告
+- `moon test --target native` 66/66 通过
+- `moon fmt` 通过
+- `moon info` API 无非预期变化
 
 ## [0.3.0] - 2026-08-15
 

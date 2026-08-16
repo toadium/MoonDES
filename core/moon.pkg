@@ -1,1 +1,3 @@
-// Core 仿真内核层 - 无外部依赖，仅使用标准库
+import {
+  "moonbitlang/core/json",
+}

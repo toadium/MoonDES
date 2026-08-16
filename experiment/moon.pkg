@@ -1,3 +1,4 @@
 import {
   "moondes/moondes/core",
+  "moonbitlang/core/json",
 }

@@ -14,6 +14,16 @@ pub fn new_queue() -> EventQueue {
 }
 
 ///|
+/// 创建带容量提示的事件队列
+///
+/// 预分配数组容量以减少动态扩容开销，适用于大规模仿真场景。
+pub fn new_queue_with_capacity(capacity : Int) -> EventQueue {
+  let heap : Array[Event] = []
+  heap.reserve_capacity(capacity)
+  { heap, }
+}
+
+///|
 /// 队列是否为空
 pub fn EventQueue::is_empty(self : EventQueue) -> Bool {
   self.heap.length() == 0
@@ -50,10 +60,15 @@ pub fn EventQueue::pop(self : EventQueue) -> Event? {
     return None
   }
   let top = self.heap[0]
-  let last = self.heap.remove(n - 1)
+  let last = self.heap.pop()
   if self.heap.length() > 0 {
-    self.heap[0] = last
-    self._sift_down(0)
+    match last {
+      Some(e) => {
+        self.heap[0] = e
+        self._sift_down(0)
+      }
+      None => ()
+    }
   }
   Some(top)
 }
@@ -101,7 +116,7 @@ fn EventQueue::_sift_up(self : EventQueue, i_param : Int) -> Unit {
 fn EventQueue::_sift_down(self : EventQueue, i_param : Int) -> Unit {
   let mut i = i_param
   let n = self.heap.length()
-  while true {
+  for ;; {
     let left = 2 * i + 1
     let right = 2 * i + 2
     let mut smallest = i

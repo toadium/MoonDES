@@ -3,6 +3,7 @@ package "moondes/moondes/core"
 
 import {
   "moonbitlang/core/debug",
+  "moonbitlang/core/json",
 }
 
 // Values
@@ -12,6 +13,8 @@ pub fn new_event(id~ : Int, time~ : Double, priority? : Int, callback~ : () -> U
 
 pub fn new_queue() -> EventQueue
 
+pub fn new_queue_with_capacity(Int) -> EventQueue
+
 // Errors
 
 // Types and methods
@@ -20,13 +23,15 @@ pub(all) struct EnvSnapshot {
   status : EnvStatus
   next_event_id : Int
   next_process_id : Int
-} derive(Eq, @debug.Debug)
+} derive(Eq, ToJson, @debug.Debug)
+pub impl @json.FromJson for EnvSnapshot
 
 pub(all) enum EnvStatus {
   Initialized
   Running
   Finished
-} derive(Eq, @debug.Debug)
+} derive(Eq, ToJson, @debug.Debug)
+pub impl @json.FromJson for EnvStatus
 
 pub(all) struct Event {
   id : Int
