@@ -1,0 +1,79 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/distributed"
+
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/experiment",
+  "walkzzz/moondes/stats",
+}
+
+// Values
+pub fn new_aggregator() -> ResultAggregator
+
+pub fn new_multi_env() -> MultiEnv
+
+pub fn new_task_scheduler() -> TaskScheduler
+
+// Errors
+
+// Types and methods
+pub(all) struct MultiEnv {
+  envs : Array[@core.SimulationEnv]
+}
+pub fn MultiEnv::add_env(Self, @core.SimulationEnv) -> Unit
+pub fn MultiEnv::all_finished(Self) -> Bool
+pub fn MultiEnv::collect_event_counts(Self) -> Array[Int]
+pub fn MultiEnv::collect_times(Self) -> Array[Double]
+pub fn MultiEnv::count(Self) -> Int
+pub fn MultiEnv::create_env(Self, until~ : Double) -> @core.SimulationEnv
+pub fn MultiEnv::get_env(Self, Int) -> @core.SimulationEnv?
+pub fn MultiEnv::run_all(Self) -> Unit
+
+pub(all) struct ResultAggregator {
+  values : Array[Double]
+  metrics : Map[String, Array[Double]]
+}
+pub fn ResultAggregator::add(Self, Double) -> Unit
+pub fn ResultAggregator::add_metric(Self, String, value~ : Double) -> Unit
+pub fn ResultAggregator::clear(Self) -> Unit
+pub fn ResultAggregator::collect_event_counts(Self, Array[@experiment.ExpResult]) -> Unit
+pub fn ResultAggregator::collect_final_times(Self, Array[@experiment.ExpResult]) -> Unit
+pub fn ResultAggregator::count(Self) -> Int
+pub fn ResultAggregator::get_metric(Self, String) -> Array[Double]?
+pub fn ResultAggregator::max(Self) -> Double
+pub fn ResultAggregator::mean(Self) -> Double
+pub fn ResultAggregator::metric_count(Self) -> Int
+pub fn ResultAggregator::metric_mean(Self, String) -> Double?
+pub fn ResultAggregator::metric_stddev(Self, String) -> Double?
+pub fn ResultAggregator::min(Self) -> Double
+pub fn ResultAggregator::stddev(Self) -> Double
+pub fn ResultAggregator::sum(Self) -> Double
+pub fn ResultAggregator::summary(Self) -> @stats.Summary
+pub fn ResultAggregator::variance(Self) -> Double
+
+pub(all) struct SimTask {
+  id : Int
+  name : String
+  config : @experiment.ExpConfig
+  priority : Int
+}
+
+pub(all) struct TaskResult {
+  task_id : Int
+  task_name : String
+  result : @experiment.ExpResult
+}
+
+pub(all) struct TaskScheduler {
+  tasks : Array[SimTask]
+  mut next_task_id : Int
+}
+pub fn TaskScheduler::peek_tasks(Self) -> Array[SimTask]
+pub fn TaskScheduler::pending_count(Self) -> Int
+pub fn TaskScheduler::run_all(Self) -> Array[@experiment.ExpResult]
+pub fn TaskScheduler::run_all_detailed(Self) -> Array[TaskResult]
+pub fn TaskScheduler::submit(Self, name~ : String, config~ : @experiment.ExpConfig, priority? : Int) -> Int
+
+// Type aliases
+
+// Traits

@@ -7,5 +7,6 @@ import {
   "walkzzz/moondes/random",
   "walkzzz/moondes/stats",
   "walkzzz/moondes/monitor",
+  "walkzzz/moondes/distributed",
   "moonbitlang/core/random" @rand,
 }

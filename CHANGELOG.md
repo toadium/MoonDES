@@ -4,9 +4,34 @@
 
 ## [Unreleased]
 
-### 计划变更（v1.4.0 — 分布式仿真）
+### 计划变更（v2.0.0 — API 演进）
 
-- 多环境并行、任务队列调度
+- 如有破坏性变更，经充分评估后发布
+
+## [1.4.0] - 2026-08-22
+
+### 分布式仿真
+
+#### Added
+- 新增 `distributed` 包：分布式仿真支持
+  - `MultiEnv`：多环境管理器，批量创建/注册/运行多个独立 SimulationEnv，收集时间和事件计数
+  - `TaskScheduler`：任务调度器，按优先级排序执行仿真任务，支持 `submit`/`run_all`/`run_all_detailed`/`peek_tasks`
+  - `ResultAggregator`：结果聚合器，跨多次实验运行结果统计聚合（均值/标准差/最小/最大/方差），支持命名指标
+  - `SimTask`/`TaskResult`：任务和结果数据结构
+- 根包新增便捷入口 `new_multi_env` / `new_task_scheduler` / `new_aggregator`
+- 22 个新测试（distributed 包）+ 3 个根包便捷入口测试
+- 修复 `moon.mod` 版本号不一致（0.8.0 → 1.4.0）
+- 修复 README.mbt.md 版本徽章过期（0.1.0 → 1.4.0）
+- 修复安装命令错误（`moon add moondes/moondes` → `moon add walkzzz/moondes`）
+- 更新架构描述从"五层"到"九层"（新增 random/stats/monitor/distributed）
+
+#### 验证
+
+- `moon test --target wasm` 163/163 全通过
+- `moon test --target wasm-gc` 163/163 全通过
+- `moon check --target all` 三后端编译通过
+- `moon fmt` 格式一致
+- `moon info` API 接口已更新
 
 ## [1.3.0] - 2026-08-16
 

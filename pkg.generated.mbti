@@ -4,6 +4,7 @@ package "walkzzz/moondes"
 import {
   "moonbitlang/core/random",
   "walkzzz/moondes/core",
+  "walkzzz/moondes/distributed",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/monitor",
   "walkzzz/moondes/plugin",
@@ -13,6 +14,8 @@ import {
 }
 
 // Values
+pub fn new_aggregator() -> @distributed.ResultAggregator
+
 pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
 
 pub fn new_env(until~ : Double) -> @core.SimulationEnv
@@ -23,9 +26,13 @@ pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger
 
 pub fn new_metrics() -> @monitor.MetricsCollector
 
+pub fn new_multi_env() -> @distributed.MultiEnv
+
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
 pub fn new_rng() -> @random.Rand
+
+pub fn new_task_scheduler() -> @distributed.TaskScheduler
 
 pub fn new_tracer() -> @monitor.TraceExporter
 

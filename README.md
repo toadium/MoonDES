@@ -1,22 +1,27 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-138%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-163%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供五层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供九层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
 - **最小堆优先级事件队列**：按 `(time, priority)` 排序，保证时序正确性
 - **协程进程调度**：进程可 `timeout` / `wait_event` / `request_resource`，挂起恢复不占用线程
 - **三类资源模型**：独占式 `Exclusive` / 共享容量 `Capacity` / 优先级抢占 `Preemptive`
+- **高级资源**：资源池 `ResourcePool` / 可重入资源 `ReentrantResource` / 资源组 `ResourceGroup`
 - **实验管理**：批量仿真、参数遍历、快照保存、断点回滚、结果统计
 - **插件扩展接口**：标准化 `on_step` / `on_event` / `on_finish` 生命周期回调
+- **随机数采样**：均匀 / 指数 / 正态（Box-Muller）/ 泊松 / 伯努利 / 离散均匀六种分布
+- **统计聚合**：均值 / 方差 / 标准差 / 直方图 / 协方差 / 相关系数
+- **监控可观测**：分级日志 `SimLogger` / 指标采集 `MetricsCollector` / Chrome Trace 导出 `TraceExporter`
+- **分布式仿真**：多环境管理 `MultiEnv` / 任务调度 `TaskScheduler` / 结果聚合 `ResultAggregator`
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
 
@@ -29,7 +34,7 @@ MoonDES 提供五层模块化架构的离散事件仿真能力，对标 Python S
 ### 安装
 
 ```bash
-moon add moondes/moondes
+moon add walkzzz/moondes
 ```
 
 ### 最小示例
@@ -46,6 +51,7 @@ env.run()
 moon run examples/hello_des        # 最简事件调度
 moon run examples/mm1_queue        # M/M/1 排队系统
 moon run examples/resource_sharing # 实验管理与插件
+moon run examples/benchmark        # 性能基准测试
 ```
 
 ## 项目结构
@@ -54,20 +60,25 @@ moon run examples/resource_sharing # 实验管理与插件
 MoonDES/
 ├── core/          # 层级1：仿真内核（SimulationEnv / EventQueue / Event）
 ├── process/       # 层级2：协程进程调度（Process / timeout / wait_event）
-├── resource/      # 层级3：资源管理（Exclusive / Capacity / Preemptive）
+├── resource/      # 层级3：资源管理（Exclusive / Capacity / Preemptive / Pool / Reentrant / Group）
 ├── experiment/    # 层级4：实验管理（ExpConfig / ExpResult / Snapshot）
 ├── plugin/        # 层级5：插件接口（PluginManager / PluginCallbacks）
+├── random/        # 层级6：随机数采样（uniform / exponential / normal / poisson / bernoulli / randint）
+├── stats/         # 层级7：统计聚合（sum / mean / variance / stddev / histogram / correlation）
+├── monitor/       # 层级8：监控可观测（SimLogger / MetricsCollector / TraceExporter）
+├── distributed/   # 层级9：分布式仿真（MultiEnv / TaskScheduler / ResultAggregator）
 ├── examples/      # 可执行示例
 │   ├── hello_des/
 │   ├── mm1_queue/
-│   └── resource_sharing/
+│   ├── resource_sharing/
+│   └── benchmark/
 └── docs/          # 项目文档
 ```
 
 ### 依赖层级
 
 ```
-core (无依赖) ← process / resource / experiment / plugin
+core (无依赖) ← process / resource / experiment / plugin / random / stats / monitor / distributed
 ```
 
 所有上层包仅依赖 `core`，无循环依赖。
@@ -81,6 +92,14 @@ core (无依赖) ← process / resource / experiment / plugin
 | `new_exclusive(name=)` | 创建独占式资源 |
 | `new_config(until=, seed=)` | 创建实验配置 |
 | `new_plugin_manager()` | 创建插件管理器 |
+| `new_rng()` | 创建随机数生成器 |
+| `summary(data)` | 计算统计摘要 |
+| `new_logger(min_level=)` | 创建仿真日志器 |
+| `new_metrics()` | 创建指标采集器 |
+| `new_tracer()` | 创建 Trace 导出器 |
+| `new_multi_env()` | 创建多环境管理器 |
+| `new_task_scheduler()` | 创建任务调度器 |
+| `new_aggregator()` | 创建结果聚合器 |
 | `version()` | 引擎版本号 |
 
 ## 测试

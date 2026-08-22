@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="1.3.0")
+  inspect(version(), content="1.4.0")
 }
 
 ///|
@@ -42,4 +42,22 @@ test "root process convenience" {
   env.run()
   assert_eq(log.length(), 1)
   assert_eq(log[0], "executed")
+}
+
+///|
+test "root new_multi_env convenience" {
+  let mgr = new_multi_env()
+  inspect(mgr.count(), content="0")
+}
+
+///|
+test "root new_task_scheduler convenience" {
+  let sched = new_task_scheduler()
+  inspect(sched.pending_count(), content="0")
+}
+
+///|
+test "root new_aggregator convenience" {
+  let agg = new_aggregator()
+  inspect(agg.count(), content="0")
 }

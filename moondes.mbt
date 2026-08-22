@@ -1,7 +1,7 @@
 ///|
 /// MoonDES 通用离散事件仿真引擎
 ///
-/// 基于 MoonBit 构建的通用离散事件仿真底座，提供八层模块化架构：
+/// 基于 MoonBit 构建的通用离散事件仿真底座，提供九层模块化架构：
 /// - Core 仿真内核层：事件队列、仿真环境、主循环
 /// - Process 协程进程调度层：进程创建、延时、等待
 /// - Resource 资源管理层：独占/容量/抢占三类资源
@@ -10,6 +10,7 @@
 /// - Random 随机数层：分布采样（均匀/指数/正态/泊松）
 /// - Stats 统计层：均值/方差/直方图/相关系数
 /// - Monitor 监控层：仿真日志、指标采集、trace 导出
+/// - Distributed 分布式仿真层：多环境管理、任务调度、结果聚合
 ///
 /// # Example
 /// ```mbt check
@@ -22,7 +23,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "1.3.0"
+  "1.4.0"
 }
 
 ///|
@@ -93,4 +94,22 @@ pub fn new_metrics() -> @monitor.MetricsCollector {
 /// 创建 Trace 导出器（便捷入口，转发至 monitor 层）
 pub fn new_tracer() -> @monitor.TraceExporter {
   @monitor.new_tracer()
+}
+
+///|
+/// 创建多环境管理器（便捷入口，转发至 distributed 层）
+pub fn new_multi_env() -> @distributed.MultiEnv {
+  @distributed.new_multi_env()
+}
+
+///|
+/// 创建任务调度器（便捷入口，转发至 distributed 层）
+pub fn new_task_scheduler() -> @distributed.TaskScheduler {
+  @distributed.new_task_scheduler()
+}
+
+///|
+/// 创建结果聚合器（便捷入口，转发至 distributed 层）
+pub fn new_aggregator() -> @distributed.ResultAggregator {
+  @distributed.new_aggregator()
 }
