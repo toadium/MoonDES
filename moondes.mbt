@@ -1,7 +1,7 @@
 ///|
 /// MoonDES 通用离散事件仿真引擎
 ///
-/// 基于 MoonBit 构建的通用离散事件仿真底座，提供九层模块化架构：
+/// 基于 MoonBit 构建的通用离散事件仿真底座，提供十层模块化架构：
 /// - Core 仿真内核层：事件队列、仿真环境、主循环
 /// - Process 协程进程调度层：进程创建、延时、等待
 /// - Resource 资源管理层：独占/容量/抢占三类资源
@@ -11,6 +11,7 @@
 /// - Stats 统计层：均值/方差/直方图/相关系数
 /// - Monitor 监控层：仿真日志、指标采集、trace 导出
 /// - Distributed 分布式仿真层：多环境管理、任务调度、结果聚合
+/// - Sync 进程同步原语层：信号事件、条件组合、信号量、屏障、容器
 ///
 /// # Example
 /// ```mbt check
@@ -23,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "1.4.0"
+  "1.5.0"
 }
 
 ///|
@@ -112,4 +113,46 @@ pub fn new_task_scheduler() -> @distributed.TaskScheduler {
 /// 创建结果聚合器（便捷入口，转发至 distributed 层）
 pub fn new_aggregator() -> @distributed.ResultAggregator {
   @distributed.new_aggregator()
+}
+
+///|
+/// 创建信号事件（便捷入口，转发至 sync 层）
+pub fn new_signal(env : @core.SimulationEnv) -> @sync.SignalEvent {
+  @sync.new_signal(env)
+}
+
+///|
+/// 创建计数信号量（便捷入口，转发至 sync 层）
+pub fn new_semaphore(count~ : Int) -> @sync.Semaphore {
+  @sync.new_semaphore(count~)
+}
+
+///|
+/// 创建同步屏障（便捷入口，转发至 sync 层）
+pub fn new_barrier(n~ : Int) -> @sync.Barrier {
+  @sync.new_barrier(n~)
+}
+
+///|
+/// 创建连续资源容器（便捷入口，转发至 sync 层）
+pub fn new_container(capacity~ : Double) -> @sync.Container {
+  @sync.new_container(capacity~)
+}
+
+///|
+/// 条件组合：等待任意信号触发（便捷入口，转发至 sync 层）
+pub fn any_of(
+  env : @core.SimulationEnv,
+  signals : Array[@sync.SignalEvent],
+) -> @sync.SignalEvent {
+  @sync.any_of(env, signals)
+}
+
+///|
+/// 条件组合：等待全部信号触发（便捷入口，转发至 sync 层）
+pub fn all_of(
+  env : @core.SimulationEnv,
+  signals : Array[@sync.SignalEvent],
+) -> @sync.SignalEvent {
+  @sync.all_of(env, signals)
 }

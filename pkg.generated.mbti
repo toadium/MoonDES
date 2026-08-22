@@ -11,12 +11,21 @@ import {
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
   "walkzzz/moondes/stats",
+  "walkzzz/moondes/sync",
 }
 
 // Values
+pub fn all_of(@core.SimulationEnv, Array[@sync.SignalEvent]) -> @sync.SignalEvent
+
+pub fn any_of(@core.SimulationEnv, Array[@sync.SignalEvent]) -> @sync.SignalEvent
+
 pub fn new_aggregator() -> @distributed.ResultAggregator
 
+pub fn new_barrier(n~ : Int) -> @sync.Barrier
+
 pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
+
+pub fn new_container(capacity~ : Double) -> @sync.Container
 
 pub fn new_env(until~ : Double) -> @core.SimulationEnv
 
@@ -31,6 +40,10 @@ pub fn new_multi_env() -> @distributed.MultiEnv
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
 pub fn new_rng() -> @random.Rand
+
+pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
+
+pub fn new_signal(@core.SimulationEnv) -> @sync.SignalEvent
 
 pub fn new_task_scheduler() -> @distributed.TaskScheduler
 

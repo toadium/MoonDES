@@ -8,6 +8,31 @@
 
 - 如有破坏性变更，经充分评估后发布
 
+## [1.5.0] - 2026-08-23
+
+### 进程同步原语
+
+#### Added
+- 新增 `sync` 包：进程同步原语，对标 SimPy 的 Events/Conditions/Containers
+  - `SignalEvent`：手动触发事件，不绑定仿真时间，支持 `fire`/`wait`/`is_fired`，已触发后 `wait` 立即执行
+  - `any_of`：条件组合，等待任意信号触发即触发结果（适用于"等待多个资源中任意一个可用"）
+  - `all_of`：条件组合，等待全部信号触发才触发结果（适用于"等待所有前置条件就绪"）
+  - `Semaphore`：计数信号量，`acquire`/`release`，许可耗尽时阻塞等待
+  - `Barrier`：进程同步屏障，N 个进程到达后统一释放，自动重置支持多轮使用
+  - `Container`：连续资源容器，`put`/`get` 操作，满时阻塞生产者、空时阻塞消费者，自动唤醒级联等待
+  - `ContainerWaiter`：容器等待请求结构
+- 根包新增便捷入口 `new_signal` / `new_semaphore` / `new_barrier` / `new_container` / `any_of` / `all_of`
+- 33 个新测试（sync 包）+ 6 个根包便捷入口测试
+- 更新架构描述从"九层"到"十层"（新增 sync）
+
+#### 验证
+
+- `moon test --target wasm` 202/202 全通过
+- `moon test --target wasm-gc` 202/202 全通过
+- `moon check` 零警告
+- `moon fmt` 格式一致
+- `moon info` API 接口已更新
+
 ## [1.4.0] - 2026-08-22
 
 ### 分布式仿真

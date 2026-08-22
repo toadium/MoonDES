@@ -1,0 +1,75 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/sync"
+
+import {
+  "walkzzz/moondes/core",
+}
+
+// Values
+pub fn all_of(@core.SimulationEnv, Array[SignalEvent]) -> SignalEvent
+
+pub fn any_of(@core.SimulationEnv, Array[SignalEvent]) -> SignalEvent
+
+pub fn new_barrier(n~ : Int) -> Barrier
+
+pub fn new_container(capacity~ : Double) -> Container
+
+pub fn new_container_with(capacity~ : Double, initial~ : Double) -> Container
+
+pub fn new_semaphore(count~ : Int) -> Semaphore
+
+pub fn new_signal(@core.SimulationEnv) -> SignalEvent
+
+// Errors
+
+// Types and methods
+pub(all) struct Barrier {
+  n : Int
+  mut waiting : Int
+  waiters : Array[() -> Unit]
+}
+pub fn Barrier::is_reset(Self) -> Bool
+pub fn Barrier::wait(Self, () -> Unit) -> Unit
+pub fn Barrier::waiting_count(Self) -> Int
+
+pub(all) struct Container {
+  mut level : Double
+  capacity : Double
+  put_waiters : Array[ContainerWaiter]
+  get_waiters : Array[ContainerWaiter]
+}
+pub fn Container::capacity(Self) -> Double
+pub fn Container::get(Self, Double, () -> Unit) -> Unit
+pub fn Container::get_queue_length(Self) -> Int
+pub fn Container::is_empty(Self) -> Bool
+pub fn Container::is_full(Self) -> Bool
+pub fn Container::level(Self) -> Double
+pub fn Container::put(Self, Double, () -> Unit) -> Unit
+pub fn Container::put_queue_length(Self) -> Int
+
+pub(all) struct ContainerWaiter {
+  amount : Double
+  callback : () -> Unit
+}
+
+pub(all) struct Semaphore {
+  mut count : Int
+  waiters : Array[() -> Unit]
+}
+pub fn Semaphore::acquire(Self, () -> Unit) -> Unit
+pub fn Semaphore::available(Self) -> Int
+pub fn Semaphore::queue_length(Self) -> Int
+pub fn Semaphore::release(Self) -> Unit
+
+pub(all) struct SignalEvent {
+  event : @core.Event
+  mut fired : Bool
+}
+pub fn SignalEvent::as_event(Self) -> @core.Event
+pub fn SignalEvent::fire(Self) -> Unit
+pub fn SignalEvent::is_fired(Self) -> Bool
+pub fn SignalEvent::wait(Self, () -> Unit) -> Unit
+
+// Type aliases
+
+// Traits

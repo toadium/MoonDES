@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="1.4.0")
+  inspect(version(), content="1.5.0")
 }
 
 ///|
@@ -60,4 +60,55 @@ test "root new_task_scheduler convenience" {
 test "root new_aggregator convenience" {
   let agg = new_aggregator()
   inspect(agg.count(), content="0")
+}
+
+///|
+test "root new_signal convenience" {
+  let env = new_env(until=10.0)
+  let sig = new_signal(env)
+  inspect(sig.is_fired(), content="false")
+  sig.fire()
+  inspect(sig.is_fired(), content="true")
+}
+
+///|
+test "root new_semaphore convenience" {
+  let sem = new_semaphore(count=3)
+  inspect(sem.available(), content="3")
+}
+
+///|
+test "root new_barrier convenience" {
+  let bar = new_barrier(n=2)
+  inspect(bar.waiting_count(), content="0")
+}
+
+///|
+test "root new_container convenience" {
+  let tank = new_container(capacity=100.0)
+  inspect(tank.level(), content="0")
+  inspect(tank.capacity(), content="100")
+}
+
+///|
+test "root any_of convenience" {
+  let env = new_env(until=10.0)
+  let s1 = new_signal(env)
+  let s2 = new_signal(env)
+  let any = any_of(env, [s1, s2])
+  inspect(any.is_fired(), content="false")
+  s1.fire()
+  inspect(any.is_fired(), content="true")
+}
+
+///|
+test "root all_of convenience" {
+  let env = new_env(until=10.0)
+  let s1 = new_signal(env)
+  let s2 = new_signal(env)
+  let all = all_of(env, [s1, s2])
+  s1.fire()
+  inspect(all.is_fired(), content="false")
+  s2.fire()
+  inspect(all.is_fired(), content="true")
 }
