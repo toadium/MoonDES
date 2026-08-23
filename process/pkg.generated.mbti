@@ -17,10 +17,16 @@ pub(all) struct Process {
   name : String
   mut status : ProcessStatus
   behavior : (Process) -> ProcessAction
+  mut interrupted : Bool
+  completion_callbacks : Array[() -> Unit]
 }
 pub fn Process::id(Self) -> Int
+pub fn Process::interrupt(Self) -> Unit
 pub fn Process::is_alive(Self) -> Bool
+pub fn Process::is_interrupted(Self) -> Bool
 pub fn Process::name(Self) -> String
+pub fn Process::on_complete(Self, () -> Unit) -> Unit
+pub fn Process::status(Self) -> ProcessStatus
 
 pub(all) enum ProcessAction {
   Done

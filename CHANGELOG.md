@@ -8,6 +8,23 @@
 
 - 如有破坏性变更，经充分评估后发布
 
+## [1.8.0] - 2026-08-23
+
+### 进程增强与经典示例
+
+#### Added
+- `Process::interrupt()` — 中断挂起的进程，下次恢复时终止而非继续
+- `Process::is_interrupted()` — 查询中断状态
+- `Process::on_complete(callback)` — 注册完成回调（join 语义），进程终止时触发
+- `Process::status()` — 查询进程状态
+- 经典示例 `dining_philosophers`：5 位哲学家就餐（Semaphore）
+- 经典示例 `producer_consumer`：生产者-消费者（Store[T]）
+- 11 个新测试（interrupt/join/status）
+
+#### 验证
+
+- `moon test` 266/266 全通过，零警告
+
 ## [1.7.0] - 2026-08-23
 
 ### Store & PriorityStore — 完成 SimPy 等价同步原语全集

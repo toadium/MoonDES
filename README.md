@@ -1,9 +1,9 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-255%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-266%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。

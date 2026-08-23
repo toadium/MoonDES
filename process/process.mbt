@@ -52,11 +52,15 @@ pub type ProcessBehavior = (Process) -> ProcessAction
 /// 基于指令式协程调度。进程行为函数返回 `ProcessAction` 描述下一步行为，
 /// 引擎根据动作调度恢复事件，在事件触发时执行 `next` 续延。
 /// 不占用操作系统线程，支持上万并发进程。
+///
+/// 支持 `interrupt()` 中断挂起的进程，`on_complete()` 注册完成回调（join 语义）。
 pub(all) struct Process {
   id : @core.ProcessId
   name : String
   mut status : ProcessStatus
   behavior : ProcessBehavior
+  mut interrupted : Bool
+  completion_callbacks : Array[() -> Unit]
 }
 
 ///|
@@ -70,7 +74,14 @@ pub fn process(
   behavior~ : ProcessBehavior,
 ) -> Process {
   let id = env._alloc_process_id()
-  let p : Process = { id, name, status: Created, behavior }
+  let p : Process = {
+    id,
+    name,
+    status: Created,
+    behavior,
+    interrupted: false,
+    completion_callbacks: [],
+  }
   // 在 time=0 调度进程启动
   ignore(env.schedule(time=0.0, callback=fn() { p._start(env) }))
   p
@@ -91,25 +102,43 @@ fn Process::_run_action(
   action : ProcessAction,
 ) -> Unit {
   match action {
-    Done => self.status = Terminated
-    Terminate => self.status = Terminated
+    Done => self._terminate()
+    Terminate => self._terminate()
     Timeout(duration~, next~) => {
       self.status = Suspended
       ignore(
         env.schedule(time=env.now() + duration, callback=fn() {
-          self.status = Running
-          self._run_action(env, next())
+          if self.interrupted {
+            self._terminate()
+          } else {
+            self.status = Running
+            self._run_action(env, next())
+          }
         }),
       )
     }
     WaitEvent(event~, next~) => {
       self.status = Suspended
       event.add_callback(fn() {
-        self.status = Running
-        self._run_action(env, next())
+        if self.interrupted {
+          self._terminate()
+        } else {
+          self.status = Running
+          self._run_action(env, next())
+        }
       })
     }
   }
+}
+
+///|
+/// 内部：终止进程并触发完成回调
+fn Process::_terminate(self : Process) -> Unit {
+  self.status = Terminated
+  for cb in self.completion_callbacks {
+    cb()
+  }
+  self.completion_callbacks.clear()
 }
 
 ///|
@@ -128,4 +157,78 @@ pub fn Process::id(self : Process) -> @core.ProcessId {
 /// 获取进程名称
 pub fn Process::name(self : Process) -> String {
   self.name
+}
+
+///|
+/// 获取进程状态
+pub fn Process::status(self : Process) -> ProcessStatus {
+  self.status
+}
+
+///|
+/// 中断挂起的进程
+///
+/// 设置中断标志。进程下一次被调度恢复时，不再执行正常续延，
+/// 而是直接终止并触发完成回调。对已终止的进程调用无效果。
+///
+/// # Example
+/// ```mbt check
+/// test {
+///   let env = @core.new_env(until=20.0)
+///   let log : Array[String] = []
+///   let p = @process.process(env, name="worker", behavior=fn(_) {
+///     @process.Timeout(duration=10.0, next=fn() {
+///       log.push("resumed")
+///       @process.Done
+///     })
+///   })
+///   ignore(
+///     @process.process(env, name="interrupter", behavior=fn(_) {
+///       p.interrupt()
+///       log.push("interrupted")
+///       @process.Done
+///     }),
+///   )
+///   env.run()
+///   assert_eq(log[0], "interrupted")
+///   assert_false(p.is_alive())
+/// }
+/// ```
+pub fn Process::interrupt(self : Process) -> Unit {
+  if !(self.status is Terminated) {
+    self.interrupted = true
+  }
+}
+
+///|
+/// 进程是否被中断
+pub fn Process::is_interrupted(self : Process) -> Bool {
+  self.interrupted
+}
+
+///|
+/// 注册进程完成回调（join 语义）
+///
+/// 当进程执行完毕（Done/Terminate/中断）时调用 `callback`。
+/// 若进程已完成，立即调用。
+///
+/// # Example
+/// ```mbt check
+/// test {
+///   let env = @core.new_env(until=10.0)
+///   let log : Array[String] = []
+///   let p = @process.process(env, name="worker", behavior=fn(_) {
+///     @process.Timeout(duration=3.0, next=fn() { @process.Done })
+///   })
+///   p.on_complete(fn() { log.push("worker done") })
+///   env.run()
+///   assert_eq(log[0], "worker done")
+/// }
+/// ```
+pub fn Process::on_complete(self : Process, callback : () -> Unit) -> Unit {
+  if self.status is Terminated {
+    callback()
+  } else {
+    self.completion_callbacks.push(callback)
+  }
 }
