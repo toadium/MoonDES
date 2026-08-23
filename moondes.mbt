@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.0.0"
+  "2.1.0"
 }
 
 ///|
@@ -185,4 +185,30 @@ pub fn[T] new_store() -> @sync.Store[T] {
 /// 创建优先级物品仓库（便捷入口，转发至 sync 层）
 pub fn[T] new_priority_store() -> @sync.PriorityStore[T] {
   @sync.new_priority_store()
+}
+
+///|
+/// 创建单向延迟链路（便捷入口，转发至 network 层）
+pub fn new_link(
+  env : @core.SimulationEnv,
+  name~ : String,
+  delay~ : Double,
+) -> @network.Link {
+  @network.new_link(env, name~, delay~)
+}
+
+///|
+/// 创建双向通道（便捷入口，转发至 network 层）
+pub fn new_channel(
+  env : @core.SimulationEnv,
+  name~ : String,
+  delay~ : Double,
+) -> @network.Channel {
+  @network.new_channel(env, name~, delay~)
+}
+
+///|
+/// 创建路由器（便捷入口，转发至 network 层）
+pub fn new_router(name~ : String) -> @network.Router {
+  @network.new_router(name~)
 }

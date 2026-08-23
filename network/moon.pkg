@@ -1,0 +1,4 @@
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/sync",
+}

@@ -1,14 +1,14 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-276%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-297%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供十一层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供十二层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
@@ -24,6 +24,7 @@ MoonDES 提供十一层模块化架构的离散事件仿真能力，对标 Pytho
 - **分布式仿真**：多环境管理 `MultiEnv` / 任务调度 `TaskScheduler` / 结果聚合 `ResultAggregator`
 - **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container` / 物品仓库 `Store[T]` / 优先级仓库 `PriorityStore[T]`
 - **仿真分析与报告**：事件时间线 `EventTimeline` / 资源追踪 `ResourceTracker` / 综合报告 `SimulationReport`
+- **网络仿真**：数据包 `Packet` / 延迟链路 `Link` / 双向通道 `Channel` / 路由转发 `Router`
 - **性能基准**：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
@@ -57,6 +58,7 @@ moon run examples/resource_sharing       # 实验管理与插件
 moon run examples/benchmark              # 性能基准测试
 moon run examples/dining_philosophers    # 哲学家就餐（Semaphore）
 moon run examples/producer_consumer      # 生产者-消费者（Store[T]）
+moon run examples/network_simulation    # 3 节点网络仿真（Link/Router）
 ```
 
 ## 项目结构
@@ -74,6 +76,7 @@ MoonDES/
 ├── distributed/   # 层级9：分布式仿真（MultiEnv / TaskScheduler / ResultAggregator）
 ├── sync/          # 层级10：进程同步原语（SignalEvent / Semaphore / Barrier / Container / Store[T] / PriorityStore[T]）
 ├── analysis/      # 层级11：仿真分析与报告（EventTimeline / ResourceTracker / SimulationReport）
+├── network/       # 层级12：网络仿真（Packet / Link / Channel / Router）
 ├── bench/         # 性能基准测试套件
 ├── examples/      # 可执行示例
 │   ├── hello_des/
@@ -81,7 +84,8 @@ MoonDES/
 │   ├── resource_sharing/
 │   ├── benchmark/
 │   ├── dining_philosophers/
-│   └── producer_consumer/
+│   ├── producer_consumer/
+│   └── network_simulation/
 └── docs/          # 项目文档
 ```
 
@@ -107,6 +111,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_semaphore` / `new_barrier` / `new_container` | 同步原语 |
 | `new_store[T]()` / `new_priority_store[T]()` | 物品仓库 |
 | `new_timeline()` / `new_resource_tracker()` / `new_report()` | 分析与报告 |
+| `new_link` / `new_channel` / `new_router` | 网络仿真 |
 | `version()` | 引擎版本号 |
 
 ## SimPy 能力对照

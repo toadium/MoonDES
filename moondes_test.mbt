@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.0.0")
+  inspect(version(), content="2.1.0")
 }
 
 ///|
@@ -146,4 +146,17 @@ test "root new_priority_store convenience" {
   let store : @sync.PriorityStore[String] = new_priority_store()
   store.put("hi", priority=1)
   inspect(store.size(), content="1")
+}
+
+///|
+test "root new_link convenience" {
+  let env = @core.new_env(until=10.0)
+  let link = new_link(env, name="test", delay=1.0)
+  inspect(link.name(), content="test")
+}
+
+///|
+test "root new_router convenience" {
+  let r = new_router(name="R1")
+  inspect(r.name(), content="R1")
 }

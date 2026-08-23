@@ -1,0 +1,60 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/network"
+
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/sync",
+}
+
+// Values
+pub fn new_channel(@core.SimulationEnv, name~ : String, delay~ : Double) -> Channel
+
+pub fn new_link(@core.SimulationEnv, name~ : String, delay~ : Double) -> Link
+
+pub fn new_packet(source~ : String, dest~ : String, size? : Int, data? : String) -> Packet
+
+pub fn new_router(name~ : String) -> Router
+
+// Errors
+
+// Types and methods
+pub(all) struct Channel {
+  name : String
+  fwd : Link
+  bwd : Link
+}
+pub fn Channel::backward(Self) -> Link
+pub fn Channel::forward(Self) -> Link
+pub fn Channel::name(Self) -> String
+
+pub(all) struct Link {
+  name : String
+  delay : Double
+  env : @core.SimulationEnv
+  buffer : @sync.Store[Packet]
+}
+pub fn Link::name(Self) -> String
+pub fn Link::pending(Self) -> Int
+pub fn Link::receive(Self, (Packet) -> Unit) -> Unit
+pub fn Link::send(Self, Packet) -> Unit
+
+pub(all) struct Packet {
+  source : String
+  dest : String
+  size : Int
+  data : String
+}
+
+pub(all) struct Router {
+  name : String
+  routes : Map[String, Link]
+}
+pub fn Router::add_route(Self, dest~ : String, Link) -> Unit
+pub fn Router::has_route(Self, String) -> Bool
+pub fn Router::name(Self) -> String
+pub fn Router::route_count(Self) -> Int
+pub fn Router::send(Self, Packet) -> Bool
+
+// Type aliases
+
+// Traits

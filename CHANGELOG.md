@@ -4,6 +4,24 @@
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-08-24
+
+### 网络仿真层
+
+#### Added
+- 新增 `network` 包（层级12）：网络仿真能力
+  - `Packet`：数据包结构（source/dest/size/data）
+  - `Link`：单向延迟链路，用 `Store[Packet]` 做接收缓冲，`env.schedule` 实现传播延迟
+  - `Channel`：双向通道（两条单向链路）
+  - `Router`：路由表 next-hop 转发，无路由时丢包
+- 根包便捷入口 `new_link` / `new_channel` / `new_router`
+- 经典示例 `network_simulation`：3 节点网络，A → B → C 多跳路由
+- 19 个网络测试 + 2 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 297/297 全通过，零警告
+
 ## [2.0.0] - 2026-08-23
 
 ### API 稳定化与正式发布

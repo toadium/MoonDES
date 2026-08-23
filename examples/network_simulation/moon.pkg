@@ -1,0 +1,7 @@
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/process",
+  "walkzzz/moondes/network",
+}
+
+pkgtype(kind: "executable")
