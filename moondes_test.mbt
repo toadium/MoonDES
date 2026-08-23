@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="1.9.0")
+  inspect(version(), content="2.0.0")
 }
 
 ///|

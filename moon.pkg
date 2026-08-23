@@ -10,6 +10,5 @@ import {
   "walkzzz/moondes/distributed",
   "walkzzz/moondes/sync",
   "walkzzz/moondes/analysis",
-  "walkzzz/moondes/bench",
   "moonbitlang/core/random" @rand,
 }

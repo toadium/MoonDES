@@ -4,9 +4,35 @@
 
 ## [Unreleased]
 
-### 计划变更（v2.0.0 — API 演进）
+## [2.0.0] - 2026-08-23
 
-- 如有破坏性变更，经充分评估后发布
+### API 稳定化与正式发布
+
+MoonDES v2.0.0 是第一个稳定版本。经过 v0.3.0 → v2.0.0 共 9 个版本的迭代，
+引擎功能完备，API 接口稳定，测试覆盖充分。
+
+#### 里程碑
+
+- 十一层模块化架构：Core / Process / Resource / Experiment / Plugin / Random / Stats / Monitor / Distributed / Sync / Analysis
+- 276 个测试全部通过，零警告
+- SimPy 等价同步原语全集：SignalEvent / any_of / all_of / Semaphore / Barrier / Container / Store[T] / PriorityStore[T]
+- 进程增强：interrupt / on_complete (join) / status
+- 仿真分析与报告：EventTimeline / ResourceTracker / SimulationReport
+- 性能基准测试套件：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
+- 6 个可执行示例：hello_des / mm1_queue / resource_sharing / benchmark / dining_philosophers / producer_consumer
+- 跨后端支持：Native / WASI / WASM
+
+#### API 稳定性承诺
+
+自 v2.0.0 起，遵循语义化版本（SemVer）：
+- v2.x：向后兼容的新增功能
+- v3.0：仅在有充分理由的破坏性变更时发布
+
+#### 验证
+
+- `moon test` 276/276 全通过，零警告
+- `moon check --target all` 通过
+- `moon fmt` 格式一致
 
 ## [1.9.0] - 2026-08-23
 
