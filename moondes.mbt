@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "1.6.0"
+  "1.7.0"
 }
 
 ///|
@@ -173,4 +173,16 @@ pub fn new_resource_tracker() -> @analysis.ResourceTracker {
 /// 创建仿真报告生成器（便捷入口，转发至 analysis 层）
 pub fn new_report() -> @analysis.SimulationReport {
   @analysis.new_report()
+}
+
+///|
+/// 创建 FIFO 物品仓库（便捷入口，转发至 sync 层）
+pub fn[T] new_store() -> @sync.Store[T] {
+  @sync.new_store()
+}
+
+///|
+/// 创建优先级物品仓库（便捷入口，转发至 sync 层）
+pub fn[T] new_priority_store() -> @sync.PriorityStore[T] {
+  @sync.new_priority_store()
 }

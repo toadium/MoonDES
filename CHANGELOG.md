@@ -8,6 +8,31 @@
 
 - 如有破坏性变更，经充分评估后发布
 
+## [1.7.0] - 2026-08-23
+
+### Store & PriorityStore — 完成 SimPy 等价同步原语全集
+
+#### Added
+- 在 `sync` 包中新增 `Store[T]`：泛型 FIFO 物品仓库
+  - `put(item)` 投递物品，有等待消费者时直接投递
+  - `get(callback)` 取出物品，仓库空时阻塞等待
+  - `size()` / `is_empty()` / `consumer_count()` / `clear()`
+- 在 `sync` 包中新增 `PriorityStore[T]`：泛型优先级物品仓库
+  - `put(item, priority)` 按优先级排序存储（数值越小越先取出）
+  - `get(callback)` 取出最高优先级物品
+  - `PriorityItem[T]` 数据结构
+  - `size()` / `is_empty()` / `consumer_count()` / `clear()`
+- 根包新增便捷入口 `new_store[T]()` / `new_priority_store[T]()`
+- 19 个新测试（sync 包）+ 2 个根包便捷入口测试
+- 完成 SimPy 等价同步原语全集：SignalEvent / any_of / all_of / Semaphore / Barrier / Container / Store / PriorityStore
+
+#### 验证
+
+- `moon test --target wasm` 255/255 全通过
+- `moon check` 零警告
+- `moon fmt` 格式一致
+- `moon info` API 接口已更新
+
 ## [1.6.0] - 2026-08-23
 
 ### 仿真分析与报告

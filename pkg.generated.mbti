@@ -40,6 +40,8 @@ pub fn new_multi_env() -> @distributed.MultiEnv
 
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
+pub fn[T] new_priority_store() -> @sync.PriorityStore[T]
+
 pub fn new_report() -> @analysis.SimulationReport
 
 pub fn new_resource_tracker() -> @analysis.ResourceTracker
@@ -49,6 +51,8 @@ pub fn new_rng() -> @random.Rand
 pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
 
 pub fn new_signal(@core.SimulationEnv) -> @sync.SignalEvent
+
+pub fn[T] new_store() -> @sync.Store[T]
 
 pub fn new_task_scheduler() -> @distributed.TaskScheduler
 

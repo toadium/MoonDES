@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="1.6.0")
+  inspect(version(), content="1.7.0")
 }
 
 ///|
@@ -132,4 +132,18 @@ test "root new_report convenience" {
   let report = new_report()
   let text = report.generate_text(env)
   assert_true(text.length() > 0)
+}
+
+///|
+test "root new_store convenience" {
+  let store : @sync.Store[Int] = new_store()
+  store.put(42)
+  inspect(store.size(), content="1")
+}
+
+///|
+test "root new_priority_store convenience" {
+  let store : @sync.PriorityStore[String] = new_priority_store()
+  store.put("hi", priority=1)
+  inspect(store.size(), content="1")
 }

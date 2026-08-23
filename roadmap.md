@@ -1,7 +1,7 @@
 # MoonDES 迭代路线图 (Roadmap)
 
 > **项目**：MoonDES — 通用离散事件仿真引擎
-> **当前版本**：v1.6.0 (仿真分析与报告完成)
+> **当前版本**：v1.7.0 (Store & PriorityStore 完成)
 > **最后更新**：2026-08-23
 > **对齐里程碑**：需求.md M1–M8（总周期 13 个月）
 
@@ -337,6 +337,7 @@ v0.1.0          ──► v0.2.0  ──► v0.3.0  ──► v0.4.0  ──► 
 | v1.4.0 | 分布式仿真 | 多环境并行、任务队列调度 | ✅ 已完成 |
 | v1.5.0 | 进程同步原语 | 信号事件、条件组合、信号量、屏障、容器 | ✅ 已完成 |
 | v1.6.0 | 仿真分析与报告 | 事件时间线、资源追踪、综合报告 | ✅ 已完成 |
+| v1.7.0 | Store & PriorityStore | FIFO 物品仓库、优先级仓库 | ✅ 已完成 |
 | v2.0.0 | API 演进 | 如有破坏性变更，经充分评估后发布 | ⬜ |
 
 ---
@@ -398,3 +399,4 @@ v0.1.0          ──► v0.2.0  ──► v0.3.0  ──► v0.4.0  ──► 
 | 2026-08-22 | roadmap v1.5 | v1.4.0 完成：distributed 包（MultiEnv/TaskScheduler/ResultAggregator），测试 138→163，修复版本/文档不一致 |
 | 2026-08-23 | roadmap v1.6 | v1.5.0 完成：sync 包（SignalEvent/any_of/all_of/Semaphore/Barrier/Container），测试 163→202 |
 | 2026-08-23 | roadmap v1.7 | v1.6.0 完成：analysis 包（EventTimeline/ResourceTracker/SimulationReport），测试 202→234 |
+| 2026-08-23 | roadmap v1.8 | v1.7.0 完成：Store[T]/PriorityStore[T] 泛型仓库，测试 234→255 |

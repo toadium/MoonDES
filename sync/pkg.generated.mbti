@@ -2,6 +2,7 @@
 package "walkzzz/moondes/sync"
 
 import {
+  "moonbitlang/core/debug",
   "walkzzz/moondes/core",
 }
 
@@ -16,9 +17,13 @@ pub fn new_container(capacity~ : Double) -> Container
 
 pub fn new_container_with(capacity~ : Double, initial~ : Double) -> Container
 
+pub fn[T] new_priority_store() -> PriorityStore[T]
+
 pub fn new_semaphore(count~ : Int) -> Semaphore
 
 pub fn new_signal(@core.SimulationEnv) -> SignalEvent
+
+pub fn[T] new_store() -> Store[T]
 
 // Errors
 
@@ -52,6 +57,22 @@ pub(all) struct ContainerWaiter {
   callback : () -> Unit
 }
 
+pub(all) struct PriorityItem[T] {
+  item : T
+  priority : Int
+} derive(@debug.Debug)
+
+pub(all) struct PriorityStore[T] {
+  items : Array[PriorityItem[T]]
+  consumers : Array[(T) -> Unit]
+}
+pub fn[T] PriorityStore::clear(Self[T]) -> Unit
+pub fn[T] PriorityStore::consumer_count(Self[T]) -> Int
+pub fn[T] PriorityStore::get(Self[T], (T) -> Unit) -> Unit
+pub fn[T] PriorityStore::is_empty(Self[T]) -> Bool
+pub fn[T] PriorityStore::put(Self[T], T, priority~ : Int) -> Unit
+pub fn[T] PriorityStore::size(Self[T]) -> Int
+
 pub(all) struct Semaphore {
   mut count : Int
   waiters : Array[() -> Unit]
@@ -69,6 +90,17 @@ pub fn SignalEvent::as_event(Self) -> @core.Event
 pub fn SignalEvent::fire(Self) -> Unit
 pub fn SignalEvent::is_fired(Self) -> Bool
 pub fn SignalEvent::wait(Self, () -> Unit) -> Unit
+
+pub(all) struct Store[T] {
+  items : Array[T]
+  consumers : Array[(T) -> Unit]
+}
+pub fn[T] Store::clear(Self[T]) -> Unit
+pub fn[T] Store::consumer_count(Self[T]) -> Int
+pub fn[T] Store::get(Self[T], (T) -> Unit) -> Unit
+pub fn[T] Store::is_empty(Self[T]) -> Bool
+pub fn[T] Store::put(Self[T], T) -> Unit
+pub fn[T] Store::size(Self[T]) -> Int
 
 // Type aliases
 

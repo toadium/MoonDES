@@ -1,9 +1,9 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-234%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-255%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
@@ -22,7 +22,7 @@ MoonDES 提供十一层模块化架构的离散事件仿真能力，对标 Pytho
 - **统计聚合**：均值 / 方差 / 标准差 / 直方图 / 协方差 / 相关系数
 - **监控可观测**：分级日志 `SimLogger` / 指标采集 `MetricsCollector` / Chrome Trace 导出 `TraceExporter`
 - **分布式仿真**：多环境管理 `MultiEnv` / 任务调度 `TaskScheduler` / 结果聚合 `ResultAggregator`
-- **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container`
+- **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container` / 物品仓库 `Store[T]` / 优先级仓库 `PriorityStore[T]`
 - **仿真分析与报告**：事件时间线 `EventTimeline` / 资源追踪 `ResourceTracker` / 综合报告 `SimulationReport`
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
@@ -44,7 +44,7 @@ moon add walkzzz/moondes
 ```mbt check
 ///|
 test {
-  inspect(version(), content="1.6.0")
+  inspect(version(), content="1.7.0")
 }
 ```
 
@@ -124,6 +124,8 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_container()` | 创建连续资源容器 |
 | `any_of()` | 条件组合：等待任意信号 |
 | `all_of()` | 条件组合：等待全部信号 |
+| `new_store[T]()` | 创建 FIFO 物品仓库 |
+| `new_priority_store[T]()` | 创建优先级物品仓库 |
 | `new_timeline()` | 创建事件时间线 |
 | `new_resource_tracker()` | 创建资源追踪器 |
 | `new_report()` | 创建仿真报告生成器 |
