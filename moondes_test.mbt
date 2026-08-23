@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="1.5.0")
+  inspect(version(), content="1.6.0")
 }
 
 ///|
@@ -111,4 +111,25 @@ test "root all_of convenience" {
   inspect(all.is_fired(), content="false")
   s2.fire()
   inspect(all.is_fired(), content="true")
+}
+
+///|
+test "root new_timeline convenience" {
+  let tl = new_timeline()
+  inspect(tl.length(), content="0")
+}
+
+///|
+test "root new_resource_tracker convenience" {
+  let tracker = new_resource_tracker()
+  inspect(tracker.entry_count(), content="0")
+}
+
+///|
+test "root new_report convenience" {
+  let env = new_env(until=10.0)
+  env.run()
+  let report = new_report()
+  let text = report.generate_text(env)
+  assert_true(text.length() > 0)
 }

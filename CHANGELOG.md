@@ -8,6 +8,27 @@
 
 - 如有破坏性变更，经充分评估后发布
 
+## [1.6.0] - 2026-08-23
+
+### 仿真分析与报告
+
+#### Added
+- 新增 `analysis` 包：仿真结果分析与报告生成
+  - `EventTimeline`：结构化事件时间线，支持 `record`/`filter_by_category`/`filter_by_time_range`/`filter_by_name`/`export_json`/`export_text`/`as_plugin`
+  - `ResourceTracker`：资源分配追踪器，`on_acquire`/`on_release` 生成甘特图数据，`utilization`/`avg_utilization` 利用率计算，`export_json`/`export_text` 导出
+  - `SimulationReport`：综合报告生成器，整合环境统计 + 时间线 + 资源数据，`generate_text` 文本报告 + `generate_json` JSON 报告
+  - `TimelineEntry`/`GanttEntry`：数据结构
+- 根包新增便捷入口 `new_timeline` / `new_resource_tracker` / `new_report`
+- 29 个新测试（analysis 包）+ 3 个根包便捷入口测试
+- 更新架构描述从"十层"到"十一层"（新增 analysis）
+
+#### 验证
+
+- `moon test --target wasm` 234/234 全通过
+- `moon check` 零警告
+- `moon fmt` 格式一致
+- `moon info` API 接口已更新
+
 ## [1.5.0] - 2026-08-23
 
 ### 进程同步原语

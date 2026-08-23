@@ -3,6 +3,7 @@ package "walkzzz/moondes"
 
 import {
   "moonbitlang/core/random",
+  "walkzzz/moondes/analysis",
   "walkzzz/moondes/core",
   "walkzzz/moondes/distributed",
   "walkzzz/moondes/experiment",
@@ -39,6 +40,10 @@ pub fn new_multi_env() -> @distributed.MultiEnv
 
 pub fn new_plugin_manager() -> @plugin.PluginManager
 
+pub fn new_report() -> @analysis.SimulationReport
+
+pub fn new_resource_tracker() -> @analysis.ResourceTracker
+
 pub fn new_rng() -> @random.Rand
 
 pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
@@ -46,6 +51,8 @@ pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
 pub fn new_signal(@core.SimulationEnv) -> @sync.SignalEvent
 
 pub fn new_task_scheduler() -> @distributed.TaskScheduler
+
+pub fn new_timeline() -> @analysis.EventTimeline
 
 pub fn new_tracer() -> @monitor.TraceExporter
 

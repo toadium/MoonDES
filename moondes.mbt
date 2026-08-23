@@ -1,7 +1,7 @@
 ///|
 /// MoonDES 通用离散事件仿真引擎
 ///
-/// 基于 MoonBit 构建的通用离散事件仿真底座，提供十层模块化架构：
+/// 基于 MoonBit 构建的通用离散事件仿真底座，提供十一层模块化架构：
 /// - Core 仿真内核层：事件队列、仿真环境、主循环
 /// - Process 协程进程调度层：进程创建、延时、等待
 /// - Resource 资源管理层：独占/容量/抢占三类资源
@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "1.5.0"
+  "1.6.0"
 }
 
 ///|
@@ -155,4 +155,22 @@ pub fn all_of(
   signals : Array[@sync.SignalEvent],
 ) -> @sync.SignalEvent {
   @sync.all_of(env, signals)
+}
+
+///|
+/// 创建事件时间线（便捷入口，转发至 analysis 层）
+pub fn new_timeline() -> @analysis.EventTimeline {
+  @analysis.new_timeline()
+}
+
+///|
+/// 创建资源追踪器（便捷入口，转发至 analysis 层）
+pub fn new_resource_tracker() -> @analysis.ResourceTracker {
+  @analysis.new_resource_tracker()
+}
+
+///|
+/// 创建仿真报告生成器（便捷入口，转发至 analysis 层）
+pub fn new_report() -> @analysis.SimulationReport {
+  @analysis.new_report()
 }

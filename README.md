@@ -1,14 +1,14 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-202%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-234%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供十层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供十一层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
@@ -23,6 +23,7 @@ MoonDES 提供十层模块化架构的离散事件仿真能力，对标 Python S
 - **监控可观测**：分级日志 `SimLogger` / 指标采集 `MetricsCollector` / Chrome Trace 导出 `TraceExporter`
 - **分布式仿真**：多环境管理 `MultiEnv` / 任务调度 `TaskScheduler` / 结果聚合 `ResultAggregator`
 - **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container`
+- **仿真分析与报告**：事件时间线 `EventTimeline` / 资源追踪 `ResourceTracker` / 综合报告 `SimulationReport`
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
 
@@ -69,6 +70,7 @@ MoonDES/
 ├── monitor/       # 层级8：监控可观测（SimLogger / MetricsCollector / TraceExporter）
 ├── distributed/   # 层级9：分布式仿真（MultiEnv / TaskScheduler / ResultAggregator）
 ├── sync/          # 层级10：进程同步原语（SignalEvent / Semaphore / Barrier / Container）
+├── analysis/      # 层级11：仿真分析与报告（EventTimeline / ResourceTracker / SimulationReport）
 ├── examples/      # 可执行示例
 │   ├── hello_des/
 │   ├── mm1_queue/
@@ -80,7 +82,7 @@ MoonDES/
 ### 依赖层级
 
 ```
-core (无依赖) ← process / resource / experiment / plugin / random / stats / monitor / distributed / sync
+core (无依赖) ← process / resource / experiment / plugin / random / stats / monitor / distributed / sync / analysis
 ```
 
 所有上层包仅依赖 `core`，无循环依赖。
@@ -108,6 +110,9 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_container()` | 创建连续资源容器 |
 | `any_of()` | 条件组合：等待任意信号 |
 | `all_of()` | 条件组合：等待全部信号 |
+| `new_timeline()` | 创建事件时间线 |
+| `new_resource_tracker()` | 创建资源追踪器 |
+| `new_report()` | 创建仿真报告生成器 |
 | `version()` | 引擎版本号 |
 
 ## 测试

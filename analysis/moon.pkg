@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/plugin",
+  "moonbitlang/core/json",
+}

@@ -1,0 +1,77 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/analysis"
+
+import {
+  "moonbitlang/core/debug",
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/plugin",
+}
+
+// Values
+pub fn new_report() -> SimulationReport
+
+pub fn new_report_with(timeline~ : EventTimeline, tracker~ : ResourceTracker) -> SimulationReport
+
+pub fn new_resource_tracker() -> ResourceTracker
+
+pub fn new_timeline() -> EventTimeline
+
+// Errors
+
+// Types and methods
+pub(all) struct EventTimeline {
+  entries : Array[TimelineEntry]
+}
+pub fn EventTimeline::as_plugin(Self) -> @plugin.PluginCallbacks
+pub fn EventTimeline::clear(Self) -> Unit
+pub fn EventTimeline::entries(Self) -> Array[TimelineEntry]
+pub fn EventTimeline::export_json(Self) -> String
+pub fn EventTimeline::export_text(Self) -> String
+pub fn EventTimeline::filter_by_category(Self, String) -> Array[TimelineEntry]
+pub fn EventTimeline::filter_by_name(Self, String) -> Array[TimelineEntry]
+pub fn EventTimeline::filter_by_time_range(Self, Double, Double) -> Array[TimelineEntry]
+pub fn EventTimeline::length(Self) -> Int
+pub fn EventTimeline::record(Self, Double, String, String, detail? : String) -> Unit
+
+pub(all) struct GanttEntry {
+  resource : String
+  process : String
+  start : Double
+  end : Double
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ResourceTracker {
+  entries : Array[GanttEntry]
+  pending : Map[String, (String, Double)]
+}
+pub fn ResourceTracker::avg_utilization(Self, Double) -> Double
+pub fn ResourceTracker::clear(Self) -> Unit
+pub fn ResourceTracker::entries(Self) -> Array[GanttEntry]
+pub fn ResourceTracker::entries_for(Self, String) -> Array[GanttEntry]
+pub fn ResourceTracker::entry_count(Self) -> Int
+pub fn ResourceTracker::export_json(Self) -> String
+pub fn ResourceTracker::export_text(Self) -> String
+pub fn ResourceTracker::on_acquire(Self, String, String, Double) -> Unit
+pub fn ResourceTracker::on_release(Self, String, Double) -> Unit
+pub fn ResourceTracker::pending_count(Self) -> Int
+pub fn ResourceTracker::utilization(Self, String, Double) -> Double
+
+pub(all) struct SimulationReport {
+  timeline : EventTimeline
+  tracker : ResourceTracker
+}
+pub fn SimulationReport::generate_json(Self, @core.SimulationEnv) -> String
+pub fn SimulationReport::generate_text(Self, @core.SimulationEnv) -> String
+pub fn SimulationReport::timeline(Self) -> EventTimeline
+pub fn SimulationReport::tracker(Self) -> ResourceTracker
+
+pub(all) struct TimelineEntry {
+  time : Double
+  category : String
+  name : String
+  detail : String
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
