@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.1.0"
+  "2.2.0"
 }
 
 ///|
@@ -211,4 +211,10 @@ pub fn new_channel(
 /// 创建路由器（便捷入口，转发至 network 层）
 pub fn new_router(name~ : String) -> @network.Router {
   @network.new_router(name~)
+}
+
+///|
+/// 创建过滤物品仓库（便捷入口，转发至 sync 层）
+pub fn[T] new_filter_store() -> @sync.FilterStore[T] {
+  @sync.new_filter_store()
 }

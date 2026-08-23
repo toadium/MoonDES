@@ -8,6 +8,7 @@ import {
   "walkzzz/moondes/distributed",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/monitor",
+  "walkzzz/moondes/network",
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
@@ -24,6 +25,8 @@ pub fn new_aggregator() -> @distributed.ResultAggregator
 
 pub fn new_barrier(n~ : Int) -> @sync.Barrier
 
+pub fn new_channel(@core.SimulationEnv, name~ : String, delay~ : Double) -> @network.Channel
+
 pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
 
 pub fn new_container(capacity~ : Double) -> @sync.Container
@@ -31,6 +34,8 @@ pub fn new_container(capacity~ : Double) -> @sync.Container
 pub fn new_env(until~ : Double) -> @core.SimulationEnv
 
 pub fn new_exclusive(name~ : String) -> @resource.Resource
+
+pub fn new_link(@core.SimulationEnv, name~ : String, delay~ : Double) -> @network.Link
 
 pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger
 
@@ -47,6 +52,8 @@ pub fn new_report() -> @analysis.SimulationReport
 pub fn new_resource_tracker() -> @analysis.ResourceTracker
 
 pub fn new_rng() -> @random.Rand
+
+pub fn new_router(name~ : String) -> @network.Router
 
 pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
 

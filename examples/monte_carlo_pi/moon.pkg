@@ -1,0 +1,6 @@
+import {
+  "walkzzz/moondes/random",
+  "walkzzz/moondes/stats",
+}
+
+pkgtype(kind: "executable")

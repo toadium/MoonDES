@@ -17,6 +17,8 @@ pub fn new_container(capacity~ : Double) -> Container
 
 pub fn new_container_with(capacity~ : Double, initial~ : Double) -> Container
 
+pub fn[T] new_filter_store() -> FilterStore[T]
+
 pub fn[T] new_priority_store() -> PriorityStore[T]
 
 pub fn new_semaphore(count~ : Int) -> Semaphore
@@ -56,6 +58,19 @@ pub(all) struct ContainerWaiter {
   amount : Double
   callback : () -> Unit
 }
+
+type FilterConsumer[T]
+
+pub(all) struct FilterStore[T] {
+  items : Array[T]
+  consumers : Array[FilterConsumer[T]]
+}
+pub fn[T] FilterStore::clear(Self[T]) -> Unit
+pub fn[T] FilterStore::consumer_count(Self[T]) -> Int
+pub fn[T] FilterStore::get(Self[T], (T) -> Bool, (T) -> Unit) -> Unit
+pub fn[T] FilterStore::is_empty(Self[T]) -> Bool
+pub fn[T] FilterStore::put(Self[T], T) -> Unit
+pub fn[T] FilterStore::size(Self[T]) -> Int
 
 pub(all) struct PriorityItem[T] {
   item : T

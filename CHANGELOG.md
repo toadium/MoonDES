@@ -4,6 +4,32 @@
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-08-24
+
+### FilterStore 与高级示例
+
+#### Added
+- `FilterStore[T]`：过滤物品仓库，消费者通过谓词声明只接收满足条件的物品
+  - `put(item)` — 检查等待消费者队列，匹配则直接投递，否则入库
+  - `get(filter, callback)` — 检查库存匹配项，找到则取出，否则加入等待队列
+  - `size()` / `is_empty()` / `consumer_count()` / `clear()`
+- 根包便捷入口 `new_filter_store()`
+- 经典示例 `monte_carlo_pi`：Monte Carlo 估算 PI（Random + Stats）
+- 经典示例 `mmc_queue`：M/M/c 多服务台排队系统（Resource + Random + Stats）
+- 12 个 FilterStore 测试 + 1 个根包便捷入口测试
+
+#### SimPy store 家族完成
+
+| SimPy | MoonDES |
+|---|---|
+| `Store` | `Store[T]` ✅ |
+| `PriorityStore` | `PriorityStore[T]` ✅ |
+| `FilterStore` | `FilterStore[T]` ✅ |
+
+#### 验证
+
+- `moon test` 310/310 全通过，零警告
+
 ## [2.1.0] - 2026-08-24
 
 ### 网络仿真层

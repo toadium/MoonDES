@@ -1,9 +1,9 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-297%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-311%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
@@ -22,7 +22,7 @@ MoonDES 提供十二层模块化架构的离散事件仿真能力，对标 Pytho
 - **统计聚合**：均值 / 方差 / 标准差 / 直方图 / 协方差 / 相关系数
 - **监控可观测**：分级日志 `SimLogger` / 指标采集 `MetricsCollector` / Chrome Trace 导出 `TraceExporter`
 - **分布式仿真**：多环境管理 `MultiEnv` / 任务调度 `TaskScheduler` / 结果聚合 `ResultAggregator`
-- **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container` / 物品仓库 `Store[T]` / 优先级仓库 `PriorityStore[T]`
+- **进程同步原语**：信号事件 `SignalEvent` / 条件组合 `any_of`/`all_of` / 信号量 `Semaphore` / 屏障 `Barrier` / 连续容器 `Container` / 物品仓库 `Store[T]` / 优先级仓库 `PriorityStore[T]` / 过滤仓库 `FilterStore[T]`
 - **仿真分析与报告**：事件时间线 `EventTimeline` / 资源追踪 `ResourceTracker` / 综合报告 `SimulationReport`
 - **网络仿真**：数据包 `Packet` / 延迟链路 `Link` / 双向通道 `Channel` / 路由转发 `Router`
 - **性能基准**：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
@@ -59,6 +59,8 @@ moon run examples/benchmark              # 性能基准测试
 moon run examples/dining_philosophers    # 哲学家就餐（Semaphore）
 moon run examples/producer_consumer      # 生产者-消费者（Store[T]）
 moon run examples/network_simulation    # 3 节点网络仿真（Link/Router）
+moon run examples/monte_carlo_pi        # Monte Carlo 估算 PI（Random+Stats）
+moon run examples/mmc_queue             # M/M/c 多服务台队列（Resource+Random+Stats）
 ```
 
 ## 项目结构
@@ -85,7 +87,9 @@ MoonDES/
 │   ├── benchmark/
 │   ├── dining_philosophers/
 │   ├── producer_consumer/
-│   └── network_simulation/
+│   ├── network_simulation/
+│   ├── monte_carlo_pi/
+│   └── mmc_queue/
 └── docs/          # 项目文档
 ```
 
@@ -109,7 +113,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_exclusive` / `new_capacity` / `new_preemptive` | 创建资源 |
 | `new_signal` / `any_of` / `all_of` | 信号事件与条件组合 |
 | `new_semaphore` / `new_barrier` / `new_container` | 同步原语 |
-| `new_store[T]()` / `new_priority_store[T]()` | 物品仓库 |
+| `new_store[T]()` / `new_priority_store[T]()` / `new_filter_store[T]()` | 物品仓库 |
 | `new_timeline()` / `new_resource_tracker()` / `new_report()` | 分析与报告 |
 | `new_link` / `new_channel` / `new_router` | 网络仿真 |
 | `version()` | 引擎版本号 |
@@ -125,6 +129,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `Container` | `Container` | ✅ |
 | `Store` | `Store[T]` | ✅ |
 | `PriorityStore` | `PriorityStore[T]` | ✅ |
+| `FilterStore` | `FilterStore[T]` | ✅ |
 | `Event` | `SignalEvent` | ✅ |
 | `AnyOf` / `AllOf` | `any_of` / `all_of` | ✅ |
 | `Semaphore` | `Semaphore` | ✅ |
@@ -134,7 +139,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 
 ```bash
 moon check          # 类型检查
-moon test           # 运行测试（276 个）
+moon test           # 运行测试（310 个）
 moon fmt            # 格式化
 moon info           # 更新接口文件
 ```

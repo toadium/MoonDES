@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.1.0")
+  inspect(version(), content="2.2.0")
 }
 
 ///|
@@ -159,4 +159,13 @@ test "root new_link convenience" {
 test "root new_router convenience" {
   let r = new_router(name="R1")
   inspect(r.name(), content="R1")
+}
+
+///|
+test "root new_filter_store convenience" {
+  let store : @sync.FilterStore[Int] = new_filter_store()
+  store.put(42)
+  let log : Array[Int] = []
+  store.get(fn(_x) { true }, fn(item) { log.push(item) })
+  assert_eq(log[0], 42)
 }
