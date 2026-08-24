@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/eventbus"
+
+// Values
+pub fn new_event_bus() -> EventBus
+
+// Errors
+
+// Types and methods
+pub(all) struct EventBus {
+  subscribers : Map[String, Array[Subscriber]]
+  mut next_id : Int
+}
+pub fn EventBus::clear(Self, String) -> Unit
+pub fn EventBus::publish(Self, String, String) -> Int
+pub fn EventBus::subscribe(Self, String, (String) -> Unit) -> Int
+pub fn EventBus::subscriber_count(Self, String) -> Int
+pub fn EventBus::topics(Self) -> Array[String]
+pub fn EventBus::total_subscribers(Self) -> Int
+pub fn EventBus::unsubscribe(Self, String, Int) -> Bool
+
+type Subscriber
+
+// Type aliases
+
+// Traits

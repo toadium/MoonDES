@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.3.0"
+  "2.4.0"
 }
 
 ///|
@@ -226,4 +226,10 @@ pub fn new_state_machine(
   transitions~ : Array[@fsm.Transition],
 ) -> @fsm.StateMachine {
   @fsm.new_state_machine(initial~, transitions~)
+}
+
+///|
+/// 创建事件总线（便捷入口，转发至 eventbus 层）
+pub fn new_event_bus() -> @eventbus.EventBus {
+  @eventbus.new_event_bus()
 }

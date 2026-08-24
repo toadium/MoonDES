@@ -4,6 +4,25 @@
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-08-24
+
+### 事件总线层
+
+#### Added
+- 新增 `eventbus` 包（层级14）：发布订阅模式
+  - `EventBus`：事件总线（subscribe/publish/unsubscribe）
+  - `subscribe(topic, callback)` — 订阅主题，返回唯一 ID
+  - `publish(topic, data)` — 发布消息，返回通知数量
+  - `unsubscribe(topic, id)` — 取消订阅
+  - `subscriber_count` / `topics` / `total_subscribers` / `clear`
+- 根包便捷入口 `new_event_bus`
+- 经典示例 `sensor_network`：3 传感器 + 监控中心 + 告警系统
+- 13 个 EventBus 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 339/339 全通过，零警告
+
 ## [2.3.0] - 2026-08-24
 
 ### 有限状态机层

@@ -7,6 +7,7 @@ import {
   "walkzzz/moondes/core",
   "walkzzz/moondes/distributed",
   "walkzzz/moondes/experiment",
+  "walkzzz/moondes/fsm",
   "walkzzz/moondes/monitor",
   "walkzzz/moondes/network",
   "walkzzz/moondes/plugin",
@@ -60,6 +61,8 @@ pub fn new_router(name~ : String) -> @network.Router
 pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
 
 pub fn new_signal(@core.SimulationEnv) -> @sync.SignalEvent
+
+pub fn new_state_machine(initial~ : String, transitions~ : Array[@fsm.Transition]) -> @fsm.StateMachine
 
 pub fn[T] new_store() -> @sync.Store[T]
 

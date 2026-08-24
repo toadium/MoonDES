@@ -1,14 +1,14 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-326%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-340%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供十三层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供十四层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
@@ -26,6 +26,7 @@ MoonDES 提供十三层模块化架构的离散事件仿真能力，对标 Pytho
 - **仿真分析与报告**：事件时间线 `EventTimeline` / 资源追踪 `ResourceTracker` / 综合报告 `SimulationReport`
 - **网络仿真**：数据包 `Packet` / 延迟链路 `Link` / 双向通道 `Channel` / 路由转发 `Router`
 - **有限状态机**：状态 `State` / 转换 `Transition` / 状态机 `StateMachine`（on_enter/on_exit 回调、guard 条件、历史轨迹）
+- **事件总线**：发布订阅 `EventBus`（subscribe/publish/unsubscribe，topic 隔离，解耦通信）
 - **性能基准**：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
@@ -63,6 +64,7 @@ moon run examples/network_simulation    # 3 节点网络仿真（Link/Router）
 moon run examples/monte_carlo_pi        # Monte Carlo 估算 PI（Random+Stats）
 moon run examples/mmc_queue             # M/M/c 多服务台队列（Resource+Random+Stats）
 moon run examples/factory_machine       # 工厂设备状态机（FSM+Process+Random）
+moon run examples/sensor_network       # 传感器网络（EventBus+Process+Random）
 ```
 
 ## 项目结构
@@ -82,6 +84,7 @@ MoonDES/
 ├── analysis/      # 层级11：仿真分析与报告（EventTimeline / ResourceTracker / SimulationReport）
 ├── network/       # 层级12：网络仿真（Packet / Link / Channel / Router）
 ├── fsm/           # 层级13：有限状态机（State / Transition / StateMachine）
+├── eventbus/      # 层级14：事件总线（EventBus 发布订阅）
 ├── bench/         # 性能基准测试套件
 ├── examples/      # 可执行示例
 │   ├── hello_des/
@@ -93,7 +96,8 @@ MoonDES/
 │   ├── network_simulation/
 │   ├── monte_carlo_pi/
 │   ├── mmc_queue/
-│   └── factory_machine/
+│   ├── factory_machine/
+│   └── sensor_network/
 └── docs/          # 项目文档
 ```
 
@@ -121,6 +125,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_timeline()` / `new_resource_tracker()` / `new_report()` | 分析与报告 |
 | `new_link` / `new_channel` / `new_router` | 网络仿真 |
 | `new_state_machine` / `transition` / `StateMachine::fire` | 有限状态机 |
+| `new_event_bus` / `EventBus::subscribe` / `EventBus::publish` | 事件总线 |
 | `version()` | 引擎版本号 |
 
 ## SimPy 能力对照
@@ -144,7 +149,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 
 ```bash
 moon check          # 类型检查
-moon test           # 运行测试（325 个）
+moon test           # 运行测试（339 个）
 moon fmt            # 格式化
 moon info           # 更新接口文件
 ```
