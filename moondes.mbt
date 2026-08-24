@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.2.0"
+  "2.3.0"
 }
 
 ///|
@@ -217,4 +217,13 @@ pub fn new_router(name~ : String) -> @network.Router {
 /// 创建过滤物品仓库（便捷入口，转发至 sync 层）
 pub fn[T] new_filter_store() -> @sync.FilterStore[T] {
   @sync.new_filter_store()
+}
+
+///|
+/// 创建有限状态机（便捷入口，转发至 fsm 层）
+pub fn new_state_machine(
+  initial~ : @fsm.State,
+  transitions~ : Array[@fsm.Transition],
+) -> @fsm.StateMachine {
+  @fsm.new_state_machine(initial~, transitions~)
 }

@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.2.0")
+  inspect(version(), content="2.3.0")
 }
 
 ///|
@@ -168,4 +168,16 @@ test "root new_filter_store convenience" {
   let log : Array[Int] = []
   store.get(fn(_x) { true }, fn(item) { log.push(item) })
   assert_eq(log[0], 42)
+}
+
+///|
+test "root new_state_machine convenience" {
+  let sm = new_state_machine(
+    initial="A",
+    transitions=[@fsm.transition(from="A", to="B", on="go")],
+  )
+  inspect(sm.current(), content="A")
+  let ok = sm.fire("go")
+  assert_true(ok)
+  inspect(sm.current(), content="B")
 }

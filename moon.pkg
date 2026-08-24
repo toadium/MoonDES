@@ -11,5 +11,6 @@ import {
   "walkzzz/moondes/sync",
   "walkzzz/moondes/analysis",
   "walkzzz/moondes/network",
+  "walkzzz/moondes/fsm",
   "moonbitlang/core/random" @rand,
 }

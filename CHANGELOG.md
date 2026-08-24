@@ -4,6 +4,25 @@
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-08-24
+
+### 有限状态机层
+
+#### Added
+- 新增 `fsm` 包（层级13）：有限状态机
+  - `State` / `Event`：状态和事件标识（String 类型别名）
+  - `Transition`：转换规则（from→to on event + guard 条件）
+  - `StateMachine`：状态机（on_enter/on_exit 回调、guard 条件、历史轨迹）
+  - `fire(event)` — 触发事件，执行状态转换
+  - `can_fire` / `available_events` / `is_in` / `history` / `reset`
+- 根包便捷入口 `new_state_machine`
+- 经典示例 `factory_machine`：工厂设备 FSM（Idle→Working→Broken→Repairing→Idle）
+- 14 个 FSM 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 325/325 全通过，零警告
+
 ## [2.2.0] - 2026-08-24
 
 ### FilterStore 与高级示例

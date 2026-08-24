@@ -1,0 +1,8 @@
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/process",
+  "walkzzz/moondes/random",
+  "walkzzz/moondes/fsm",
+}
+
+pkgtype(kind: "executable")

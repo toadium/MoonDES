@@ -1,0 +1,44 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/fsm"
+
+// Values
+pub fn new_state_machine(initial~ : String, transitions~ : Array[Transition]) -> StateMachine
+
+pub fn transition(from~ : String, to~ : String, on~ : String, guard_fn? : () -> Bool) -> Transition
+
+// Errors
+
+// Types and methods
+pub(all) struct StateMachine {
+  mut current_state : String
+  transitions : Array[Transition]
+  enter_callbacks : Map[String, (String) -> Unit]
+  exit_callbacks : Map[String, (String) -> Unit]
+  mut history : Array[String]
+}
+pub fn StateMachine::available_events(Self) -> Array[String]
+pub fn StateMachine::can_fire(Self, String) -> Bool
+pub fn StateMachine::current(Self) -> String
+pub fn StateMachine::fire(Self, String) -> Bool
+pub fn StateMachine::history(Self) -> Array[String]
+pub fn StateMachine::is_in(Self, String) -> Bool
+pub fn StateMachine::on_enter(Self, String, (String) -> Unit) -> Unit
+pub fn StateMachine::on_exit(Self, String, (String) -> Unit) -> Unit
+pub fn StateMachine::reset(Self, String) -> Unit
+pub fn StateMachine::transition_count(Self) -> Int
+
+pub(all) struct Transition {
+  from : String
+  to : String
+  on : String
+  guard_fn : () -> Bool
+}
+
+// Type aliases
+pub type Event = String
+
+pub type State = String
+
+pub type StateCallback = (String) -> Unit
+
+// Traits
