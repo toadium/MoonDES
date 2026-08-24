@@ -1,6 +1,6 @@
 name = "walkzzz/moondes"
 
-version = "2.4.0"
+version = "2.5.0"
 
 readme = "README.mbt.md"
 

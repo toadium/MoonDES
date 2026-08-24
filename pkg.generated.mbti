@@ -6,6 +6,7 @@ import {
   "walkzzz/moondes/analysis",
   "walkzzz/moondes/core",
   "walkzzz/moondes/distributed",
+  "walkzzz/moondes/eventbus",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/fsm",
   "walkzzz/moondes/monitor",
@@ -33,6 +34,8 @@ pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
 pub fn new_container(capacity~ : Double) -> @sync.Container
 
 pub fn new_env(until~ : Double) -> @core.SimulationEnv
+
+pub fn new_event_bus() -> @eventbus.EventBus
 
 pub fn new_exclusive(name~ : String) -> @resource.Resource
 

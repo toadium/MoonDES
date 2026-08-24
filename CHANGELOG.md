@@ -4,6 +4,34 @@
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-08-24
+
+### 定时器层 + 交通系统综合示例
+
+#### Added
+- 新增 `timer` 包（层级15）：周期性定时器
+  - `Timer`：自重调度实现周期触发
+  - `start()` / `stop()` / `is_active()` / `fire_count()` / `reset()`
+  - 支持 `max_count` 限制触发次数（默认无限）
+- 根包便捷入口 `new_timer`
+- 综合示例 `traffic_system`：2 交叉口交通灯（FSM）+ 车辆到达（Random）+ EventBus 协调 + Timer 周期切换 + Stats 统计
+- 11 个 Timer 测试 + 1 个根包便捷入口测试
+
+#### 综合示例展示的层间协同
+
+| 层 | 在交通系统中的角色 |
+|---|---|
+| FSM | 交通灯状态机 Red→Green→Yellow→Red |
+| EventBus | 车辆到达/通过事件发布订阅 |
+| Timer | 每 15s 周期切换交通灯 |
+| Process | 车辆到达进程 |
+| Random | 车辆到达间隔、等待时间 |
+| Stats | 等待时间统计 |
+
+#### 验证
+
+- `moon test` 351/351 全通过，零警告
+
 ## [2.4.0] - 2026-08-24
 
 ### 事件总线层

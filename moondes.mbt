@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.4.0"
+  "2.5.0"
 }
 
 ///|
@@ -232,4 +232,14 @@ pub fn new_state_machine(
 /// 创建事件总线（便捷入口，转发至 eventbus 层）
 pub fn new_event_bus() -> @eventbus.EventBus {
   @eventbus.new_event_bus()
+}
+
+///|
+/// 创建定时器（便捷入口，转发至 timer 层）
+pub fn new_timer(
+  env : @core.SimulationEnv,
+  interval~ : Double,
+  callback~ : () -> Unit,
+) -> @timer.Timer {
+  @timer.new_timer(env, interval~, callback~)
 }

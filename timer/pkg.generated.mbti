@@ -1,0 +1,31 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/timer"
+
+import {
+  "walkzzz/moondes/core",
+}
+
+// Values
+pub fn new_timer(@core.SimulationEnv, interval~ : Double, callback~ : () -> Unit, max_count? : Int) -> Timer
+
+// Errors
+
+// Types and methods
+pub(all) struct Timer {
+  env : @core.SimulationEnv
+  interval : Double
+  callback : () -> Unit
+  mut active : Bool
+  mut fire_count : Int
+  max_count : Int
+}
+pub fn Timer::fire_count(Self) -> Int
+pub fn Timer::interval(Self) -> Double
+pub fn Timer::is_active(Self) -> Bool
+pub fn Timer::reset(Self) -> Unit
+pub fn Timer::start(Self) -> Unit
+pub fn Timer::stop(Self) -> Unit
+
+// Type aliases
+
+// Traits

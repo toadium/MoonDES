@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.4.0")
+  inspect(version(), content="2.5.0")
 }
 
 ///|
@@ -190,4 +190,18 @@ test "root new_event_bus convenience" {
   let count = bus.publish("test", "hello")
   assert_eq(count, 1)
   assert_eq(log[0], "hello")
+}
+
+///|
+test "root new_timer convenience" {
+  let env = @core.new_env(until=50.0)
+  let mut count = 0
+  let timer = new_timer(
+    env,
+    interval=10.0,
+    callback=fn() { count = count + 1 },
+  )
+  timer.start()
+  env.run()
+  assert_true(count > 0)
 }
