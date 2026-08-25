@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub fn new_process_group(name? : String) -> ProcessGroup
+
 pub fn process(@core.SimulationEnv, name? : String, behavior~ : (Process) -> ProcessAction) -> Process
 
 // Errors
@@ -34,6 +36,22 @@ pub(all) enum ProcessAction {
   WaitEvent(event~ : @core.Event, next~ : () -> ProcessAction)
   Terminate
 }
+
+pub(all) struct ProcessGroup {
+  name : String
+  mut members : Array[Process]
+  mut completed_count : Int
+  all_complete_callbacks : Array[() -> Unit]
+}
+pub fn ProcessGroup::add(Self, Process) -> Unit
+pub fn ProcessGroup::completed_count(Self) -> Int
+pub fn ProcessGroup::get(Self, Int) -> Process
+pub fn ProcessGroup::is_all_complete(Self) -> Bool
+pub fn ProcessGroup::members(Self) -> Array[Process]
+pub fn ProcessGroup::name(Self) -> String
+pub fn ProcessGroup::on_all_complete(Self, () -> Unit) -> Unit
+pub fn ProcessGroup::pending_count(Self) -> Int
+pub fn ProcessGroup::size(Self) -> Int
 
 pub(all) enum ProcessStatus {
   Created

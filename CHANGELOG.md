@@ -4,6 +4,28 @@
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-08-24
+
+### 进程组 + 电梯调度示例
+
+#### Added
+- `ProcessGroup`：进程组批量管理（process 包内）
+  - `add(process)` — 注册进程，自动通过 `on_complete` 跟踪完成
+  - `size` / `completed_count` / `pending_count` / `is_all_complete`
+  - `on_all_complete(callback)` — 全部完成时触发回调
+  - `members` / `get` — 成员访问
+- 根包便捷入口 `new_process_group`
+- 综合示例 `elevator_dispatch`：2 部电梯调度
+  - FSM：Idle→Moving→DoorOpen→Idle
+  - ProcessGroup 管理电梯进程
+  - EventBus 发布请求/服务事件
+  - Stats 统计等待时间
+- 9 个 ProcessGroup 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 361/361 全通过，零警告
+
 ## [2.5.0] - 2026-08-24
 
 ### 定时器层 + 交通系统综合示例

@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.5.0")
+  inspect(version(), content="2.6.0")
 }
 
 ///|
@@ -196,12 +196,21 @@ test "root new_event_bus convenience" {
 test "root new_timer convenience" {
   let env = @core.new_env(until=50.0)
   let mut count = 0
-  let timer = new_timer(
-    env,
-    interval=10.0,
-    callback=fn() { count = count + 1 },
-  )
+  let timer = new_timer(env, interval=10.0, callback=fn() { count = count + 1 })
   timer.start()
   env.run()
   assert_true(count > 0)
+}
+
+///|
+test "root new_process_group convenience" {
+  let env = @core.new_env(until=50.0)
+  let group = new_process_group(name="test")
+  let p = @process.process(env, name="p1", behavior=fn(_p) {
+    @process.Timeout(duration=10.0, next=fn() { @process.Done })
+  })
+  group.add(p)
+  assert_eq(group.size(), 1)
+  env.run()
+  assert_true(group.is_all_complete())
 }

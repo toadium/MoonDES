@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.5.0"
+  "2.6.0"
 }
 
 ///|
@@ -242,4 +242,10 @@ pub fn new_timer(
   callback~ : () -> Unit,
 ) -> @timer.Timer {
   @timer.new_timer(env, interval~, callback~)
+}
+
+///|
+/// 创建进程组（便捷入口，转发至 process 层）
+pub fn new_process_group(name~ : String = "") -> @process.ProcessGroup {
+  @process.new_process_group(name~)
 }

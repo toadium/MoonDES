@@ -1,9 +1,9 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.5.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-2.6.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-352%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-362%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
@@ -67,6 +67,7 @@ moon run examples/mmc_queue             # M/M/c 多服务台队列（Resource+Ra
 moon run examples/factory_machine       # 工厂设备状态机（FSM+Process+Random）
 moon run examples/sensor_network       # 传感器网络（EventBus+Process+Random）
 moon run examples/traffic_system       # 交通系统（FSM+EventBus+Timer+Stats）
+moon run examples/elevator_dispatch    # 电梯调度（FSM+ProcessGroup+EventBus+Stats）
 ```
 
 ## 项目结构
@@ -101,7 +102,8 @@ MoonDES/
 │   ├── mmc_queue/
 │   ├── factory_machine/
 │   ├── sensor_network/
-│   └── traffic_system/
+│   ├── traffic_system/
+│   └── elevator_dispatch/
 └── docs/          # 项目文档
 ```
 
@@ -154,7 +156,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 
 ```bash
 moon check          # 类型检查
-moon test           # 运行测试（351 个）
+moon test           # 运行测试（361 个）
 moon fmt            # 格式化
 moon info           # 更新接口文件
 ```

@@ -16,6 +16,7 @@ import {
   "walkzzz/moondes/resource",
   "walkzzz/moondes/stats",
   "walkzzz/moondes/sync",
+  "walkzzz/moondes/timer",
 }
 
 // Values
@@ -72,6 +73,8 @@ pub fn[T] new_store() -> @sync.Store[T]
 pub fn new_task_scheduler() -> @distributed.TaskScheduler
 
 pub fn new_timeline() -> @analysis.EventTimeline
+
+pub fn new_timer(@core.SimulationEnv, interval~ : Double, callback~ : () -> Unit) -> @timer.Timer
 
 pub fn new_tracer() -> @monitor.TraceExporter
 
