@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/pipeline"
+
+// Values
+pub fn new_pipeline() -> Pipeline
+
+// Errors
+
+// Types and methods
+pub(all) struct Pipeline {
+  stages : Array[PipelineStage]
+}
+pub fn Pipeline::add_stage(Self, name~ : String, capacity~ : Int, processing_time~ : Double) -> Unit
+pub fn Pipeline::bottleneck(Self) -> Int?
+pub fn Pipeline::get(Self, Int) -> PipelineStage
+pub fn Pipeline::is_empty(Self) -> Bool
+pub fn Pipeline::stage_count(Self) -> Int
+pub fn Pipeline::stage_names(Self) -> Array[String]
+pub fn Pipeline::stages(Self) -> Array[PipelineStage]
+pub fn Pipeline::to_string(Self) -> String
+pub fn Pipeline::total_capacity(Self) -> Int
+pub fn Pipeline::total_processing_time(Self) -> Double
+
+pub(all) struct PipelineStage {
+  name : String
+  capacity : Int
+  processing_time : Double
+}
+
+// Type aliases
+
+// Traits

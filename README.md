@@ -1,14 +1,14 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.7.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-2.8.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-384%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-395%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供十六层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供十七层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
@@ -29,6 +29,7 @@ MoonDES 提供十六层模块化架构的离散事件仿真能力，对标 Pytho
 - **事件总线**：发布订阅 `EventBus`（subscribe/publish/unsubscribe，topic 隔离，解耦通信）
 - **定时器**：周期触发 `Timer`（start/stop，自重调度，有限次/无限次）
 - **序列化**：仿真快照 `SimulationSnapshot`（to_json/summary，进程/FSM/统计状态捕获）
+- **流水线**：多阶段处理 `Pipeline`（add_stage/瓶颈分析/总处理时间）
 - **性能基准**：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
@@ -70,6 +71,8 @@ moon run examples/sensor_network       # 传感器网络（EventBus+Process+Rand
 moon run examples/traffic_system       # 交通系统（FSM+EventBus+Timer+Stats）
 moon run examples/elevator_dispatch    # 电梯调度（FSM+ProcessGroup+EventBus+Stats）
 moon run examples/hospital_er         # 医院急诊（FSM+Resource+EventBus+Stats）
+moon run examples/water_treatment     # 自来水厂（Pipeline+Resource+FSM+EventBus+Timer+Stats）
+moon run examples/sewage_treatment    # 污水处理厂（Pipeline+Resource+FSM+EventBus+Stats）
 ```
 
 ## 项目结构
@@ -92,6 +95,7 @@ MoonDES/
 ├── eventbus/      # 层级14：事件总线（EventBus 发布订阅）
 ├── timer/          # 层级15：定时器（Timer 周期触发）
 ├── serialize/     # 层级16：序列化（SimulationSnapshot 快照）
+├── pipeline/      # 层级17：流水线（Pipeline 多阶段处理）
 ├── bench/         # 性能基准测试套件
 ├── examples/      # 可执行示例
 │   ├── hello_des/
@@ -107,7 +111,9 @@ MoonDES/
 │   ├── sensor_network/
 │   ├── traffic_system/
 │   ├── elevator_dispatch/
-│   └── hospital_er/
+│   ├── hospital_er/
+│   ├── water_treatment/
+│   └── sewage_treatment/
 └── docs/          # 项目文档
 ```
 
@@ -138,6 +144,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_event_bus` / `EventBus::subscribe` / `EventBus::publish` | 事件总线 |
 | `new_timer` / `Timer::start` / `Timer::stop` | 定时器 |
 | `new_snapshot` / `SimulationSnapshot::to_json` | 序列化 |
+| `new_pipeline` / `Pipeline::add_stage` / `Pipeline::bottleneck` | 流水线 |
 | `new_condition_variable` / `ConditionVariable::notify_all` | 条件变量 |
 | `version()` | 引擎版本号 |
 
@@ -162,7 +169,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 
 ```bash
 moon check          # 类型检查
-moon test           # 运行测试（383 个）
+moon test           # 运行测试（394 个）
 moon fmt            # 格式化
 moon info           # 更新接口文件
 ```

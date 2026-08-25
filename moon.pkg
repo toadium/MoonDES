@@ -15,5 +15,6 @@ import {
   "walkzzz/moondes/eventbus",
   "walkzzz/moondes/timer",
   "walkzzz/moondes/serialize",
+  "walkzzz/moondes/pipeline",
   "moonbitlang/core/random" @rand,
 }

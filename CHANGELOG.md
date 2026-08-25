@@ -4,6 +4,33 @@
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-08-25
+
+### 流水线层 + 自来水厂/污水处理厂综合示例
+
+#### Added
+- 新增 `pipeline` 包（层级17）：多阶段处理流水线
+  - `PipelineStage`：名称/容量/处理时间
+  - `Pipeline`：add_stage / stage_count / total_processing_time / total_capacity
+  - `bottleneck()` — 瓶颈阶段分析
+  - `to_string()` — 人类可读描述
+- 根包便捷入口 `new_pipeline`
+- 综合示例 `water_treatment`：自来水厂
+  - 工艺：取水→混凝→沉淀→过滤→消毒→供水（6 阶段）
+  - Pipeline + Resource + FSM + EventBus + Timer + Stats
+  - 厂区状态机 Normal→Warning→Emergency→Maintenance→Normal
+  - 定期水质采样定时器
+- 综合示例 `sewage_treatment`：污水处理厂
+  - 工艺：进水→格栅→初沉→曝气→二沉→消毒→排放（7 阶段）
+  - Pipeline + Resource + FSM + EventBus + Stats
+  - 出水达标状态机 Compliant→Marginal→NonCompliant→Adjusting→Compliant
+  - COD 水质检测与超标告警
+- 10 个 Pipeline 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 394/394 全通过，零警告
+
 ## [2.7.0] - 2026-08-24
 
 ### 条件变量 + 序列化层 + 医院急诊示例

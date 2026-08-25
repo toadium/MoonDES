@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.7.0"
+  "2.8.0"
 }
 
 ///|
@@ -260,4 +260,10 @@ pub fn new_snapshot(env : @core.SimulationEnv) -> @serialize.SimulationSnapshot 
 /// 创建条件变量（便捷入口，转发至 sync 层）
 pub fn new_condition_variable() -> @sync.ConditionVariable {
   @sync.new_condition_variable()
+}
+
+///|
+/// 创建流水线（便捷入口，转发至 pipeline 层）
+pub fn new_pipeline() -> @pipeline.Pipeline {
+  @pipeline.new_pipeline()
 }

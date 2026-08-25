@@ -14,6 +14,7 @@ import {
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
+  "walkzzz/moondes/serialize",
   "walkzzz/moondes/stats",
   "walkzzz/moondes/sync",
   "walkzzz/moondes/timer",
@@ -29,6 +30,8 @@ pub fn new_aggregator() -> @distributed.ResultAggregator
 pub fn new_barrier(n~ : Int) -> @sync.Barrier
 
 pub fn new_channel(@core.SimulationEnv, name~ : String, delay~ : Double) -> @network.Channel
+
+pub fn new_condition_variable() -> @sync.ConditionVariable
 
 pub fn new_config(until~ : Double, seed? : Int) -> @experiment.ExpConfig
 
@@ -67,6 +70,8 @@ pub fn new_router(name~ : String) -> @network.Router
 pub fn new_semaphore(count~ : Int) -> @sync.Semaphore
 
 pub fn new_signal(@core.SimulationEnv) -> @sync.SignalEvent
+
+pub fn new_snapshot(@core.SimulationEnv) -> @serialize.SimulationSnapshot
 
 pub fn new_state_machine(initial~ : String, transitions~ : Array[@fsm.Transition]) -> @fsm.StateMachine
 

@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.7.0")
+  inspect(version(), content="2.8.0")
 }
 
 ///|
@@ -230,4 +230,12 @@ test "root new_condition_variable convenience" {
   cv.wait(fn() { log.push("ok") })
   ignore(cv.notify_one())
   assert_eq(log[0], "ok")
+}
+
+///|
+test "root new_pipeline convenience" {
+  let p = new_pipeline()
+  p.add_stage(name="a", capacity=5, processing_time=2.0)
+  assert_eq(p.stage_count(), 1)
+  assert_eq(p.total_processing_time(), 2.0)
 }
