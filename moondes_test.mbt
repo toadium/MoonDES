@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.6.0")
+  inspect(version(), content="2.7.0")
 }
 
 ///|
@@ -213,4 +213,21 @@ test "root new_process_group convenience" {
   assert_eq(group.size(), 1)
   env.run()
   assert_true(group.is_all_complete())
+}
+
+///|
+test "root new_snapshot convenience" {
+  let env = @core.new_env(until=100.0)
+  let snap = new_snapshot(env)
+  assert_eq(snap.time, 0.0)
+  assert_eq(snap.event_count, 0)
+}
+
+///|
+test "root new_condition_variable convenience" {
+  let cv = new_condition_variable()
+  let log : Array[String] = []
+  cv.wait(fn() { log.push("ok") })
+  ignore(cv.notify_one())
+  assert_eq(log[0], "ok")
 }

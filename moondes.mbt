@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.6.0"
+  "2.7.0"
 }
 
 ///|
@@ -246,6 +246,18 @@ pub fn new_timer(
 
 ///|
 /// 创建进程组（便捷入口，转发至 process 层）
-pub fn new_process_group(name~ : String = "") -> @process.ProcessGroup {
+pub fn new_process_group(name? : String = "") -> @process.ProcessGroup {
   @process.new_process_group(name~)
+}
+
+///|
+/// 创建仿真快照（便捷入口，转发至 serialize 层）
+pub fn new_snapshot(env : @core.SimulationEnv) -> @serialize.SimulationSnapshot {
+  @serialize.new_snapshot(env)
+}
+
+///|
+/// 创建条件变量（便捷入口，转发至 sync 层）
+pub fn new_condition_variable() -> @sync.ConditionVariable {
+  @sync.new_condition_variable()
 }

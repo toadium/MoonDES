@@ -1,0 +1,52 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/serialize"
+
+import {
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/fsm",
+  "walkzzz/moondes/process",
+}
+
+// Values
+pub fn new_snapshot(@core.SimulationEnv) -> SimulationSnapshot
+
+// Errors
+
+// Types and methods
+pub(all) struct FsmSnapshot {
+  current_state : String
+  transition_count : Int
+  history : Array[String]
+}
+
+pub(all) struct ProcessSnapshot {
+  name : String
+  status : String
+}
+
+pub(all) struct SimulationSnapshot {
+  time : Double
+  until : Double
+  event_count : Int
+  is_finished : Bool
+  process_states : Array[ProcessSnapshot]
+  fsm_states : Array[FsmSnapshot]
+  stats_data : Array[StatsSnapshot]
+}
+pub fn SimulationSnapshot::add_fsm(Self, @fsm.StateMachine) -> Unit
+pub fn SimulationSnapshot::add_process(Self, @process.Process) -> Unit
+pub fn SimulationSnapshot::add_stats(Self, Array[Double]) -> Unit
+pub fn SimulationSnapshot::summary(Self) -> String
+pub fn SimulationSnapshot::to_json(Self) -> String
+
+pub(all) struct StatsSnapshot {
+  count : Int
+  mean : Double
+  stddev : Double
+  min : Double
+  max : Double
+}
+
+// Type aliases
+
+// Traits

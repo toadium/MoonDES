@@ -4,6 +4,33 @@
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-08-24
+
+### 条件变量 + 序列化层 + 医院急诊示例
+
+#### Added
+- `ConditionVariable`（sync 包内）：条件变量同步原语
+  - `wait(callback)` — 注册等待
+  - `notify_one()` — FIFO 唤醒一个等待者
+  - `notify_all()` — 唤醒所有等待者
+  - `waiter_count` / `has_waiters` / `clear`
+- 新增 `serialize` 包（层级16）：仿真快照
+  - `SimulationSnapshot`：捕获时间/事件数/进程状态/FSM状态/统计数据
+  - `add_process` / `add_fsm` / `add_stats` — 添加组件状态
+  - `to_json()` — JSON 序列化
+  - `summary()` — 人类可读摘要
+- 根包便捷入口 `new_condition_variable` / `new_snapshot`
+- 综合示例 `hospital_er`：医院急诊室
+  - FSM：患者 Waiting→Triaged→InTreatment→Discharged
+  - Resource：3 张病床
+  - EventBus：重症告警/出院事件
+  - Stats：等待时间/治疗时间统计
+- 9 个条件变量测试 + 11 个序列化测试 + 2 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 383/383 全通过，零警告
+
 ## [2.6.0] - 2026-08-24
 
 ### 进程组 + 电梯调度示例

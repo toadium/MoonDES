@@ -1,0 +1,7 @@
+import {
+  "moonbitlang/core/json",
+  "walkzzz/moondes/core",
+  "walkzzz/moondes/process",
+  "walkzzz/moondes/fsm",
+  "walkzzz/moondes/stats",
+}

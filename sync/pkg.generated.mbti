@@ -13,6 +13,8 @@ pub fn any_of(@core.SimulationEnv, Array[SignalEvent]) -> SignalEvent
 
 pub fn new_barrier(n~ : Int) -> Barrier
 
+pub fn new_condition_variable() -> ConditionVariable
+
 pub fn new_container(capacity~ : Double) -> Container
 
 pub fn new_container_with(capacity~ : Double, initial~ : Double) -> Container
@@ -38,6 +40,16 @@ pub(all) struct Barrier {
 pub fn Barrier::is_reset(Self) -> Bool
 pub fn Barrier::wait(Self, () -> Unit) -> Unit
 pub fn Barrier::waiting_count(Self) -> Int
+
+pub(all) struct ConditionVariable {
+  waiters : Array[() -> Unit]
+}
+pub fn ConditionVariable::clear(Self) -> Int
+pub fn ConditionVariable::has_waiters(Self) -> Bool
+pub fn ConditionVariable::notify_all(Self) -> Int
+pub fn ConditionVariable::notify_one(Self) -> Bool
+pub fn ConditionVariable::wait(Self, () -> Unit) -> Unit
+pub fn ConditionVariable::waiter_count(Self) -> Int
 
 pub(all) struct Container {
   mut level : Double
