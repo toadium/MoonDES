@@ -4,6 +4,32 @@
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-08-25
+
+### 图网络层 + 人脉关系网社交网络示例
+
+#### Added
+- 新增 `graph` 包（层级18）：无向图
+  - `add_node` / `add_edge` / `neighbors` / `has_edge` / `degree`
+  - `bfs` — 广度优先遍历
+  - `shortest_path` — BFS 最短路径
+  - `connected_components` — 连通分量
+  - `to_string` — 人类可读描述
+- 根包便捷入口 `new_graph`
+- 综合示例 `social_network`：人脉关系网
+  - Graph 构建社交网络（13 人，3 社群，跨社群连接）
+  - FSM 人物状态 Uninformed→Informed→Influencer
+  - EventBus 信息传播事件
+  - Process 三级传播动力学（80%→40%→60% 概率）
+  - Random 传播概率控制
+  - Stats 传播时间/影响力分数统计
+  - 最短路径、BFS 遍历、连通分量分析
+- 14 个 Graph 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 409/409 全通过，零警告
+
 ## [2.8.0] - 2026-08-25
 
 ### 流水线层 + 自来水厂/污水处理厂综合示例

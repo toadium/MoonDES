@@ -11,6 +11,7 @@ import {
   "walkzzz/moondes/fsm",
   "walkzzz/moondes/monitor",
   "walkzzz/moondes/network",
+  "walkzzz/moondes/pipeline",
   "walkzzz/moondes/plugin",
   "walkzzz/moondes/process",
   "walkzzz/moondes/resource",
@@ -52,6 +53,8 @@ pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger
 pub fn new_metrics() -> @monitor.MetricsCollector
 
 pub fn new_multi_env() -> @distributed.MultiEnv
+
+pub fn new_pipeline() -> @pipeline.Pipeline
 
 pub fn new_plugin_manager() -> @plugin.PluginManager
 

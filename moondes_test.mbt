@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.8.0")
+  inspect(version(), content="2.9.0")
 }
 
 ///|
@@ -238,4 +238,12 @@ test "root new_pipeline convenience" {
   p.add_stage(name="a", capacity=5, processing_time=2.0)
   assert_eq(p.stage_count(), 1)
   assert_eq(p.total_processing_time(), 2.0)
+}
+
+///|
+test "root new_graph convenience" {
+  let g = new_graph()
+  g.add_edge("A", "B")
+  assert_eq(g.node_count(), 2)
+  assert_eq(g.edge_count(), 1)
 }

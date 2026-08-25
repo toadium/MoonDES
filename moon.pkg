@@ -16,5 +16,6 @@ import {
   "walkzzz/moondes/timer",
   "walkzzz/moondes/serialize",
   "walkzzz/moondes/pipeline",
+  "walkzzz/moondes/graph",
   "moonbitlang/core/random" @rand,
 }

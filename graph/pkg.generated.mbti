@@ -1,0 +1,30 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/graph"
+
+// Values
+pub fn new_graph() -> Graph
+
+// Errors
+
+// Types and methods
+pub(all) struct Graph {
+  adj : Map[String, Array[String]]
+  mut edge_cnt : Int
+}
+pub fn Graph::add_edge(Self, String, String) -> Unit
+pub fn Graph::add_node(Self, String) -> Unit
+pub fn Graph::bfs(Self, String) -> Array[String]
+pub fn Graph::connected_components(Self) -> Array[Array[String]]
+pub fn Graph::degree(Self, String) -> Int
+pub fn Graph::edge_count(Self) -> Int
+pub fn Graph::has_edge(Self, String, String) -> Bool
+pub fn Graph::is_empty(Self) -> Bool
+pub fn Graph::neighbors(Self, String) -> Array[String]
+pub fn Graph::node_count(Self) -> Int
+pub fn Graph::nodes(Self) -> Array[String]
+pub fn Graph::shortest_path(Self, String, String) -> Array[String]?
+pub fn Graph::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

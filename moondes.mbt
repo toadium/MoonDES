@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.8.0"
+  "2.9.0"
 }
 
 ///|
@@ -266,4 +266,10 @@ pub fn new_condition_variable() -> @sync.ConditionVariable {
 /// 创建流水线（便捷入口，转发至 pipeline 层）
 pub fn new_pipeline() -> @pipeline.Pipeline {
   @pipeline.new_pipeline()
+}
+
+///|
+/// 创建图（便捷入口，转发至 graph 层）
+pub fn new_graph() -> @graph.Graph {
+  @graph.new_graph()
 }
