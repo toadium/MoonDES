@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "2.9.0"
+  "3.0.0"
 }
 
 ///|
@@ -272,4 +272,13 @@ pub fn new_pipeline() -> @pipeline.Pipeline {
 /// 创建图（便捷入口，转发至 graph 层）
 pub fn new_graph() -> @graph.Graph {
   @graph.new_graph()
+}
+
+///|
+/// 创建马尔可夫链（便捷入口，转发至 markov 层）
+pub fn new_markov_chain(
+  initial~ : String,
+  rng~ : @rand.Rand,
+) -> @markov.MarkovChain {
+  @markov.new_markov_chain(initial~, rng~)
 }

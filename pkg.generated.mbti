@@ -9,6 +9,7 @@ import {
   "walkzzz/moondes/eventbus",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/fsm",
+  "walkzzz/moondes/graph",
   "walkzzz/moondes/monitor",
   "walkzzz/moondes/network",
   "walkzzz/moondes/pipeline",
@@ -45,6 +46,8 @@ pub fn new_event_bus() -> @eventbus.EventBus
 pub fn new_exclusive(name~ : String) -> @resource.Resource
 
 pub fn[T] new_filter_store() -> @sync.FilterStore[T]
+
+pub fn new_graph() -> @graph.Graph
 
 pub fn new_link(@core.SimulationEnv, name~ : String, delay~ : Double) -> @network.Link
 

@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="2.9.0")
+  inspect(version(), content="3.0.0")
 }
 
 ///|
@@ -246,4 +246,13 @@ test "root new_graph convenience" {
   g.add_edge("A", "B")
   assert_eq(g.node_count(), 2)
   assert_eq(g.edge_count(), 1)
+}
+
+///|
+test "root new_markov_chain convenience" {
+  let rng = @random.new_rng()
+  let mc = new_markov_chain(initial="A", rng~)
+  mc.add_transition("A", "B", 1.0)
+  let next = mc.next_state()
+  assert_eq(next, "B")
 }

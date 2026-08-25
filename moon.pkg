@@ -17,5 +17,6 @@ import {
   "walkzzz/moondes/serialize",
   "walkzzz/moondes/pipeline",
   "walkzzz/moondes/graph",
+  "walkzzz/moondes/markov",
   "moonbitlang/core/random" @rand,
 }

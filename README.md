@@ -1,14 +1,14 @@
 # MoonDES
 
 [![CI](https://github.com/toadium/MoonDES/actions/workflows/ci.yml/badge.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-2.9.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/toadium/MoonDES/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-410%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-424%20passed-brightgreen.svg)](https://github.com/toadium/MoonDES/actions/workflows/ci.yml)
 [![Backends](https://img.shields.io/badge/backends-native%20%7C%20wasm--gc%20%7C%20wasm-blue.svg)](https://github.com/toadium/MoonDES)
 
 > 通用离散事件仿真引擎，基于国产 MoonBit 编译型语言构建。
 
-MoonDES 提供十八层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
+MoonDES 提供十九层模块化架构的离散事件仿真能力，对标 Python SimPy 与 Java DESMO-J，面向工业数字化、智慧管网、生产调度等工程仿真场景。
 
 ## 特性
 
@@ -31,6 +31,7 @@ MoonDES 提供十八层模块化架构的离散事件仿真能力，对标 Pytho
 - **序列化**：仿真快照 `SimulationSnapshot`（to_json/summary，进程/FSM/统计状态捕获）
 - **流水线**：多阶段处理 `Pipeline`（add_stage/瓶颈分析/总处理时间）
 - **图网络**：无向图 `Graph`（BFS/最短路径/连通分量/度数）
+- **马尔可夫链**：概率状态转移 `MarkovChain`（next_state/simulate/概率查询）
 - **性能基准**：事件吞吐量 / 进程扩展性 / 资源竞争 / 同步原语规模
 - **多实例并行**：仿真环境无全局共享状态，天然支持并行仿真
 - **跨后端**：一次开发，编译为 Native / WASI / WASM 三种部署形态
@@ -75,6 +76,7 @@ moon run examples/hospital_er         # 医院急诊（FSM+Resource+EventBus+Sta
 moon run examples/water_treatment     # 自来水厂（Pipeline+Resource+FSM+EventBus+Timer+Stats）
 moon run examples/sewage_treatment    # 污水处理厂（Pipeline+Resource+FSM+EventBus+Stats）
 moon run examples/social_network     # 人脉关系网（Graph+FSM+EventBus+Process+Stats）
+moon run examples/epidemic_spread    # 传染病传播（Markov+Graph+FSM+EventBus+Stats）
 ```
 
 ## 项目结构
@@ -99,6 +101,7 @@ MoonDES/
 ├── serialize/     # 层级16：序列化（SimulationSnapshot 快照）
 ├── pipeline/      # 层级17：流水线（Pipeline 多阶段处理）
 ├── graph/         # 层级18：图网络（Graph BFS/最短路径）
+├── markov/        # 层级19：马尔可夫链（MarkovChain 概率转移）
 ├── bench/         # 性能基准测试套件
 ├── examples/      # 可执行示例
 │   ├── hello_des/
@@ -117,7 +120,8 @@ MoonDES/
 │   ├── hospital_er/
 │   ├── water_treatment/
 │   ├── sewage_treatment/
-│   └── social_network/
+│   ├── social_network/
+│   └── epidemic_spread/
 └── docs/          # 项目文档
 ```
 
@@ -150,6 +154,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 | `new_snapshot` / `SimulationSnapshot::to_json` | 序列化 |
 | `new_pipeline` / `Pipeline::add_stage` / `Pipeline::bottleneck` | 流水线 |
 | `new_graph` / `Graph::bfs` / `Graph::shortest_path` | 图网络 |
+| `new_markov_chain` / `MarkovChain::next_state` / `MarkovChain::simulate` | 马尔可夫链 |
 | `new_condition_variable` / `ConditionVariable::notify_all` | 条件变量 |
 | `version()` | 引擎版本号 |
 
@@ -174,7 +179,7 @@ core (无依赖) ← process / resource / experiment / plugin / random / stats /
 
 ```bash
 moon check          # 类型检查
-moon test           # 运行测试（409 个）
+moon test           # 运行测试（423 个）
 moon fmt            # 格式化
 moon info           # 更新接口文件
 ```

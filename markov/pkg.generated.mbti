@@ -1,0 +1,33 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/markov"
+
+import {
+  "moonbitlang/core/random",
+}
+
+// Values
+pub fn new_markov_chain(initial~ : String, rng~ : @random.Rand) -> MarkovChain
+
+// Errors
+
+// Types and methods
+pub(all) struct MarkovChain {
+  mut current_state : String
+  transitions : Map[String, Array[(String, Double)]]
+  rng : @random.Rand
+  mut step_count : Int
+}
+pub fn MarkovChain::add_transition(Self, String, String, Double) -> Unit
+pub fn MarkovChain::current(Self) -> String
+pub fn MarkovChain::has_transitions(Self, String) -> Bool
+pub fn MarkovChain::next_state(Self) -> String
+pub fn MarkovChain::probability(Self, String, String) -> Double
+pub fn MarkovChain::simulate(Self, Int) -> Array[String]
+pub fn MarkovChain::states(Self) -> Array[String]
+pub fn MarkovChain::step_count(Self) -> Int
+pub fn MarkovChain::to_string(Self) -> String
+pub fn MarkovChain::transition_count(Self) -> Int
+
+// Type aliases
+
+// Traits

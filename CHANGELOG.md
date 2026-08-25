@@ -4,6 +4,32 @@
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-08-25
+
+### v3.0.0 里程碑：马尔可夫链层 + 传染病传播仿真
+
+#### Added
+- 新增 `markov` 包（层级19）：离散时间马尔可夫链
+  - `MarkovChain`：概率驱动的状态转移
+  - `add_transition` — 添加状态转移概率
+  - `next_state` — 根据概率采样下一状态
+  - `simulate(n)` — 多步仿真
+  - `probability(from, to)` — 转移概率查询
+  - `states` / `transition_count` / `to_string`
+- 根包便捷入口 `new_markov_chain`
+- 综合示例 `epidemic_spread`：传染病传播仿真（SIR 模型）
+  - MarkovChain 个体状态 S→E→I→R（概率驱动）
+  - Graph 接触网络（20 人，4 社群+跨社群连接）
+  - FSM 疫情阶段 Contained→Outbreak→Epidemic→Contained
+  - EventBus 感染/康复/爆发告警
+  - Process 感染传播动力学（30 步传播）
+  - Stats 感染时间线/攻击率统计
+- 13 个 Markov 测试 + 1 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 423/423 全通过，零警告
+
 ## [2.9.0] - 2026-08-25
 
 ### 图网络层 + 人脉关系网社交网络示例
