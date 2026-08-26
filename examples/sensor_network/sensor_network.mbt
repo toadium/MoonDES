@@ -10,7 +10,8 @@
 /// 告警系统订阅 temperature，超过阈值时告警。
 ///
 /// 运行：moon run ./examples/sensor_network --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=100.0)
   let rng = @random.new_rng()
   let bus = @eventbus.new_event_bus()
@@ -113,23 +114,24 @@ fn main {
 
   env.run()
 
-  println("Sensor Network Simulation")
-  println("==========================")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("")
-  println("Event Bus Topics: {bus.topics().length()}")
-  println("Total subscribers: \{bus.total_subscribers()}")
-  println("")
-  println("Results:")
-  println("  Total readings:     \{total_readings}")
-  println("  Temperature readings: \{temp_readings}")
-  println("  Humidity readings:    \{humid_readings}")
-  println("  Pressure readings:    \{press_readings}")
-  println("  Alerts triggered:     \{alerts}")
-  println("")
-  println("Subscriber counts:")
-  println("  temperature: \{bus.subscriber_count("temperature")}")
-  println("  humidity:    \{bus.subscriber_count("humidity")}")
-  println("  pressure:    \{bus.subscriber_count("pressure")}")
+  @simbuf.println("Sensor Network Simulation")
+  @simbuf.println("==========================")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Event Bus Topics: {bus.topics().length()}")
+  @simbuf.println("Total subscribers: \{bus.total_subscribers()}")
+  @simbuf.println("")
+  @simbuf.println("Results:")
+  @simbuf.println("  Total readings:     \{total_readings}")
+  @simbuf.println("  Temperature readings: \{temp_readings}")
+  @simbuf.println("  Humidity readings:    \{humid_readings}")
+  @simbuf.println("  Pressure readings:    \{press_readings}")
+  @simbuf.println("  Alerts triggered:     \{alerts}")
+  @simbuf.println("")
+  @simbuf.println("Subscriber counts:")
+  @simbuf.println("  temperature: \{bus.subscriber_count("temperature")}")
+  @simbuf.println("  humidity:    \{bus.subscriber_count("humidity")}")
+  @simbuf.println("  pressure:    \{bus.subscriber_count("pressure")}")
+  @simbuf.to_string()
 }

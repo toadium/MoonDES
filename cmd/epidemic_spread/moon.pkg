@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/epidemic_spread",
+}
+
+pkgtype(kind: "executable")

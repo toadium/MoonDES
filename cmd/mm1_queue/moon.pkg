@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/mm1_queue",
+}
+
+pkgtype(kind: "executable")

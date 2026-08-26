@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MoonDES — 离散事件仿真平台</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #1a1a2e; color: #e0e0e0; }
+    .header { background: #16213e; padding: 20px; text-align: center; border-bottom: 2px solid #0f3460; }
+    .header h1 { color: #e94560; font-size: 24px; }
+    .header p { color: #888; font-size: 14px; margin-top: 4px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: flex; gap: 20px; }
+    .sidebar { width: 280px; flex-shrink: 0; }
+    .sidebar h2 { font-size: 16px; margin-bottom: 10px; color: #e94560; }
+    .example-list { display: flex; flex-direction: column; gap: 6px; }
+    .example-item { padding: 10px 12px; background: #16213e; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+    .example-item:hover { border-color: #e94560; }
+    .example-item.active { border-color: #e94560; background: #0f3460; }
+    .example-item .title { font-weight: 600; font-size: 14px; }
+    .example-item .cat { font-size: 11px; color: #888; margin-top: 2px; }
+    .main { flex: 1; }
+    .main h2 { font-size: 18px; margin-bottom: 10px; color: #e94560; }
+    .main .desc { font-size: 13px; color: #aaa; margin-bottom: 16px; }
+    .btn-run { padding: 10px 24px; background: #e94560; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .btn-run:hover { background: #c81e45; }
+    .btn-run:disabled { background: #555; cursor: not-allowed; }
+    .output { margin-top: 16px; background: #0d1117; border-radius: 8px; padding: 16px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; max-height: 600px; overflow-y: auto; border: 1px solid #30363d; }
+    .output .placeholder { color: #555; text-align: center; padding: 40px; }
+    .status { margin-top: 8px; font-size: 12px; color: #888; }
+    .status.error { color: #e94560; }
+    .status.success { color: #4caf50; }
+    .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid #555; border-top-color: #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>MoonDES — 离散事件仿真平台</h1>
+    <p>21 层 · 452 测试 · 19 示例 · Proton + Rabbita 全栈</p>
+  </div>
+  <div class="container">
+    <div class="sidebar">
+      <h2>仿真示例</h2>
+      <div class="example-list" id="example-list"></div>
+    </div>
+    <div class="main">
+      <h2 id="example-title">选择一个示例</h2>
+      <p class="desc" id="example-desc"></p>
+      <button class="btn-run" id="btn-run" disabled>运行仿真</button>
+      <div class="status" id="status"></div>
+      <div class="output" id="output"><div class="placeholder">点击左侧示例，然后运行仿真</div></div>
+    </div>
+  </div>
+  <script src="/frontend.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/resource_sharing",
+}
+
+pkgtype(kind: "executable")

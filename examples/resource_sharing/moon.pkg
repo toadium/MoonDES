@@ -2,6 +2,5 @@ import {
   "walkzzz/moondes/core",
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/plugin",
+  "walkzzz/moondes/simbuf",
 }
-
-pkgtype(kind: "executable")

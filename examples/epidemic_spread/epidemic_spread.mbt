@@ -12,7 +12,8 @@
 /// - Stats 感染统计/传播速度
 ///
 /// 运行：moon run ./examples/epidemic_spread --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=200.0)
   let rng = @random.new_rng()
   let bus = @eventbus.new_event_bus()
@@ -203,46 +204,46 @@ fn main {
   }
 
   // 输出
-  println("Epidemic Spread Simulation (SIR Model)")
-  println("======================================")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("")
-  println("Contact Network:")
-  println("  Population: \{contact_net.node_count()}")
-  println("  Contacts (edges): \{contact_net.edge_count()}")
-  println("  Components: \{contact_net.connected_components().length()}")
-  println("")
-  println("Epidemic FSM:")
-  println("  Final phase: \{epidemic_fsm.current()}")
-  println("  Transitions: \{epidemic_fsm.transition_count()}")
-  println("")
-  println("Final State Distribution:")
-  println("  Susceptible (S): \{final_s}")
-  println("  Exposed (E):     \{final_e}")
-  println("  Infected (I):    \{final_i}")
-  println("  Recovered (R):   \{final_r}")
-  println("")
-  println("Epidemic Statistics:")
-  println("  Total infected (cumulative): \{total_infected}")
-  println("  Total recovered:             \{total_recovered}")
-  println("  Peak concurrent infections:   \{peak_infected}")
+  @simbuf.println("Epidemic Spread Simulation (SIR Model)")
+  @simbuf.println("======================================")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Contact Network:")
+  @simbuf.println("  Population: \{contact_net.node_count()}")
+  @simbuf.println("  Contacts (edges): \{contact_net.edge_count()}")
+  @simbuf.println("  Components: \{contact_net.connected_components().length()}")
+  @simbuf.println("")
+  @simbuf.println("Epidemic FSM:")
+  @simbuf.println("  Final phase: \{epidemic_fsm.current()}")
+  @simbuf.println("  Transitions: \{epidemic_fsm.transition_count()}")
+  @simbuf.println("")
+  @simbuf.println("Final State Distribution:")
+  @simbuf.println("  Susceptible (S): \{final_s}")
+  @simbuf.println("  Exposed (E):     \{final_e}")
+  @simbuf.println("  Infected (I):    \{final_i}")
+  @simbuf.println("  Recovered (R):   \{final_r}")
+  @simbuf.println("")
+  @simbuf.println("Epidemic Statistics:")
+  @simbuf.println("  Total infected (cumulative): \{total_infected}")
+  @simbuf.println("  Total recovered:             \{total_recovered}")
+  @simbuf.println("  Peak concurrent infections:   \{peak_infected}")
   let attack_rate = total_infected.to_double() /
     contact_net.node_count().to_double() *
     100.0
-  println("  Attack rate:                 \{attack_rate}%")
-  println("")
+  @simbuf.println("  Attack rate:                 \{attack_rate}%")
+  @simbuf.println("")
   if infection_timeline.length() > 0 {
     let ts = @stats.summary(infection_timeline)
-    println("Infection Timeline Statistics:")
-    println("  Count:  \{infection_timeline.length()}")
-    println("  Mean:   \{ts.mean}")
-    println("  StdDev: \{ts.stddev}")
-    println("  Min:    \{ts.min}")
-    println("  Max:    \{ts.max}")
+    @simbuf.println("Infection Timeline Statistics:")
+    @simbuf.println("  Count:  \{infection_timeline.length()}")
+    @simbuf.println("  Mean:   \{ts.mean}")
+    @simbuf.println("  StdDev: \{ts.stddev}")
+    @simbuf.println("  Min:    \{ts.min}")
+    @simbuf.println("  Max:    \{ts.max}")
   }
-  println("")
-  println("Per-Person Status:")
+  @simbuf.println("")
+  @simbuf.println("Per-Person Status:")
   for person in people {
     let state = person_chains[person].current()
     let deg = contact_net.degree(person)
@@ -253,10 +254,11 @@ fn main {
       "R" => "Recovered"
       _ => "Unknown"
     }
-    println("  \{person}: \{label} (contacts=\{deg})")
+    @simbuf.println("  \{person}: \{label} (contacts=\{deg})")
   }
-  println("")
-  println("Event Bus:")
-  println("  Topics: \{bus.topics().length()}")
-  println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.println("")
+  @simbuf.println("Event Bus:")
+  @simbuf.println("  Topics: \{bus.topics().length()}")
+  @simbuf.println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.to_string()
 }

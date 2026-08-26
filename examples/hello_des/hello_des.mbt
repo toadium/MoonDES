@@ -3,7 +3,8 @@
 ///
 /// 演示如何创建仿真环境、调度事件、运行主循环。
 /// 三个事件按时间顺序触发，输出各自的发生时间。
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=20.0)
   let log : Array[String] = []
   ignore(
@@ -23,7 +24,8 @@ fn main {
   )
   env.run()
   for line in log {
-    println(line)
+    @simbuf.println(line)
   }
-  println("仿真结束时间: \{env.now()}")
+  @simbuf.println("仿真结束时间: \{env.now()}")
+  @simbuf.to_string()
 }

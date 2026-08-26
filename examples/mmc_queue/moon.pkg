@@ -4,6 +4,5 @@ import {
   "walkzzz/moondes/resource",
   "walkzzz/moondes/random",
   "walkzzz/moondes/stats",
+  "walkzzz/moondes/simbuf",
 }
-
-pkgtype(kind: "executable")

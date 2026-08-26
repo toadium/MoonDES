@@ -9,7 +9,8 @@
 /// Random 模拟故障概率和服务时间。
 ///
 /// 运行：moon run ./examples/factory_machine --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=500.0)
   let rng = @random.new_rng()
 
@@ -91,23 +92,24 @@ fn main {
 
   env.run()
 
-  println("Factory Machine FSM Simulation")
-  println("==============================")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("")
-  println("Results:")
-  println("  Jobs completed:    \{jobs_completed}")
-  println("  Breakdowns:        \{breakdowns}")
-  println("  Total work time:   \{total_work_time}")
-  println("  Total repair time: \{total_repair_time}")
-  println("  State transitions: \{sm.transition_count()}")
-  println("  Final state:       \{sm.current()}")
-  println("")
-  println("State history (last 20):")
+  @simbuf.println("Factory Machine FSM Simulation")
+  @simbuf.println("==============================")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Results:")
+  @simbuf.println("  Jobs completed:    \{jobs_completed}")
+  @simbuf.println("  Breakdowns:        \{breakdowns}")
+  @simbuf.println("  Total work time:   \{total_work_time}")
+  @simbuf.println("  Total repair time: \{total_repair_time}")
+  @simbuf.println("  State transitions: \{sm.transition_count()}")
+  @simbuf.println("  Final state:       \{sm.current()}")
+  @simbuf.println("")
+  @simbuf.println("State history (last 20):")
   let h = sm.history()
   let start = if h.length() > 20 { h.length() - 20 } else { 0 }
   for i in start..<h.length() {
-    println("  \{i}: \{h[i]}")
+    @simbuf.println("  \{i}: \{h[i]}")
   }
+  @simbuf.to_string()
 }

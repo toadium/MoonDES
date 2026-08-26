@@ -6,7 +6,8 @@
 /// 估算 PI = 4 * inside / total。
 ///
 /// 运行：moon run ./examples/monte_carlo_pi --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let rng = @random.new_rng()
   let n = 100000
   let mut inside = 0
@@ -31,25 +32,26 @@ fn main {
   let error = pi_estimate - 3.141592653589793
   let abs_error = if error < 0.0 { -error } else { error }
 
-  println("Monte Carlo PI Estimation")
-  println("=========================")
-  println("Total samples: \{n}")
-  println("Inside circle: \{inside}")
-  println("")
-  println("PI estimate:   \{pi_estimate}")
-  println("PI actual:     3.141592653589793")
-  println("Absolute error: \{abs_error}")
-  println("")
-  println("Batch convergence:")
+  @simbuf.println("Monte Carlo PI Estimation")
+  @simbuf.println("=========================")
+  @simbuf.println("Total samples: \{n}")
+  @simbuf.println("Inside circle: \{inside}")
+  @simbuf.println("")
+  @simbuf.println("PI estimate:   \{pi_estimate}")
+  @simbuf.println("PI actual:     3.141592653589793")
+  @simbuf.println("Absolute error: \{abs_error}")
+  @simbuf.println("")
+  @simbuf.println("Batch convergence:")
   for i in 0..<ratios.length() {
     let n_i = (i + 1) * 10000
-    println("  N=\{n_i}  PI≈\{ratios[i]}")
+    @simbuf.println("  N=\{n_i}  PI≈\{ratios[i]}")
   }
-  println("")
+  @simbuf.println("")
   let s = @stats.summary(ratios)
-  println("Statistics over batches:")
-  println("  Mean:   \{s.mean}")
-  println("  StdDev: \{s.stddev}")
-  println("  Min:    \{s.min}")
-  println("  Max:    \{s.max}")
+  @simbuf.println("Statistics over batches:")
+  @simbuf.println("  Mean:   \{s.mean}")
+  @simbuf.println("  StdDev: \{s.stddev}")
+  @simbuf.println("  Min:    \{s.min}")
+  @simbuf.println("  Max:    \{s.max}")
+  @simbuf.to_string()
 }

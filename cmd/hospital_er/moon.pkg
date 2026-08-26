@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/hospital_er",
+}
+
+pkgtype(kind: "executable")

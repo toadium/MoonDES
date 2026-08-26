@@ -8,7 +8,8 @@
 /// 统计吞吐量和延迟。
 ///
 /// 运行：moon run ./examples/network_simulation --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=100.0)
   let mut received = 0
   let mut total_delay = 0.0
@@ -25,29 +26,29 @@ fn main {
   link_bc.receive(fn(pkt) {
     received = received + 1
     total_delay = total_delay + env.now()
-    println("[C] received '\{pkt.data}' from \{pkt.source} at t=\{env.now()}")
+    @simbuf.println("[C] received '\{pkt.data}' from \{pkt.source} at t=\{env.now()}")
   })
 
   // B 端接收并路由转发
   link_ab.receive(fn(pkt) {
-    println("[B] routing '\{pkt.data}' to \{pkt.dest} at t=\{env.now()}")
+    @simbuf.println("[B] routing '\{pkt.data}' to \{pkt.dest} at t=\{env.now()}")
     ignore(router_b.send(pkt))
   })
 
   // A 端发送 3 个数据包
   ignore(
     @process.process(env, name="sender-A", behavior=fn(_) {
-      println("[A] sending packet 1 at t=\{env.now()}")
+      @simbuf.println("[A] sending packet 1 at t=\{env.now()}")
       link_ab.send(
         @network.new_packet(source="A", dest="C", size=100, data="msg-1"),
       )
       @process.Timeout(duration=10.0, next=fn() {
-        println("[A] sending packet 2 at t=\{env.now()}")
+        @simbuf.println("[A] sending packet 2 at t=\{env.now()}")
         link_ab.send(
           @network.new_packet(source="A", dest="C", size=200, data="msg-2"),
         )
         @process.Timeout(duration=15.0, next=fn() {
-          println("[A] sending packet 3 at t=\{env.now()}")
+          @simbuf.println("[A] sending packet 3 at t=\{env.now()}")
           link_ab.send(
             @network.new_packet(source="A", dest="C", size=150, data="msg-3"),
           )
@@ -58,10 +59,11 @@ fn main {
   )
 
   env.run()
-  println("")
-  println("=== Network Simulation Results ===")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("Packets received: \{received}")
-  println("Average end-to-end delay: \{total_delay / received.to_double()}")
+  @simbuf.println("")
+  @simbuf.println("=== Network Simulation Results ===")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("Packets received: \{received}")
+  @simbuf.println("Average end-to-end delay: \{total_delay / received.to_double()}")
+  @simbuf.to_string()
 }

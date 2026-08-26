@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/network_simulation",
+}
+
+pkgtype(kind: "executable")

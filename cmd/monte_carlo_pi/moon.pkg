@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/monte_carlo_pi",
+}
+
+pkgtype(kind: "executable")

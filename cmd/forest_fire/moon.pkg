@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/forest_fire",
+}
+
+pkgtype(kind: "executable")

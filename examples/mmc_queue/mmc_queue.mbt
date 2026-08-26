@@ -6,7 +6,8 @@
 /// 使用 Resource 层的 Capacity 资源模拟 c 个服务台。
 ///
 /// 运行：moon run ./examples/mmc_queue --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let c = 3 // 服务台数量
   let lambda = 0.5 // 到达率
   let mu = 0.3 // 服务率
@@ -118,30 +119,31 @@ fn main {
   }
   let throughput = served.to_double() / env.now()
 
-  println("M/M/c Queue Simulation")
-  println("======================")
-  println("Parameters:")
-  println("  Servers (c):     \{c}")
-  println("  Arrival rate (λ): \{lambda}")
-  println("  Service rate (μ): \{mu}")
-  println("  Simulation time:  \{until}")
-  println("")
-  println("Results:")
-  println("  Customers served:   \{served}")
-  println("  Throughput:         \{throughput}")
-  println("  Avg wait time:      \{avg_wait}")
-  println("  Avg system time:    \{avg_sys}")
-  println("  Max queue length:   \{max_queue}")
-  println("  Utilization (ρ):    \{rho}")
-  println("")
+  @simbuf.println("M/M/c Queue Simulation")
+  @simbuf.println("======================")
+  @simbuf.println("Parameters:")
+  @simbuf.println("  Servers (c):     \{c}")
+  @simbuf.println("  Arrival rate (λ): \{lambda}")
+  @simbuf.println("  Service rate (μ): \{mu}")
+  @simbuf.println("  Simulation time:  \{until}")
+  @simbuf.println("")
+  @simbuf.println("Results:")
+  @simbuf.println("  Customers served:   \{served}")
+  @simbuf.println("  Throughput:         \{throughput}")
+  @simbuf.println("  Avg wait time:      \{avg_wait}")
+  @simbuf.println("  Avg system time:    \{avg_sys}")
+  @simbuf.println("  Max queue length:   \{max_queue}")
+  @simbuf.println("  Utilization (ρ):    \{rho}")
+  @simbuf.println("")
   if wait_times.length() > 0 {
     let ws = @stats.summary(wait_times)
-    println("Wait time statistics:")
-    println("  Mean:   \{ws.mean}")
-    println("  StdDev: \{ws.stddev}")
-    println("  Min:    \{ws.min}")
-    println("  Max:    \{ws.max}")
+    @simbuf.println("Wait time statistics:")
+    @simbuf.println("  Mean:   \{ws.mean}")
+    @simbuf.println("  StdDev: \{ws.stddev}")
+    @simbuf.println("  Min:    \{ws.min}")
+    @simbuf.println("  Max:    \{ws.max}")
   }
-  println("")
-  println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.to_string()
 }

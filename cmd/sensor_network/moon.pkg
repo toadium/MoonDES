@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/sensor_network",
+}
+
+pkgtype(kind: "executable")

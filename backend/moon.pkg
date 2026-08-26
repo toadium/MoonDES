@@ -1,0 +1,33 @@
+import {
+  "moonbitlang/async",
+  "moonbitlang/async/http" @http,
+  "moonbitlang/async/socket" @socket,
+  "moonbitlang/async/stdio" @stdio,
+  "moonbitlang/async/fs" @fs,
+  "moonbitlang/async/io" @io,
+  "moonbitlang/core/json" @json,
+  "walkzzz/moondes/shared" @shared,
+  "walkzzz/moondes/examples/hello_des",
+  "walkzzz/moondes/examples/mm1_queue",
+  "walkzzz/moondes/examples/mmc_queue",
+  "walkzzz/moondes/examples/producer_consumer",
+  "walkzzz/moondes/examples/dining_philosophers",
+  "walkzzz/moondes/examples/resource_sharing",
+  "walkzzz/moondes/examples/traffic_system",
+  "walkzzz/moondes/examples/elevator_dispatch",
+  "walkzzz/moondes/examples/sensor_network",
+  "walkzzz/moondes/examples/network_simulation",
+  "walkzzz/moondes/examples/monte_carlo_pi",
+  "walkzzz/moondes/examples/benchmark",
+  "walkzzz/moondes/examples/hospital_er",
+  "walkzzz/moondes/examples/factory_machine",
+  "walkzzz/moondes/examples/water_treatment",
+  "walkzzz/moondes/examples/sewage_treatment",
+  "walkzzz/moondes/examples/social_network",
+  "walkzzz/moondes/examples/epidemic_spread",
+  "walkzzz/moondes/examples/forest_fire",
+}
+
+supported_targets = "native"
+
+pkgtype(kind: "executable")

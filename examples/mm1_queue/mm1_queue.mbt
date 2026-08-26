@@ -3,7 +3,8 @@
 ///
 /// 单服务台排队模型：顾客按间隔到达，服务台逐一服务。
 /// 使用 Process 层创建到达进程和服务进程，统计系统指标。
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=100.0)
   let mut served : Int = 0
   let mut queue_len : Int = 0
@@ -39,8 +40,9 @@ fn main {
     }),
   )
   env.run()
-  println("=== M/M/1 排队系统仿真结果 ===")
-  println("仿真时长: \{env.now()}")
-  println("已服务顾客数: \{served}")
-  println("最大排队长度: \{max_queue}")
+  @simbuf.println("=== M/M/1 排队系统仿真结果 ===")
+  @simbuf.println("仿真时长: \{env.now()}")
+  @simbuf.println("已服务顾客数: \{served}")
+  @simbuf.println("最大排队长度: \{max_queue}")
+  @simbuf.to_string()
 }

@@ -11,7 +11,8 @@
 /// - Stats 统计传播范围、速度、影响力
 ///
 /// 运行：moon run ./examples/social_network --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=100.0)
   let rng = @random.new_rng()
   let bus = @eventbus.new_event_bus()
@@ -172,17 +173,17 @@ fn main {
   }
 
   // 输出
-  println("Social Network Simulation")
-  println("==========================")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("")
-  println("Network Topology:")
-  println("  Nodes (people): \{network.node_count()}")
-  println("  Edges (relationships): \{network.edge_count()}")
-  println("  Components: \{network.connected_components().length()}")
-  println("")
-  println("BFS from Alice (information reach order):")
+  @simbuf.println("Social Network Simulation")
+  @simbuf.println("==========================")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Network Topology:")
+  @simbuf.println("  Nodes (people): \{network.node_count()}")
+  @simbuf.println("  Edges (relationships): \{network.edge_count()}")
+  @simbuf.println("  Components: \{network.connected_components().length()}")
+  @simbuf.println("")
+  @simbuf.println("BFS from Alice (information reach order):")
   let bfs_order = network.bfs("Alice")
   for i in 0..<bfs_order.length() {
     let person = bfs_order[i]
@@ -195,52 +196,53 @@ fn main {
     } else {
       " - uninformed"
     }
-    println("  [\{i}] \{person} (degree=\{deg})\{label}")
+    @simbuf.println("  [\{i}] \{person} (degree=\{deg})\{label}")
   }
-  println("")
-  println("Shortest Paths from Alice:")
+  @simbuf.println("")
+  @simbuf.println("Shortest Paths from Alice:")
   for person in people {
     if person != "Alice" {
       match network.shortest_path("Alice", person) {
         Some(path) => {
           let hops = path.length() - 1
           let path_str = path.join(" -> ")
-          println("  Alice -> \{person}: \{hops} hops (\{path_str})")
+          @simbuf.println("  Alice -> \{person}: \{hops} hops (\{path_str})")
         }
-        None => println("  Alice -> \{person}: unreachable")
+        None => @simbuf.println("  Alice -> \{person}: unreachable")
       }
     }
   }
-  println("")
-  println("Information Spread Statistics:")
-  println("  Total informed:    \{total_informed}")
-  println("  Total influencers: \{total_influencers}")
+  @simbuf.println("")
+  @simbuf.println("Information Spread Statistics:")
+  @simbuf.println("  Total informed:    \{total_informed}")
+  @simbuf.println("  Total influencers: \{total_influencers}")
   let reach_rate = total_informed.to_double() /
     network.node_count().to_double() *
     100.0
-  println("  Reach rate:        \{reach_rate}%")
-  println("")
+  @simbuf.println("  Reach rate:        \{reach_rate}%")
+  @simbuf.println("")
   if inform_times.length() > 0 {
     let ts = @stats.summary(inform_times)
-    println("Inform Time Statistics:")
-    println("  Count:  \{inform_times.length()}")
-    println("  Mean:   \{ts.mean}")
-    println("  StdDev: \{ts.stddev}")
-    println("  Min:    \{ts.min}")
-    println("  Max:    \{ts.max}")
+    @simbuf.println("Inform Time Statistics:")
+    @simbuf.println("  Count:  \{inform_times.length()}")
+    @simbuf.println("  Mean:   \{ts.mean}")
+    @simbuf.println("  StdDev: \{ts.stddev}")
+    @simbuf.println("  Min:    \{ts.min}")
+    @simbuf.println("  Max:    \{ts.max}")
   }
-  println("")
+  @simbuf.println("")
   if influence_scores.length() > 0 {
     let is_stat = @stats.summary(influence_scores)
-    println("Influence Score Statistics:")
-    println("  Count:  \{influence_scores.length()}")
-    println("  Mean:   \{is_stat.mean}")
-    println("  StdDev: \{is_stat.stddev}")
-    println("  Min:    \{is_stat.min}")
-    println("  Max:    \{is_stat.max}")
+    @simbuf.println("Influence Score Statistics:")
+    @simbuf.println("  Count:  \{influence_scores.length()}")
+    @simbuf.println("  Mean:   \{is_stat.mean}")
+    @simbuf.println("  StdDev: \{is_stat.stddev}")
+    @simbuf.println("  Min:    \{is_stat.min}")
+    @simbuf.println("  Max:    \{is_stat.max}")
   }
-  println("")
-  println("Event Bus:")
-  println("  Topics: \{bus.topics().length()}")
-  println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.println("")
+  @simbuf.println("Event Bus:")
+  @simbuf.println("  Topics: \{bus.topics().length()}")
+  @simbuf.println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.to_string()
 }

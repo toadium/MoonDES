@@ -5,7 +5,8 @@
 /// Store 空时消费者阻塞等待。使用 Store[T] 实现异步解耦。
 ///
 /// 运行：moon run ./examples/producer_consumer --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=30.0)
   let store : @sync.Store[Int] = @sync.new_store()
   let mut produced = 0
@@ -68,10 +69,11 @@ fn main {
   )
 
   env.run()
-  println("Producer-Consumer (Store[Int])")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("Produced: \{produced}")
-  println("Consumed: \{consumed}")
-  println("Remaining in store: \{store.size()}")
+  @simbuf.println("Producer-Consumer (Store[Int])")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("Produced: \{produced}")
+  @simbuf.println("Consumed: \{consumed}")
+  @simbuf.println("Remaining in store: \{store.size()}")
+  @simbuf.to_string()
 }

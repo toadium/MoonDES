@@ -1,0 +1,5 @@
+import {
+  "walkzzz/moondes/examples/hello_des",
+}
+
+pkgtype(kind: "executable")

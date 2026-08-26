@@ -8,6 +8,5 @@ import {
   "walkzzz/moondes/eventbus",
   "walkzzz/moondes/timer",
   "walkzzz/moondes/pipeline",
+  "walkzzz/moondes/simbuf",
 }
-
-pkgtype(kind: "executable")

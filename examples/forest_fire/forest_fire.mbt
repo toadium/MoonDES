@@ -12,7 +12,8 @@
 /// - Stats 燃烧面积/扩散速度统计
 ///
 /// 运行：moon run ./examples/forest_fire --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let env = @core.new_env(until=100.0)
   let rng = @random.new_rng()
   let bus = @eventbus.new_event_bus()
@@ -150,37 +151,37 @@ fn main {
   let initial_trees = grid_w * grid_h - forest.count_value("Empty")
 
   // 输出
-  println("Forest Fire Spread Simulation")
-  println("=============================")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("")
-  println("Forest Grid: \{grid_w}x\{grid_h} (\{grid_w * grid_h} cells)")
-  println("Initial ignition: (\{cx}, \{cy})")
-  println("")
-  println("Fire Alert FSM:")
-  println("  Final phase: \{fire_fsm.current()}")
-  println("  Transitions: \{fire_fsm.transition_count()}")
-  println("")
-  println("Final State Distribution:")
-  println("  Trees:  \{final_trees}")
-  println("  Burned: \{final_empties} (includes pre-existing empty)")
-  println("  Total burned (cumulative): \{total_burned}")
-  println("  Peak concurrent fires:    \{peak_burning}")
+  @simbuf.println("Forest Fire Spread Simulation")
+  @simbuf.println("=============================")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("")
+  @simbuf.println("Forest Grid: \{grid_w}x\{grid_h} (\{grid_w * grid_h} cells)")
+  @simbuf.println("Initial ignition: (\{cx}, \{cy})")
+  @simbuf.println("")
+  @simbuf.println("Fire Alert FSM:")
+  @simbuf.println("  Final phase: \{fire_fsm.current()}")
+  @simbuf.println("  Transitions: \{fire_fsm.transition_count()}")
+  @simbuf.println("")
+  @simbuf.println("Final State Distribution:")
+  @simbuf.println("  Trees:  \{final_trees}")
+  @simbuf.println("  Burned: \{final_empties} (includes pre-existing empty)")
+  @simbuf.println("  Total burned (cumulative): \{total_burned}")
+  @simbuf.println("  Peak concurrent fires:    \{peak_burning}")
   let burn_rate = total_burned.to_double() / initial_trees.to_double() * 100.0
-  println("  Burn rate:                \{burn_rate}%")
-  println("")
+  @simbuf.println("  Burn rate:                \{burn_rate}%")
+  @simbuf.println("")
   if burn_timeline.length() > 0 {
     let ts = @stats.summary(burn_timeline)
-    println("Burn Timeline Statistics:")
-    println("  Count:  \{burn_timeline.length()}")
-    println("  Mean:   \{ts.mean}")
-    println("  StdDev: \{ts.stddev}")
-    println("  Min:    \{ts.min}")
-    println("  Max:    \{ts.max}")
+    @simbuf.println("Burn Timeline Statistics:")
+    @simbuf.println("  Count:  \{burn_timeline.length()}")
+    @simbuf.println("  Mean:   \{ts.mean}")
+    @simbuf.println("  StdDev: \{ts.stddev}")
+    @simbuf.println("  Min:    \{ts.min}")
+    @simbuf.println("  Max:    \{ts.max}")
   }
-  println("")
-  println("Area History (burning cells per step):")
+  @simbuf.println("")
+  @simbuf.println("Area History (burning cells per step):")
   for i in 0..<area_history.length() {
     let bar_len = area_history[i]
     let mut bar = ""
@@ -190,10 +191,10 @@ fn main {
     if bar.length() > 60 {
       bar = bar[:60].to_owned() + "..."
     }
-    println("  Step \{i}: \{area_history[i]} \{bar}")
+    @simbuf.println("  Step \{i}: \{area_history[i]} \{bar}")
   }
-  println("")
-  println("Final Forest Grid (T=Tree, B=Burning, .=Empty):")
+  @simbuf.println("")
+  @simbuf.println("Final Forest Grid (T=Tree, B=Burning, .=Empty):")
   let g = ca.current_grid()
   for y in 0..<grid_h {
     let mut row = "  "
@@ -207,10 +208,11 @@ fn main {
       }
       row += ch
     }
-    println(row)
+    @simbuf.println(row)
   }
-  println("")
-  println("Event Bus:")
-  println("  Topics: \{bus.topics().length()}")
-  println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.println("")
+  @simbuf.println("Event Bus:")
+  @simbuf.println("  Topics: \{bus.topics().length()}")
+  @simbuf.println("  Subscribers: \{bus.total_subscribers()}")
+  @simbuf.to_string()
 }

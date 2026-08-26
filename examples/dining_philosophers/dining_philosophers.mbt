@@ -5,7 +5,8 @@
 /// 哲学家交替思考和就餐。使用 Semaphore 防止相邻哲学家同时拿同一支叉子。
 ///
 /// 运行：moon run ./examples/dining_philosophers --target wasm
-fn main {
+pub fn run() -> String {
+  @simbuf.clear()
   let n = 5
   let env = @core.new_env(until=50.0)
   let mut meals_served = 0
@@ -60,8 +61,9 @@ fn main {
   }
 
   env.run()
-  println("Dining Philosophers (N=\{n})")
-  println("Simulation time: \{env.now()}")
-  println("Events processed: \{env.event_count()}")
-  println("Meals served: \{meals_served}")
+  @simbuf.println("Dining Philosophers (N=\{n})")
+  @simbuf.println("Simulation time: \{env.now()}")
+  @simbuf.println("Events processed: \{env.event_count()}")
+  @simbuf.println("Meals served: \{meals_served}")
+  @simbuf.to_string()
 }
