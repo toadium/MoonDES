@@ -5,7 +5,7 @@
 /// - GET  /              → 静态 index.html
 /// - GET  /frontend.js   → 前端 JS bundle
 /// - GET  /api/examples  → 示例列表 JSON
-/// - POST /api/simulate  → 运行仿真，返回结果 JSON
+/// - POST /api/simulate  → 运行仿真，返回结果 JSON（含 mermaid 图表 + 统计卡片）
 ///
 /// 运行：moon run backend --target native
 
@@ -70,6 +70,8 @@ fn run_simulation(name : String) -> @shared.SimulationResponse {
       duration_ms: 0,
       success: false,
       error: Some("Unknown example: \{name}"),
+      mermaid: None,
+      stats: [],
     }
   } else {
     @shared.SimulationResponse::{
@@ -78,6 +80,8 @@ fn run_simulation(name : String) -> @shared.SimulationResponse {
       duration_ms: 0,
       success: true,
       error: None,
+      mermaid: gen_mermaid(name),
+      stats: gen_stats(name),
     }
   }
 }
@@ -154,6 +158,8 @@ async fn main {
               duration_ms: 0,
               success: false,
               error: Some("Invalid request: \{err}"),
+              mermaid: None,
+              stats: [],
             }
           }
         }

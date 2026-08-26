@@ -9,6 +9,15 @@
 // ===========================================================================
 
 ///|
+/// 统计卡片
+pub(all) struct StatCard {
+  label : String    // 标签（如 "已服务顾客数"）
+  value : String    // 值（如 "42"）
+  unit : String     // 单位（如 "人"、"批/h"），可为空
+  color : String    // 颜色主题：blue/green/orange/red/purple/cyan
+} derive(Eq, ToJson, FromJson)
+
+///|
 /// 仿真请求
 pub(all) struct SimulationRequest {
   name : String       // 示例名称
@@ -23,6 +32,8 @@ pub(all) struct SimulationResponse {
   duration_ms : Int   // 运行耗时（毫秒）
   success : Bool      // 是否成功
   error : String?     // 错误信息
+  mermaid : String?   // Mermaid 图表源码（可选）
+  stats : Array[StatCard]  // 统计卡片
 } derive(Eq, ToJson, FromJson)
 
 ///|

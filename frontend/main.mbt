@@ -3,7 +3,7 @@
 ///
 /// 19 个仿真示例的交互式 Web UI：
 /// - 左侧示例列表（分类标注）
-/// - 右侧仿真描述 + 运行按钮 + 输出展示
+/// - 右侧仿真描述 + 运行按钮 + 统计卡片 + Mermaid 图表 + 文本输出
 ///
 /// 构建：moon build frontend --target js
 
@@ -15,6 +15,8 @@ struct Model {
   output : String
   running : Bool
   error : String?
+  mermaid : String?
+  stats : Array[@shared.StatCard]
 }
 
 ///|
@@ -22,7 +24,7 @@ struct Model {
 enum Msg {
   Select(Int)
   Run
-  SimResult(String)
+  SimResult(String, String?, Array[@shared.StatCard])
   SimError(String)
 }
 
@@ -35,6 +37,8 @@ fn init_model() -> Model {
     output: "",
     running: false,
     error: None,
+    mermaid: None,
+    stats: [],
   }
 }
 
@@ -44,7 +48,7 @@ fn parse_response(raw : String) -> Msg {
   try {
     let resp : @shared.SimulationResponse = @json.from_json(@json.parse(raw))
     if resp.success {
-      SimResult(resp.output)
+      SimResult(resp.output, resp.mermaid, resp.stats)
     } else {
       let err = match resp.error {
         Some(e) => e
@@ -62,7 +66,7 @@ fn parse_response(raw : String) -> Msg {
 fn update(dispatch : @rabbita.Emit[Msg], msg : Msg, model : Model) -> (@rabbita.Cmd, Model) {
   match msg {
     Select(idx) => {
-      (@rabbita.none, { ..model, selected: idx, output: "", error: None })
+      (@rabbita.none, { ..model, selected: idx, output: "", error: None, mermaid: None, stats: [] })
     }
     Run => {
       if model.running || model.examples.length() == 0 {
@@ -79,16 +83,40 @@ fn update(dispatch : @rabbita.Emit[Msg], msg : Msg, model : Model) -> (@rabbita.
               Err(_) => dispatch(SimError("HTTP request failed"))
             }
           })
-        (cmd, { ..model, running: true, output: "", error: None })
+        (cmd, { ..model, running: true, output: "", error: None, mermaid: None, stats: [] })
       }
     }
-    SimResult(output) => {
-      (@rabbita.none, { ..model, running: false, output, error: None })
+    SimResult(output, mermaid, stats) => {
+      (@rabbita.none, { ..model, running: false, output, error: None, mermaid, stats })
     }
     SimError(err) => {
       (@rabbita.none, { ..model, running: false, error: Some(err) })
     }
   }
+}
+
+///|
+/// 渲染统计卡片
+fn view_stats(stats : Array[@shared.StatCard]) -> @html.Html {
+  let cards : Array[@html.Html] = []
+  for card in stats {
+    let cls = "stat-card stat-\{card.color}"
+    let value_text = if card.unit == "" {
+      card.value
+    } else {
+      "\{card.value} \{card.unit}"
+    }
+    cards.push(
+      @html.div(
+        class=cls,
+        [
+          @html.div(class="stat-label", [@html.text(card.label)]),
+          @html.div(class="stat-value", [@html.text(value_text)]),
+        ],
+      ),
+    )
+  }
+  @html.div(class="stats-grid", cards)
 }
 
 ///|
@@ -134,25 +162,49 @@ fn view(dispatch : @rabbita.Emit[Msg], model : Model) -> @html.Html {
     [@html.text(run_label)],
   )
 
-  // 输出区域
-  let output_html = if model.running {
-    @html.pre(class="output", [@html.text("正在运行仿真...")])
+  // 可视化区域：统计卡片 + Mermaid 图表
+  let visual_html = if model.running {
+    @html.div(class="visual-area", [
+      @html.div(class="loading-spinner", [@html.text("正在运行仿真...")]),
+    ])
   } else if model.output != "" {
-    @html.pre(class="output", [@html.text(model.output)])
+    let parts : Array[@html.Html] = []
+    // 统计卡片
+    if model.stats.length() > 0 {
+      parts.push(view_stats(model.stats))
+    }
+    // Mermaid 图表
+    match model.mermaid {
+      Some(m) =>
+        parts.push(
+          @html.div(class="mermaid-section", [
+            @html.h3([@html.text("架构图表")]),
+            @html.div(class="mermaid", [@html.text(m)]),
+          ]),
+        )
+      None => ()
+    }
+    // 文本输出
+    parts.push(
+      @html.div(class="output-section", [
+        @html.h3([@html.text("仿真输出")]),
+        @html.pre(class="output", [@html.text(model.output)]),
+      ]),
+    )
+    @html.div(class="visual-area", parts)
   } else {
     match model.error {
       Some(e) =>
-        @html.pre(class="output", [@html.text("错误: \{e}")])
+        @html.div(class="visual-area", [
+          @html.pre(class="output error-output", [@html.text("错误: \{e}")]),
+        ])
       None =>
-        @html.div(
-          class="output",
-          [
-            @html.div(
-              class="placeholder",
-              [@html.text("点击左侧示例，然后运行仿真")],
-            ),
-          ],
-        )
+        @html.div(class="visual-area", [
+          @html.div(
+            class="output placeholder",
+            [@html.text("点击左侧示例，然后运行仿真")],
+          ),
+        ])
     }
   }
 
@@ -162,7 +214,7 @@ fn view(dispatch : @rabbita.Emit[Msg], model : Model) -> @html.Html {
       @html.h2([@html.text(title_text)]),
       @html.p(class="desc", [@html.text(desc_text)]),
       run_btn,
-      output_html,
+      visual_html,
     ],
   )
 
