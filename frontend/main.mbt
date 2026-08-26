@@ -302,6 +302,9 @@ fn view(dispatch : @rabbita.Emit[Msg], model : Model) -> @html.Html {
           @html.div(class="mermaid-section", [
             @html.div(class="section-header", [
               @html.h3([@html.text("架构图表")]),
+              @html.div(class="toolbar-buttons", [
+                @html.button(class="tool-btn", id="btn-replay", [@html.text("重播动画")]),
+              ]),
             ]),
             @html.div(class="mermaid", [@html.text(m)]),
           ]),

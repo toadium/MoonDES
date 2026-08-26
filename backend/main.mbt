@@ -134,6 +134,8 @@ async fn main {
         send_file(conn, "backend/index.html", html_headers, "Missing backend/index.html")
       (@http.Get, "/frontend.js") =>
         send_file(conn, "backend/frontend.js", js_headers, "Missing frontend bundle")
+      (@http.Get, "/anim.js") =>
+        send_file(conn, "backend/anim.js", js_headers, "Missing anim.js")
       (@http.Get, "/api/examples") => {
         let list = @shared.example_list()
         let json_str = list.to_json().stringify()
