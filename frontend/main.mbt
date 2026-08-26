@@ -71,7 +71,7 @@ fn update(dispatch : @rabbita.Emit[Msg], msg : Msg, model : Model) -> (@rabbita.
         let ex = model.examples[model.selected]
         let request = @shared.SimulationRequest::{ name: ex.name, params: "{}" }
         let request_json = request.to_json().stringify()
-        let cmd = @rhttp.post("http://127.0.0.1:8080/api/simulate")
+        let cmd = @rhttp.post("/api/simulate")
           .with_text(request_json)
           .expect_text(fn(result) {
             match result {

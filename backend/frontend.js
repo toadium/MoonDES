@@ -25560,7 +25560,7 @@ function _M0FP37walkzzz7moondes8frontend6update(dispatch, msg, model) {
               const ex = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, model.selected);
               const request = new _M0TP37walkzzz7moondes6shared17SimulationRequest(ex.name, "{}");
               const request_json = _M0MPC14json4Json17stringify_2einner(_M0IP37walkzzz7moondes6shared17SimulationRequestPB6ToJson8to__json(request), false, 0, undefined);
-              const cmd = _M0MP319moonbit_2dcommunity7rabbita4http7Request12expect__text(_M0MP319moonbit_2dcommunity7rabbita4http15RequestWithBody10with__text(_M0FP319moonbit_2dcommunity7rabbita4http4post("http://127.0.0.1:8080/api/simulate"), request_json), (result) => {
+              const cmd = _M0MP319moonbit_2dcommunity7rabbita4http7Request12expect__text(_M0MP319moonbit_2dcommunity7rabbita4http15RequestWithBody10with__text(_M0FP319moonbit_2dcommunity7rabbita4http4post("/api/simulate"), request_json), (result) => {
                 let raw;
                 _L$4: {
                   if (result.$tag === 1) {
