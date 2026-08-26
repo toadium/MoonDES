@@ -2706,14 +2706,17 @@ function _M0TP37walkzzz7moondes6shared8StatCard(param0, param1, param2, param3) 
   this.unit = param2;
   this.color = param3;
 }
-function _M0TP37walkzzz7moondes8frontend5Model(param0, param1, param2, param3, param4, param5, param6) {
+function _M0TP37walkzzz7moondes8frontend5Model(param0, param1, param2, param3, param4, param5, param6, param7, param8, param9) {
   this.examples = param0;
   this.selected = param1;
   this.output = param2;
   this.running = param3;
-  this.error = param4;
-  this.mermaid = param5;
-  this.stats = param6;
+  this.completed = param4;
+  this.error = param5;
+  this.mermaid = param6;
+  this.stats = param7;
+  this.collapsed = param8;
+  this.show_info = param9;
 }
 function _M0DTP37walkzzz7moondes8frontend3Msg6Select(param0) {
   this._0 = param0;
@@ -2732,6 +2735,16 @@ function _M0DTP37walkzzz7moondes8frontend3Msg8SimError(param0) {
   this._0 = param0;
 }
 _M0DTP37walkzzz7moondes8frontend3Msg8SimError.prototype.$tag = 3;
+function _M0DTP37walkzzz7moondes8frontend3Msg11ToggleGroup(param0) {
+  this._0 = param0;
+}
+_M0DTP37walkzzz7moondes8frontend3Msg11ToggleGroup.prototype.$tag = 4;
+function _M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo() {}
+_M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo.prototype.$tag = 5;
+const _M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo__ = new _M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo();
+function _M0DTP37walkzzz7moondes8frontend3Msg11ClearOutput() {}
+_M0DTP37walkzzz7moondes8frontend3Msg11ClearOutput.prototype.$tag = 6;
+const _M0DTP37walkzzz7moondes8frontend3Msg11ClearOutput__ = new _M0DTP37walkzzz7moondes8frontend3Msg11ClearOutput();
 function _M0TP37walkzzz7moondes6shared17SimulationRequest(param0, param1) {
   this.name = param0;
   this.params = param1;
@@ -2942,6 +2955,7 @@ const _bind$5 = (_discard_, _discard_$2) => new _M0DTPC16result6ResultGRP319moon
 const _M0FP319moonbit_2dcommunity7rabbita3cmd16default__handler = new _M0TP319moonbit_2dcommunity7rabbita3cmd2Op(_bind$5, _bind$2, _bind, _bind$3, _bind$4);
 const _M0FP319moonbit_2dcommunity7rabbita3cmd4none = new _M0DTP319moonbit_2dcommunity7rabbita3cmd3Cmd5Batch([]);
 const _M0FP37walkzzz7moondes6shared13all__examples = [new _M0TP37walkzzz7moondes6shared11ExampleInfo("hello_des", "Hello DES", "基础", "最简事件调度——三个事件按时间顺序触发"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("mm1_queue", "M/M/1 排队", "排队论", "单服务台排队系统仿真"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("mmc_queue", "M/M/c 排队", "排队论", "多服务台排队系统仿真"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("producer_consumer", "生产者-消费者", "并发", "生产者与消费者通过缓冲区协作"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("dining_philosophers", "哲学家就餐", "并发", "五个哲学家共享叉子的经典并发问题"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("resource_sharing", "资源共享", "并发", "多进程竞争共享资源"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("traffic_system", "交通系统", "网络", "十字路口交通灯调度与车辆通行"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("elevator_dispatch", "电梯调度", "网络", "多电梯调度系统，FSM 驱动"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("sensor_network", "传感器网络", "网络", "无线传感器网络监测与数据汇聚"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("network_simulation", "网络仿真", "网络", "网络节点通信与数据包传输"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("monte_carlo_pi", "蒙特卡洛 π", "概率", "蒙特卡洛方法估算圆周率"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("benchmark", "性能基准", "概率", "事件调度/进程调度/M/M/1 性能测试"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("hospital_er", "医院急诊", "综合", "急诊室资源调度+条件变量+FSM"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("factory_machine", "工厂机器", "综合", "工厂机器运转与故障维修仿真"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("water_treatment", "自来水处理", "工业", "多阶段水处理工艺流水线"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("sewage_treatment", "污水处理", "工业", "污水处理厂工艺流程仿真"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("social_network", "社交网络", "图网络", "人脉关系网——图算法+事件总线"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("epidemic_spread", "传染病传播", "图网络", "SIR 传染病模型——Markov+Graph+FSM"), new _M0TP37walkzzz7moondes6shared11ExampleInfo("forest_fire", "森林火灾", "空间", "森林火灾扩散——Grid2D+CA+FSM")];
+const _M0FP37walkzzz7moondes8frontend16category__groups = [{ _0: "基础", _1: "📦" }, { _0: "排队论", _1: "📊" }, { _0: "并发", _1: "🔀" }, { _0: "网络", _1: "🌐" }, { _0: "概率", _1: "🎲" }, { _0: "综合", _1: "🏥" }, { _0: "工业", _1: "🏭" }, { _0: "图网络", _1: "🕸️" }, { _0: "空间", _1: "🔥" }];
 const _self = _M0MP319moonbit_2dcommunity7rabbita3cmd2Op2Op();
 _M0MP319moonbit_2dcommunity7rabbita3cmd2Op12on__identify(_self, (extension) => {
   let http_method;
@@ -4563,6 +4577,9 @@ function _M0MPC16string10StringView13strip__prefix(self, prefix) {
 }
 function _M0MPC15array5Array11new_2einnerGRPC16string10StringViewE(capacity) {
   return [];
+}
+function _M0MPC15array5Array4pushGbE(self, value) {
+  _M0MPB7JSArray4push(self, value);
 }
 function _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(self, value) {
   _M0MPB7JSArray4push(self, value);
@@ -7347,6 +7364,10 @@ function _M0MPC15array5Array3popGiE(self) {
     const v = _M0MPC15array5Array11unsafe__popGiE(self);
     return v;
   }
+}
+function _M0MPC15array5Array2atGbE(self, index) {
+  const len = self.length;
+  return index >= 0 && index < len ? self[index] : $panic();
 }
 function _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(self, index) {
   const len = self.length;
@@ -19930,6 +19951,34 @@ function _M0FP319moonbit_2dcommunity7rabbita4html3preGRPB5ArrayGRP319moonbit_2dc
   }
   return _M0FP319moonbit_2dcommunity7rabbita4html11pre_2einnerGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(style, id, class_, title, hidden, attrs, children);
 }
+function _M0FP319moonbit_2dcommunity7rabbita4html12span_2einnerGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(style, id, class_, title, hidden, attrs, children) {
+  let attrs$2;
+  let children$2;
+  _L: {
+    const _bind$8 = _M0FP319moonbit_2dcommunity7rabbita4html14resolve__attrsGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(attrs, children);
+    const _attrs = _bind$8._0;
+    const _children = _bind$8._1;
+    attrs$2 = _attrs;
+    children$2 = _children;
+    break _L;
+  }
+  _M0FP319moonbit_2dcommunity7rabbita4html11push__title(title, attrs$2);
+  _M0FP319moonbit_2dcommunity7rabbita4html12push__hidden(hidden, attrs$2);
+  _M0FP319moonbit_2dcommunity7rabbita4html11push__style(style, attrs$2);
+  _M0FP319moonbit_2dcommunity7rabbita4html11push__class(class_, attrs$2);
+  _M0FP319moonbit_2dcommunity7rabbita4html8push__id(id, attrs$2);
+  return _M0MP419moonbit_2dcommunity7rabbita8internal4vdom5VNode4elem("span", _M0MP319moonbit_2dcommunity7rabbita4html5Attrs9to__props(attrs$2), children$2, undefined);
+}
+function _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(style$46$opt, id, class_, title, hidden, attrs, children) {
+  let style;
+  if (style$46$opt.$tag === 1) {
+    const _Some = style$46$opt;
+    style = _Some._0;
+  } else {
+    style = [];
+  }
+  return _M0FP319moonbit_2dcommunity7rabbita4html12span_2einnerGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(style, id, class_, title, hidden, attrs, children);
+}
 function _M0FP319moonbit_2dcommunity7rabbita4html4text(str) {
   return _M0MP419moonbit_2dcommunity7rabbita8internal4vdom5VNode4text(str);
 }
@@ -25814,7 +25863,21 @@ function _M0IP37walkzzz7moondes6shared8StatCardPC14json8FromJson10from__json(_x_
   return new _M0DTPC16result6ResultGRP37walkzzz7moondes6shared8StatCardRPC14json15JsonDecodeErrorE2Ok(new _M0TP37walkzzz7moondes6shared8StatCard(_de_label_6$2, _de_value_8$2, _de_unit_7$2, _de_color_5$2));
 }
 function _M0FP37walkzzz7moondes8frontend11init__model() {
-  return new _M0TP37walkzzz7moondes8frontend5Model(_M0FP37walkzzz7moondes6shared13all__examples, 0, "", false, undefined, undefined, []);
+  const collapsed = [];
+  const _bind$8 = 0;
+  const _bind$9 = _M0FP37walkzzz7moondes8frontend16category__groups.length;
+  let _tmp$2 = _bind$8;
+  while (true) {
+    const _ = _tmp$2;
+    if (_ < _bind$9) {
+      _M0MPC15array5Array4pushGbE(collapsed, false);
+      _tmp$2 = _ + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return new _M0TP37walkzzz7moondes8frontend5Model(_M0FP37walkzzz7moondes6shared13all__examples, 0, "", false, false, undefined, undefined, [], collapsed, false);
 }
 function _M0FP37walkzzz7moondes8frontend15parse__response(raw) {
   let _try_err;
@@ -25861,70 +25924,104 @@ function _M0FP37walkzzz7moondes8frontend15parse__response(raw) {
   return new _M0DTP37walkzzz7moondes8frontend3Msg8SimError(_M0MPB13StringBuilder10to__string(_string_builder));
 }
 function _M0FP37walkzzz7moondes8frontend6update(dispatch, msg, model) {
-  let err;
+  let idx;
   _L: {
-    let mermaid;
-    let output;
-    let stats;
+    let err;
     _L$2: {
-      let idx;
+      let mermaid;
+      let output;
+      let stats;
       _L$3: {
-        switch (msg.$tag) {
-          case 0: {
-            const _Select = msg;
-            const _idx = _Select._0;
-            idx = _idx;
-            break _L$3;
-          }
-          case 1: {
-            if (model.running || model.examples.length === 0) {
-              return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: model };
-            } else {
-              const ex = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, model.selected);
-              const request = new _M0TP37walkzzz7moondes6shared17SimulationRequest(ex.name, "{}");
-              const request_json = _M0MPC14json4Json17stringify_2einner(_M0IP37walkzzz7moondes6shared17SimulationRequestPB6ToJson8to__json(request), false, 0, undefined);
-              const cmd = _M0MP319moonbit_2dcommunity7rabbita4http7Request12expect__text(_M0MP319moonbit_2dcommunity7rabbita4http15RequestWithBody10with__text(_M0FP319moonbit_2dcommunity7rabbita4http4post("/api/simulate"), request_json), (result) => {
-                let raw;
-                _L$4: {
-                  if (result.$tag === 1) {
-                    const _Ok = result;
-                    const _raw = _Ok._0;
-                    raw = _raw;
-                    break _L$4;
-                  } else {
-                    const _func = dispatch;
-                    return _func(new _M0DTP37walkzzz7moondes8frontend3Msg8SimError("HTTP request failed"));
+        let idx$2;
+        _L$4: {
+          switch (msg.$tag) {
+            case 0: {
+              const _Select = msg;
+              const _idx = _Select._0;
+              idx$2 = _idx;
+              break _L$4;
+            }
+            case 1: {
+              if (model.running || model.examples.length === 0) {
+                return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: model };
+              } else {
+                const ex = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, model.selected);
+                const request = new _M0TP37walkzzz7moondes6shared17SimulationRequest(ex.name, "{}");
+                const request_json = _M0MPC14json4Json17stringify_2einner(_M0IP37walkzzz7moondes6shared17SimulationRequestPB6ToJson8to__json(request), false, 0, undefined);
+                const cmd = _M0MP319moonbit_2dcommunity7rabbita4http7Request12expect__text(_M0MP319moonbit_2dcommunity7rabbita4http15RequestWithBody10with__text(_M0FP319moonbit_2dcommunity7rabbita4http4post("/api/simulate"), request_json), (result) => {
+                  let raw;
+                  _L$5: {
+                    if (result.$tag === 1) {
+                      const _Ok = result;
+                      const _raw = _Ok._0;
+                      raw = _raw;
+                      break _L$5;
+                    } else {
+                      const _func = dispatch;
+                      return _func(new _M0DTP37walkzzz7moondes8frontend3Msg8SimError("HTTP request failed"));
+                    }
                   }
-                }
-                const _func = dispatch;
-                return _func(_M0FP37walkzzz7moondes8frontend15parse__response(raw));
-              });
-              return { _0: cmd, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, "", true, undefined, undefined, []) };
+                  const _func = dispatch;
+                  return _func(_M0FP37walkzzz7moondes8frontend15parse__response(raw));
+                });
+                return { _0: cmd, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, "", true, false, undefined, undefined, [], model.collapsed, model.show_info) };
+              }
+            }
+            case 2: {
+              const _SimResult = msg;
+              const _output = _SimResult._0;
+              const _mermaid = _SimResult._1;
+              const _stats = _SimResult._2;
+              mermaid = _mermaid;
+              output = _output;
+              stats = _stats;
+              break _L$3;
+            }
+            case 3: {
+              const _SimError = msg;
+              const _err = _SimError._0;
+              err = _err;
+              break _L$2;
+            }
+            case 4: {
+              const _ToggleGroup = msg;
+              const _idx$2 = _ToggleGroup._0;
+              idx = _idx$2;
+              break _L;
+            }
+            case 5: {
+              return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, model.output, model.running, model.completed, model.error, model.mermaid, model.stats, model.collapsed, !model.show_info) };
+            }
+            default: {
+              return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, "", model.running, false, model.error, undefined, [], model.collapsed, model.show_info) };
             }
           }
-          case 2: {
-            const _SimResult = msg;
-            const _output = _SimResult._0;
-            const _mermaid = _SimResult._1;
-            const _stats = _SimResult._2;
-            mermaid = _mermaid;
-            output = _output;
-            stats = _stats;
-            break _L$2;
-          }
-          default: {
-            const _SimError = msg;
-            const _err = _SimError._0;
-            err = _err;
-            break _L;
-          }
         }
+        return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, idx$2, "", model.running, false, undefined, undefined, [], model.collapsed, false) };
       }
-      return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, idx, "", model.running, undefined, undefined, []) };
+      return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, output, false, true, undefined, mermaid, stats, model.collapsed, model.show_info) };
     }
-    return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, output, false, undefined, mermaid, stats) };
+    return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, model.output, false, false, err, model.mermaid, model.stats, model.collapsed, model.show_info) };
   }
-  return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, model.output, false, err, model.mermaid, model.stats) };
+  const new_collapsed = [];
+  const _bind$8 = 0;
+  const _bind$9 = model.collapsed.length;
+  let _tmp$2 = _bind$8;
+  while (true) {
+    const i = _tmp$2;
+    if (i < _bind$9) {
+      if (i === idx) {
+        _M0MPC15array5Array4pushGbE(new_collapsed, !_M0MPC15array5Array2atGbE(model.collapsed, i));
+      } else {
+        _M0MPC15array5Array4pushGbE(new_collapsed, _M0MPC15array5Array2atGbE(model.collapsed, i));
+      }
+      _tmp$2 = i + 1 | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return { _0: _M0FP319moonbit_2dcommunity7rabbita3cmd4none, _1: new _M0TP37walkzzz7moondes8frontend5Model(model.examples, model.selected, model.output, model.running, model.completed, model.error, model.mermaid, model.stats, new_collapsed, model.show_info) };
 }
 function _M0FP37walkzzz7moondes8frontend11view__stats(stats) {
   const cards = [];
@@ -25958,24 +26055,66 @@ function _M0FP37walkzzz7moondes8frontend11view__stats(stats) {
   return _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "stats-grid", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, cards);
 }
 function _M0FP37walkzzz7moondes8frontend4view(dispatch, model) {
-  const sidebar_items = [];
+  const sidebar_content = [];
   const _bind$8 = 0;
-  const _bind$9 = model.examples.length;
+  const _bind$9 = _M0FP37walkzzz7moondes8frontend16category__groups.length;
   let _tmp$2 = _bind$8;
   while (true) {
-    const i = _tmp$2;
-    if (i < _bind$9) {
-      const ex = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, i);
-      const cls = i === model.selected ? "example-item active" : "example-item";
-      const _func = dispatch;
-      _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(sidebar_items, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, cls, undefined, -1, _func(new _M0DTP37walkzzz7moondes8frontend3Msg6Select(i)), undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "title", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(ex.title)]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "cat", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(ex.category)])]));
-      _tmp$2 = i + 1 | 0;
+    const gi = _tmp$2;
+    if (gi < _bind$9) {
+      let cat_name;
+      let cat_icon;
+      _L: {
+        const _bind$10 = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(_M0FP37walkzzz7moondes8frontend16category__groups, gi);
+        const _cat_name = _bind$10._0;
+        const _cat_icon = _bind$10._1;
+        cat_name = _cat_name;
+        cat_icon = _cat_icon;
+        break _L;
+      }
+      const is_collapsed = _M0MPC15array5Array2atGbE(model.collapsed, gi);
+      const group_items = [];
+      const _bind$10 = 0;
+      const _bind$11 = model.examples.length;
+      let _tmp$3 = _bind$10;
+      while (true) {
+        const i = _tmp$3;
+        if (i < _bind$11) {
+          const ex = _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, i);
+          if (ex.category === cat_name) {
+            const cls = i === model.selected ? "example-item active" : "example-item";
+            const _func = dispatch;
+            _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(group_items, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, cls, undefined, -1, _func(new _M0DTP37walkzzz7moondes8frontend3Msg6Select(i)), undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "title", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(ex.title)])]));
+          }
+          _tmp$3 = i + 1 | 0;
+          continue;
+        } else {
+          break;
+        }
+      }
+      if (group_items.length > 0) {
+        const header_cls = is_collapsed ? "group-header collapsed" : "group-header";
+        const _func = dispatch;
+        const _tmp$4 = _func(new _M0DTP37walkzzz7moondes8frontend3Msg11ToggleGroup(gi));
+        const _tmp$5 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group-icon", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(cat_icon)]);
+        const _tmp$6 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group-name", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(cat_name)]);
+        const _string_builder = _M0MPB13StringBuilder21StringBuilder_2einner(0);
+        _M0MPB13StringBuilder13write__objectGiE(_string_builder, group_items.length);
+        _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(sidebar_content, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, header_cls, undefined, -1, _tmp$4, undefined, undefined, undefined, undefined, undefined, undefined, [_tmp$5, _tmp$6, _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group-count", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(_M0MPB13StringBuilder10to__string(_string_builder))]), _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group-arrow", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(is_collapsed ? "▶" : "▼")])])]));
+        if (!is_collapsed) {
+          _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(sidebar_content, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "group-items", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, group_items));
+        }
+      }
+      _tmp$2 = gi + 1 | 0;
       continue;
     } else {
       break;
     }
   }
-  const sidebar = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "sidebar", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h2GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("仿真示例")]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "example-list", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, sidebar_items)]);
+  const _tmp$3 = _M0FP319moonbit_2dcommunity7rabbita4html2h2GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("仿真示例")]);
+  const _string_builder = _M0MPB13StringBuilder21StringBuilder_2einner(0);
+  _M0MPB13StringBuilder13write__objectGiE(_string_builder, model.examples.length);
+  const sidebar = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "sidebar", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "sidebar-header", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_tmp$3, _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "sidebar-count", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(_M0MPB13StringBuilder10to__string(_string_builder))])]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "example-list", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, sidebar_content)]);
   let title_text;
   let desc_text;
   _L: {
@@ -25990,12 +26129,46 @@ function _M0FP37walkzzz7moondes8frontend4view(dispatch, model) {
       break _L;
     }
   }
-  const run_label = model.running ? "运行中..." : "运行仿真";
+  let run_label;
+  let run_cls;
+  _L$2: {
+    if (model.running) {
+      run_label = "运行中...";
+      run_cls = "btn-run btn-running";
+      break _L$2;
+    } else {
+      if (model.completed) {
+        run_label = "重新运行";
+        run_cls = "btn-run btn-completed";
+        break _L$2;
+      } else {
+        run_label = "运行仿真";
+        run_cls = "btn-run btn-idle";
+        break _L$2;
+      }
+    }
+  }
   const _func = dispatch;
-  const run_btn = _M0FP319moonbit_2dcommunity7rabbita4html6buttonGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "btn-run", undefined, -1, undefined, -1, undefined, undefined, -1, _func(_M0DTP37walkzzz7moondes8frontend3Msg3Run__), undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(run_label)]);
+  const run_btn = _M0FP319moonbit_2dcommunity7rabbita4html6buttonGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, run_cls, undefined, -1, undefined, -1, undefined, undefined, -1, _func(_M0DTP37walkzzz7moondes8frontend3Msg3Run__), undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(run_label)]);
+  let info_section;
+  if (model.show_info) {
+    const _func$2 = dispatch;
+    const _tmp$4 = _func$2(_M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo__);
+    const _tmp$5 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-icon", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("💡")]);
+    const _tmp$6 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("示例说明")]);
+    const _func$3 = dispatch;
+    info_section = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-section expanded", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-header", undefined, -1, _tmp$4, undefined, undefined, undefined, undefined, undefined, undefined, [_tmp$5, _tmp$6, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-toggle", undefined, -1, _func$3(_M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo__), undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("收起 ▲")])]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-body", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html1pGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(desc_text)])])]);
+  } else {
+    const _func$2 = dispatch;
+    const _tmp$4 = _func$2(_M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo__);
+    const _tmp$5 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-icon", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("💡")]);
+    const _tmp$6 = _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("示例说明")]);
+    const _func$3 = dispatch;
+    info_section = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-section", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-header", undefined, -1, _tmp$4, undefined, undefined, undefined, undefined, undefined, undefined, [_tmp$5, _tmp$6, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "info-toggle", undefined, -1, _func$3(_M0DTP37walkzzz7moondes8frontend3Msg10ToggleInfo__), undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("展开 ▼")])])]);
+  }
   let visual_html;
   if (model.running) {
-    visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "loading-spinner", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("正在运行仿真...")])]);
+    visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "loading-spinner", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "spinner", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("")]), _M0FP319moonbit_2dcommunity7rabbita4html4text("正在运行仿真...")])]);
   } else {
     if (_M0IP016_24default__implPB2Eq10not__equalGsE(model.output, "")) {
       const parts = [];
@@ -26003,26 +26176,28 @@ function _M0FP37walkzzz7moondes8frontend4view(dispatch, model) {
         _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(parts, _M0FP37walkzzz7moondes8frontend11view__stats(model.stats));
       }
       let m;
-      _L$2: {
-        _L$3: {
+      _L$3: {
+        _L$4: {
           const _bind$10 = model.mermaid;
           if (_bind$10 === undefined) {
           } else {
             const _Some = _bind$10;
             const _m = _Some;
             m = _m;
-            break _L$3;
+            break _L$4;
           }
-          break _L$2;
+          break _L$3;
         }
-        _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(parts, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "mermaid-section", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h3GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("架构图表")]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "mermaid", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(m)])]));
+        _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(parts, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "mermaid-section", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "section-header", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h3GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("架构图表")])]), _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "mermaid", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(m)])]));
       }
-      _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(parts, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output-section", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h3GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("仿真输出")]), _M0FP319moonbit_2dcommunity7rabbita4html3preGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(model.output)])]));
+      const _tmp$4 = _M0FP319moonbit_2dcommunity7rabbita4html2h3GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("仿真输出")]);
+      const _func$2 = dispatch;
+      _M0MPC15array5Array4pushGRP319moonbit_2dcommunity7rabbita4html4HtmlE(parts, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output-section", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "section-header output-toolbar", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_tmp$4, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "toolbar-buttons", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html6buttonGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "tool-btn", undefined, -1, undefined, -1, undefined, undefined, -1, _func$2(_M0DTP37walkzzz7moondes8frontend3Msg11ClearOutput__), undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("清空")]), _M0FP319moonbit_2dcommunity7rabbita4html6buttonGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, "btn-copy", "tool-btn", undefined, -1, undefined, -1, undefined, undefined, -1, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("复制")]), _M0FP319moonbit_2dcommunity7rabbita4html6buttonGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, "btn-download", "tool-btn", undefined, -1, undefined, -1, undefined, undefined, -1, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("下载")])])]), _M0FP319moonbit_2dcommunity7rabbita4html3preGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, "sim-output", "output", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(model.output)])]));
       visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, parts);
     } else {
       let e;
-      _L$2: {
-        _L$3: {
+      _L$3: {
+        _L$4: {
           const _bind$10 = model.error;
           if (_bind$10 === undefined) {
             visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output placeholder", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text("点击左侧示例，然后运行仿真")])]);
@@ -26030,18 +26205,18 @@ function _M0FP37walkzzz7moondes8frontend4view(dispatch, model) {
             const _Some = _bind$10;
             const _e = _Some;
             e = _e;
-            break _L$3;
+            break _L$4;
           }
-          break _L$2;
+          break _L$3;
         }
-        const _string_builder = _M0MPB13StringBuilder21StringBuilder_2einner(8);
-        _M0IPB13StringBuilderPB6Logger13write__string(_string_builder, "错误: ");
-        _M0MPB13StringBuilder13write__objectGsE(_string_builder, e);
-        visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3preGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output error-output", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(_M0MPB13StringBuilder10to__string(_string_builder))])]);
+        const _string_builder$2 = _M0MPB13StringBuilder21StringBuilder_2einner(8);
+        _M0IPB13StringBuilderPB6Logger13write__string(_string_builder$2, "错误: ");
+        _M0MPB13StringBuilder13write__objectGsE(_string_builder$2, e);
+        visual_html = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "visual-area", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3preGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "output error-output", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(_M0MPB13StringBuilder10to__string(_string_builder$2))])]);
       }
     }
   }
-  const main_area = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "main", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h2GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(title_text)]), _M0FP319moonbit_2dcommunity7rabbita4html1pGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "desc", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(desc_text)]), run_btn, visual_html]);
+  const main_area = _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "main", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "main-header", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html2h2GRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, undefined, undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(title_text)]), _M0FP319moonbit_2dcommunity7rabbita4html4spanGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "main-category", undefined, -1, undefined, [_M0FP319moonbit_2dcommunity7rabbita4html4text(model.examples.length > 0 ? _M0MPC15array5Array2atGRP37walkzzz7moondes6shared11ExampleInfoE(model.examples, model.selected).category : "")])]), info_section, _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "action-bar", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [run_btn]), visual_html]);
   return _M0FP319moonbit_2dcommunity7rabbita4html3divGRPB5ArrayGRP319moonbit_2dcommunity7rabbita4html4HtmlEE(_M0DTPC16option6OptionGRPB5ArrayGsEE4None__, undefined, "container", undefined, -1, undefined, undefined, undefined, undefined, undefined, undefined, undefined, [sidebar, main_area]);
 }
 (() => {
