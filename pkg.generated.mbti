@@ -10,6 +10,7 @@ import {
   "walkzzz/moondes/experiment",
   "walkzzz/moondes/fsm",
   "walkzzz/moondes/graph",
+  "walkzzz/moondes/markov",
   "walkzzz/moondes/monitor",
   "walkzzz/moondes/network",
   "walkzzz/moondes/pipeline",
@@ -52,6 +53,8 @@ pub fn new_graph() -> @graph.Graph
 pub fn new_link(@core.SimulationEnv, name~ : String, delay~ : Double) -> @network.Link
 
 pub fn new_logger(min_level~ : @monitor.LogLevel) -> @monitor.SimLogger
+
+pub fn new_markov_chain(initial~ : String, rng~ : @random.Rand) -> @markov.MarkovChain
 
 pub fn new_metrics() -> @monitor.MetricsCollector
 

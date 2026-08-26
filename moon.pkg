@@ -18,5 +18,7 @@ import {
   "walkzzz/moondes/pipeline",
   "walkzzz/moondes/graph",
   "walkzzz/moondes/markov",
+  "walkzzz/moondes/grid2d",
+  "walkzzz/moondes/ca",
   "moonbitlang/core/random" @rand,
 }

@@ -1,0 +1,28 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/ca"
+
+import {
+  "walkzzz/moondes/grid2d",
+}
+
+// Values
+pub fn new_ca(grid~ : @grid2d.Grid2D, rule~ : (@grid2d.Grid2D, Int, Int) -> String) -> CellularAutomaton
+
+// Errors
+
+// Types and methods
+pub(all) struct CellularAutomaton {
+  grid : @grid2d.Grid2D
+  rule : (@grid2d.Grid2D, Int, Int) -> String
+  mut generation : Int
+}
+pub fn CellularAutomaton::count_value(Self, String) -> Int
+pub fn CellularAutomaton::current_grid(Self) -> @grid2d.Grid2D
+pub fn CellularAutomaton::evolve(Self, Int) -> Unit
+pub fn CellularAutomaton::generation_count(Self) -> Int
+pub fn CellularAutomaton::step(Self) -> Unit
+pub fn CellularAutomaton::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

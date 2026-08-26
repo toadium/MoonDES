@@ -24,7 +24,7 @@
 /// }
 /// ```
 pub fn version() -> String {
-  "3.0.0"
+  "3.1.0"
 }
 
 ///|
@@ -281,4 +281,19 @@ pub fn new_markov_chain(
   rng~ : @rand.Rand,
 ) -> @markov.MarkovChain {
   @markov.new_markov_chain(initial~, rng~)
+}
+
+///|
+/// 创建 2D 网格（便捷入口，转发至 grid2d 层）
+pub fn new_grid2d(width~ : Int, height~ : Int, default~ : String) -> @grid2d.Grid2D {
+  @grid2d.new_grid2d(width~, height~, default~)
+}
+
+///|
+/// 创建元胞自动机（便捷入口，转发至 ca 层）
+pub fn new_ca(
+  grid~ : @grid2d.Grid2D,
+  rule~ : (@grid2d.Grid2D, Int, Int) -> String,
+) -> @ca.CellularAutomaton {
+  @ca.new_ca(grid~, rule~)
 }

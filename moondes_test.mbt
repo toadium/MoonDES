@@ -1,6 +1,6 @@
 ///|
 test "root version returns correct string" {
-  inspect(version(), content="3.0.0")
+  inspect(version(), content="3.1.0")
 }
 
 ///|
@@ -255,4 +255,19 @@ test "root new_markov_chain convenience" {
   mc.add_transition("A", "B", 1.0)
   let next = mc.next_state()
   assert_eq(next, "B")
+}
+
+///|
+test "root new_grid2d convenience" {
+  let g = new_grid2d(width=2, height=2, default="X")
+  assert_eq(g.width(), 2)
+  assert_eq(g.get(0, 0), "X")
+}
+
+///|
+test "root new_ca convenience" {
+  let g = new_grid2d(width=2, height=2, default="A")
+  let ca = new_ca(grid=g, rule=fn(_grid, _x, _y) { "B" })
+  ca.step()
+  assert_eq(ca.count_value("B"), 4)
 }

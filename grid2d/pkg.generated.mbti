@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "walkzzz/moondes/grid2d"
+
+// Values
+pub fn new_grid2d(width~ : Int, height~ : Int, default~ : String) -> Grid2D
+
+// Errors
+
+// Types and methods
+pub(all) struct Grid2D {
+  width : Int
+  height : Int
+  cells : Array[String]
+}
+pub fn Grid2D::cell_count(Self) -> Int
+pub fn Grid2D::copy(Self) -> Self
+pub fn Grid2D::count_if(Self, (String) -> Bool) -> Int
+pub fn Grid2D::count_value(Self, String) -> Int
+pub fn Grid2D::fill(Self, String) -> Unit
+pub fn Grid2D::get(Self, Int, Int) -> String
+pub fn Grid2D::height(Self) -> Int
+pub fn Grid2D::in_bounds(Self, Int, Int) -> Bool
+pub fn Grid2D::neighbor_coords_moore(Self, Int, Int) -> Array[(Int, Int)]
+pub fn Grid2D::neighbors_moore(Self, Int, Int) -> Array[String]
+pub fn Grid2D::neighbors_von_neumann(Self, Int, Int) -> Array[String]
+pub fn Grid2D::set(Self, Int, Int, String) -> Unit
+pub fn Grid2D::to_string(Self) -> String
+pub fn Grid2D::width(Self) -> Int
+
+// Type aliases
+
+// Traits

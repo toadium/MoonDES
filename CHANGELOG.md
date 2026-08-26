@@ -4,6 +4,37 @@
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-08-26
+
+### 空间仿真层 + 森林火灾扩散
+
+#### Added
+- 新增 `grid2d` 包（层级20）：2D 网格
+  - `Grid2D`：set/get/width/height/in_bounds
+  - `neighbors_moore` — Moore 邻域（8 邻居）
+  - `neighbors_von_neumann` — Von Neumann 邻域（4 邻居）
+  - `neighbor_coords_moore` — 邻域坐标
+  - `fill` / `count_if` / `count_value` / `copy` / `to_string`
+- 新增 `ca` 包（层级21）：元胞自动机引擎
+  - `CellularAutomaton`：基于 Grid2D + 规则回调
+  - `step` — 同步演化一步（所有细胞基于当前状态计算新状态）
+  - `evolve(n)` — 多步演化
+  - `count_value` / `generation_count` / `to_string`
+- 根包便捷入口 `new_grid2d` / `new_ca`
+- 综合示例 `forest_fire`：森林火灾扩散
+  - Grid2D 20x20 森林网格（Tree/Burning/Empty）
+  - CA 火势传播规则（邻居 Burning→概率点燃→烧完变 Empty）
+  - FSM 火警等级 Normal→Watch→Warning→Critical→Contained
+  - EventBus 火势蔓延事件
+  - Process 40 步传播动力学
+  - Stats 燃烧时间线/燃烧率/峰值统计
+  - ASCII 可视化最终森林状态
+- 13 个 Grid2D 测试 + 10 个 CA 测试 + 2 个根包便捷入口测试
+
+#### 验证
+
+- `moon test` 448/448 全通过，零警告
+
 ## [3.0.0] - 2026-08-25
 
 ### v3.0.0 里程碑：马尔可夫链层 + 传染病传播仿真
