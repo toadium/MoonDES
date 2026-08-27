@@ -329,9 +329,9 @@ async fn send_file(conn : @http.ServerConnection, path : String, headers : @http
 async fn main {
   @stdio.stdout.write("污水处理厂 AI 监控仿真系统\n")
   @stdio.stdout.write("============================\n")
-  @stdio.stdout.write("Listening on http://127.0.0.1:8081\n")
+  @stdio.stdout.write("Listening on http://127.0.0.1:10010\n")
 
-  let server = @http.Server(@socket.Addr::parse("127.0.0.1:8081")) catch {
+  let server = @http.Server(@socket.Addr::parse("127.0.0.1:10010")) catch {
     err => { @stdio.stdout.write("Failed: \{err}\n"); return }
   }
 
