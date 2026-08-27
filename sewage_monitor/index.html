@@ -65,6 +65,28 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .energy-label{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
 .flow{display:flex;align-items:flex-end;gap:2px;height:50px}
 .flow-bar{flex:1;border-radius:2px 2px 0 0;transition:height .5s;min-height:1px}
+
+/* 水工建筑物 */
+.hyd-panel{background:var(--surface);border:1px solid var(--blue);border-radius:8px;padding:16px;margin-bottom:16px}
+.hyd-panel h3{font-size:13px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.hyd-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hyd-card{background:var(--surface2);border-radius:6px;padding:8px 10px;border-left:3px solid var(--blue)}
+.hyd-card.circle{border-left-color:var(--purple)}
+.hyd-card.channel{border-left-color:var(--cyan)}
+.hyd-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.hyd-dim{font-size:10px;color:var(--muted)}
+.hyd-stats{display:flex;gap:8px;margin-top:4px}
+.hyd-stat{font-size:10px;color:var(--accent)}
+.hyd-stat .v{font-weight:700}
+/* SVG 布局 */
+.hyd-svg{width:100%;height:280px;background:#000;border-radius:8px;border:1px solid var(--border);margin-top:8px}
+/* 水位监控 */
+.hyd-level{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px}
+.hyd-level-item{display:flex;align-items:center;gap:4px;font-size:10px}
+.hyd-level-name{color:var(--muted);width:60px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hyd-level-bar{flex:1;height:8px;background:var(--border);border-radius:2px;overflow:hidden;position:relative}
+.hyd-level-fill{height:100%;border-radius:2px;transition:width .5s}
+.hyd-level-val{color:var(--accent);width:32px;text-align:right;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -92,6 +114,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <div class="ai-panel"><h3>AI 预测告警</h3><div class="alerts" id="alerts"></div></div>
 <div class="ai-panel"><h3>能耗趋势 kWh/h</h3><div class="energy" id="energy"></div><div class="energy-label">最近 12 小时</div></div>
 <div class="ai-panel"><h3>处理流量 m3/h</h3><div class="flow" id="flow"></div><div class="energy-label">最近 30 分钟</div></div>
+
+<div class="hyd-panel"><h3>水工建筑物</h3><div class="hyd-grid" id="hyd-grid"></div></div>
+<div class="hyd-panel"><h3>厂区平面布置</h3><svg class="hyd-svg" id="hyd-svg" viewBox="0 0 600 280"></svg></div>
+<div class="hyd-panel"><h3>实时水位监控</h3><div class="hyd-level" id="hyd-level"></div></div>
 </div>
 </div>
 <script>
@@ -99,7 +125,7 @@ mermaid.initialize({startOnLoad:false,theme:'dark',themeVariables:{darkMode:true
 var mermaidSrc='flowchart TB\n IN[进水 COD 350] --> S1[格栅]\n S1 --> S2[沉砂]\n S2 --> S3[初沉 SS60%]\n S3 --> S4[曝气生化 A2/O]\n S4 --> S5[二沉]\n S5 --> S6[消毒 UV]\n S6 --> OUT[排放 COD<=50]\n S4 -.->|污泥回流| S3\n S5 -.->|剩余污泥| TH[污泥脱水]\n M1[监测点] -.-> S3\n M2[监测点] -.-> S5\n M3[监测点] -.-> S6\n AI[AI 监控中心] -.-> M1\n AI -.-> M2\n AI -.-> M3\n style IN fill:#1565c0,color:#fff\n style S4 fill:#ff9800,color:#fff\n style OUT fill:#4caf50,color:#fff\n style AI fill:#9c27b0,color:#fff\n style M1 fill:#00bcd4,color:#fff\n style M2 fill:#00bcd4,color:#fff\n style M3 fill:#00bcd4,color:#fff\n style TH fill:#795548,color:#fff';
 function renderMermaid(){var d=document.getElementById('mermaid-div');d.innerHTML='';try{mermaid.render('m1',mermaidSrc).then(function(r){d.innerHTML=r.svg;}).catch(function(){});}catch(e){}}
 renderMermaid();
-function runSim(){var b=document.getElementById('run-btn'),o=document.getElementById('output');b.className='btn running';b.textContent='运行中...';o.className='output';o.textContent='正在运行仿真...';fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'sewage_treatment'})}).then(function(r){return r.text();}).then(function(t){try{var d=JSON.parse(t);if(d.success){o.textContent=d.output;b.className='btn done';b.textContent='重新运行';if(d.mermaid){mermaidSrc=d.mermaid;renderMermaid();}}else{o.textContent='错误: '+(d.error||'?');b.className='btn';b.textContent='运行仿真';}}catch(e){o.textContent='解析错误';b.className='btn';b.textContent='运行仿真';}}).catch(function(e){o.textContent='请求失败';b.className='btn';b.textContent='运行仿真';});}
+function runSim(){var b=document.getElementById('run-btn'),o=document.getElementById('output');b.className='btn running';b.textContent='运行中...';o.className='output';o.textContent='正在运行仿真...';fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'sewage_treatment'})}).then(function(r){return r.text();}).then(function(t){try{var d=JSON.parse(t);if(d.success){o.textContent=d.output;b.className='btn done';b.textContent='重新运行';if(d.mermaid){mermaidSrc=d.mermaid;renderMermaid();}if(d.structures){renderHyd(d.structures);}}else{o.textContent='错误: '+(d.error||'?');b.className='btn';b.textContent='运行仿真';}}catch(e){o.textContent='解析错误';b.className='btn';b.textContent='运行仿真';}}).catch(function(e){o.textContent='请求失败';b.className='btn';b.textContent='运行仿真';});}
 function rnd(a,b){return Math.random()*(b-a)+a;}
 var md=[{c:'m-cod',l:'COD',u:'mg/L',a:30,b:60},{c:'m-bod',l:'BOD',u:'mg/L',a:5,b:15},{c:'m-ph',l:'pH',u:'',a:6.5,b:7.8},{c:'m-ss',l:'SS',u:'mg/L',a:5,b:25},{c:'m-nh3',l:'NH3-N',u:'mg/L',a:0.5,b:3},{c:'m-tp',l:'TP',u:'mg/L',a:0.1,b:1}];
 function updMetrics(){var h='';md.forEach(function(m){var v=rnd(m.a,m.b),p=Math.round((v-m.a)/(m.b-m.a)*100);h+='<div class="metric '+m.c+'"><div class="label">'+m.l+'</div><div class="value">'+v.toFixed(2)+'</div><div class="bar"><div class="fill" style="width:'+p+'%"></div></div><div class="unit">'+m.u+'</div></div>';});document.getElementById('metrics').innerHTML=h;}
@@ -111,8 +137,84 @@ var eData=[];for(var i=0;i<12;i++)eData.push(rnd(120,180));
 function updEnergy(){eData.shift();eData.push(rnd(120,180));var h='';eData.forEach(function(v){var h2=Math.round(v/200*60),c=v>160?'var(--orange)':v>140?'var(--cyan)':'var(--green)';h+='<div class="energy-bar" style="height:'+h2+'px;background:'+c+'"></div>';});document.getElementById('energy').innerHTML=h;}
 var fData=[];for(var i=0;i<30;i++)fData.push(rnd(400,600));
 function updFlow(){fData.shift();fData.push(rnd(400,600));var h='';fData.forEach(function(v){var h2=Math.round(v/700*50);h+='<div class="flow-bar" style="height:'+h2+'px;background:var(--accent)"></div>';});document.getElementById('flow').innerHTML=h;}
+
+// === 水工建筑物 ===
+var hydData=null;
+function renderHyd(data){
+  if(!data||!data.length)return;
+  hydData=data;
+  var h='';
+  data.forEach(function(s){
+    var cls='hyd-card';
+    if(s.type=='圆形')cls+=' circle';
+    if(s.type=='渠道')cls+=' channel';
+    h+='<div class="'+cls+'"><div class="hyd-name">'+s.name+' x'+s.units+'</div><div class="hyd-dim">'+s.dim+'</div><div class="hyd-stats"><span class="hyd-stat">V=<span class="v">'+s.volume.toFixed(0)+'</span>m3</span><span class="hyd-stat">HRT=<span class="v">'+s.hrt.toFixed(2)+'</span>h</span></div></div>';
+  });
+  document.getElementById('hyd-grid').innerHTML=h;
+  renderHydSVG(data);
+  renderHydLevel(data);
+}
+function renderHydSVG(data){
+  var svg=document.getElementById('hyd-svg');
+  var s='';
+  // Background grid
+  s+='<rect width="600" height="280" fill="#000"/>';
+  for(var i=0;i<12;i++)s+='<line x1="'+i*50+'" y1="0" x2="'+i*50+'" y2="280" stroke="#0a0a14" stroke-width="0.5"/>';
+  for(var i=0;i<6;i++)s+='<line x1="0" y1="'+i*50+'" x2="600" y2="'+i*50+'" stroke="#0a0a14" stroke-width="0.5"/>';
+  // Layout positions (x, y, w, h, label, color)
+  var layout=[
+    [20,20,40,20,'进水泵房','#1565c0'],
+    [70,15,30,30,'格栅间','#00bcd4'],
+    [110,20,40,20,'沉砂池','#00bcd4'],
+    [165,10,50,40,'初沉池','#2196f3'],
+    [230,15,70,30,'曝气池','#ff9800'],
+    [315,10,55,40,'二沉池','#2196f3'],
+    [385,20,40,20,'消毒池','#4caf50'],
+    [440,20,35,20,'出水井','#4caf50'],
+    [165,60,40,20,'浓缩池','#795548'],
+    [220,60,35,20,'贮泥池','#795548'],
+    [490,15,25,30,'配水井','#9c27b0'],
+    [530,20,30,15,'计量槽','#00bcd4']
+  ];
+  layout.forEach(function(l){
+    s+='<rect x="'+l[0]+'" y="'+l[1]+'" width="'+l[2]+'" height="'+l[3]+'" fill="'+l[4]+'" fill-opacity="0.3" stroke="'+l[4]+'" stroke-width="1.5" rx="2"/>';
+    s+='<text x="'+(l[0]+l[2]/2)+'" y="'+(l[1]+l[3]/2+3)+'" fill="#e0e0e0" font-size="7" text-anchor="middle">'+l[5]+'</text>';
+  });
+  // Flow arrows
+  var arrows=[[60,30,70,30],[100,30,110,30],[150,30,165,30],[215,30,230,30],[300,30,315,30],[370,30,385,30],[425,30,440,30]];
+  arrows.forEach(function(a){s+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+a[2]+'" y2="'+a[3]+'" stroke="#00d4ff" stroke-width="1" marker-end="url(#arrow)"/>';});
+  // Arrow marker
+  s+='<defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#00d4ff"/></marker></defs>';
+  // Title
+  s+='<text x="300" y="100" fill="#707080" font-size="9" text-anchor="middle">污水处理厂平面布置示意图 (俯视)</text>';
+  // Legend
+  s+='<rect x="20" y="120" width="560" height="140" fill="#0d0d0d" stroke="#1a1a2e" rx="4"/>';
+  s+='<text x="30" y="138" fill="#00d4ff" font-size="8">构筑物参数明细</text>';
+  var y=152;
+  data.forEach(function(d){
+    s+='<text x="30" y="'+y+'" fill="#e0e0e0" font-size="7">'+d.name+' ['+d.type+'] '+d.dim+' V='+d.volume.toFixed(0)+'m3 HRT='+d.hrt.toFixed(2)+'h</text>';
+    y+=12;
+    if(y>250){y=152;}
+  });
+  svg.innerHTML=s;
+}
+function renderHydLevel(data){
+  if(!data)return;
+  var h='';
+  data.forEach(function(s){
+    var pct=Math.round(rnd(60,95));
+    var color=pct>85?'var(--orange)':'var(--cyan)';
+    h+='<div class="hyd-level-item"><div class="hyd-level-name">'+s.name+'</div><div class="hyd-level-bar"><div class="hyd-level-fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="hyd-level-val">'+pct+'%</div></div>';
+  });
+  document.getElementById('hyd-level').innerHTML=h;
+}
+function updHydLevel(){
+  if(!hydData)return;
+  renderHydLevel(hydData);
+}
+
 updMetrics();updEquip();updAlerts();updEnergy();updFlow();
-setInterval(updMetrics,2000);setInterval(updEquip,2000);setInterval(updAlerts,3000);setInterval(updEnergy,2000);setInterval(updFlow,2000);
+setInterval(updMetrics,2000);setInterval(updEquip,2000);setInterval(updAlerts,3000);setInterval(updEnergy,2000);setInterval(updFlow,2000);setInterval(updHydLevel,2000);
 </script>
 </body>
 </html>

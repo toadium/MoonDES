@@ -28,6 +28,103 @@ let text_headers : @http.Headers = make_headers([
 ])
 
 ///|
+/// 水工建筑物定义
+struct HydraulicStruct {
+  name : String         // 构筑物名称
+  struct_type : String  // 类型: 矩形/圆形/渠道
+  length : Double       // 长度/直径 (m)
+  width : Double        // 宽度 (m), 圆形为0
+  depth : Double        // 有效水深 (m)
+  units : Int           // 并联数量
+  design_flow : Double  // 设计流量 (m3/h)
+  status : String       // 运行状态
+} derive(Show)
+
+///|
+/// 计算有效容积 (m3)
+fn hyd_volume(s : HydraulicStruct) -> Double {
+  if s.width > 0.0 {
+    s.length * s.width * s.depth * s.units.to_double()
+  } else {
+    // 圆形: π * r^2 * h
+    3.14159 * (s.length / 2.0) * (s.length / 2.0) * s.depth * s.units.to_double()
+  }
+}
+
+///|
+/// 计算水力停留时间 HRT (小时)
+fn hyd_hrt(s : HydraulicStruct) -> Double {
+  let vol = hyd_volume(s)
+  if s.design_flow > 0.0 {
+    vol / s.design_flow
+  } else {
+    0.0
+  }
+}
+
+///|
+/// 计算表面负荷 (m3/m2/h), 仅沉淀池
+fn hyd_surface_load(s : HydraulicStruct) -> Double {
+  let area = if s.width > 0.0 {
+    s.length * s.width * s.units.to_double()
+  } else {
+    3.14159 * (s.length / 2.0) * (s.length / 2.0) * s.units.to_double()
+  }
+  if area > 0.0 {
+    s.design_flow / area
+  } else {
+    0.0
+  }
+}
+
+///|
+/// 水工建筑物列表
+fn hyd_structures() -> Array[HydraulicStruct] {
+  [
+  { name: "进水泵房", struct_type: "矩形", length: 12.0, width: 6.0, depth: 5.0, units: 1, design_flow: 500.0, status: "运行" },
+  { name: "粗格栅间", struct_type: "渠道", length: 8.0, width: 1.2, depth: 2.0, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "细格栅间", struct_type: "渠道", length: 8.0, width: 1.0, depth: 2.0, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "曝气沉砂池", struct_type: "矩形", length: 12.0, width: 3.0, depth: 3.5, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "初沉池", struct_type: "圆形", length: 30.0, width: 0.0, depth: 4.0, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "曝气池", struct_type: "矩形", length: 40.0, width: 8.0, depth: 6.0, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "二沉池", struct_type: "圆形", length: 36.0, width: 0.0, depth: 4.5, units: 2, design_flow: 500.0, status: "运行" },
+  { name: "消毒接触池", struct_type: "矩形", length: 20.0, width: 3.0, depth: 3.0, units: 1, design_flow: 500.0, status: "运行" },
+  { name: "污泥浓缩池", struct_type: "圆形", length: 8.0, width: 0.0, depth: 5.0, units: 1, design_flow: 20.0, status: "运行" },
+  { name: "贮泥池", struct_type: "矩形", length: 6.0, width: 4.0, depth: 4.0, units: 1, design_flow: 15.0, status: "运行" },
+  { name: "配水井", struct_type: "圆形", length: 4.0, width: 0.0, depth: 3.0, units: 1, design_flow: 500.0, status: "运行" },
+  { name: "巴歇尔计量槽", struct_type: "渠道", length: 3.0, width: 1.5, depth: 1.2, units: 1, design_flow: 500.0, status: "运行" },
+  ]
+}
+
+///|
+/// 构建水工建筑物 JSON
+fn hyd_structures_json() -> String {
+  let structs = hyd_structures()
+  let items : Array[String] = []
+  for s in structs {
+    let vol = hyd_volume(s)
+    let hrt = hyd_hrt(s)
+    let load = hyd_surface_load(s)
+    let dim = if s.width > 0.0 {
+      "\{s.length}m x \{s.width}m x \{s.depth}m"
+    } else {
+      "D\{s.length}m x H\{s.depth}m"
+    }
+    let name_j = s.name.to_json().stringify()
+    let type_j = s.struct_type.to_json().stringify()
+    let dim_j = dim.to_json().stringify()
+    let status_j = s.status.to_json().stringify()
+    let vol_str = vol.to_string()
+    let hrt_str = hrt.to_string()
+    let load_str = load.to_string()
+    let flow_str = s.design_flow.to_string()
+    let units_str = s.units.to_string()
+    items.push("{\"name\":\{name_j},\"type\":\{type_j},\"dim\":\{dim_j},\"volume\":\{vol_str},\"hrt\":\{hrt_str},\"load\":\{load_str},\"flow\":\{flow_str},\"units\":\{units_str},\"status\":\{status_j}}")
+  }
+  "[\{items.join(", ")}]"
+}
+
+///|
 /// 污水处理厂仿真
 fn run_sewage_sim() -> String {
   @simbuf.clear()
@@ -177,6 +274,26 @@ fn run_sewage_sim() -> String {
   @simbuf.println("事件总线:")
   @simbuf.println("  主题数:   \{bus.topics().length()}")
   @simbuf.println("  订阅者:   \{bus.total_subscribers()}")
+  @simbuf.println("")
+  @simbuf.println("水工建筑物参数:")
+  @simbuf.println("----------------------------------------")
+  let structs = hyd_structures()
+  for s in structs {
+    let vol = hyd_volume(s)
+    let hrt = hyd_hrt(s)
+    let load = hyd_surface_load(s)
+    let dim = if s.width > 0.0 {
+      "\{s.length}m x \{s.width}m x \{s.depth}m"
+    } else {
+      "D\{s.length}m x H\{s.depth}m"
+    }
+    @simbuf.println("  \{s.name} [\{s.struct_type} x\{s.units}]")
+    @simbuf.println("    尺寸: \{dim}")
+    @simbuf.println("    容积: \{vol} m3")
+    @simbuf.println("    HRT:  \{hrt} h")
+    @simbuf.println("    表面负荷: \{load} m3/m2/h")
+    @simbuf.println("    状态: \{s.status}")
+  }
   @simbuf.to_string()
 }
 
@@ -187,7 +304,8 @@ let mermaid_chart : String = "flowchart TB\n    IN[进水<br/>COD 350mg/L] --> S
 fn build_response(output : String) -> String {
   let oj = output.to_json().stringify()
   let mj = mermaid_chart.to_json().stringify()
-  "{\"success\":true,\"output\":\{oj},\"mermaid\":\{mj},\"name\":\"sewage_treatment\"}"
+  let sj = hyd_structures_json()
+  "{\"success\":true,\"output\":\{oj},\"mermaid\":\{mj},\"structures\":\{sj},\"name\":\"sewage_treatment\"}"
 }
 
 ///|
