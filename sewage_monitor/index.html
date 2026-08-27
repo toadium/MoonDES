@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>污水处理厂 AI 监控仿真系统</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#000;--surface:#0d0d0d;--surface2:#161616;--border:#1a1a2e;--accent:#00d4ff;--accent2:#9c27b0;--text:#e0e0e0;--muted:#707080;--dim:#404050;--green:#4caf50;--orange:#ff9800;--red:#f44336;--cyan:#00bcd4;--purple:#9c27b0;--blue:#2196f3}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#000,#0a0a14);padding:14px 24px;border-bottom:2px solid var(--accent);display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:20px;font-weight:800;color:var(--accent);text-shadow:0 0 15px rgba(0,212,255,0.3)}
+.header .sub{font-size:12px;color:var(--muted);margin-left:10px}
+.header .tags{display:flex;gap:8px}
+.header .tag{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.container{max-width:1400px;margin:0 auto;padding:20px;display:flex;gap:20px}
+.left{flex:1;min-width:0}
+.right{width:420px;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px}
+.card h3{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.btn{padding:10px 28px;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;background:linear-gradient(135deg,#008ba0,#006d80);transition:all .2s}
+.btn:hover{box-shadow:0 0 12px rgba(0,212,255,0.4);filter:brightness(1.1)}
+.btn.running{background:linear-gradient(135deg,#d49500,#a07000);cursor:wait}
+.btn.done{background:linear-gradient(135deg,#2e7d32,#1b5e20)}
+.mermaid{display:flex;justify-content:center;padding:8px;overflow-x:auto}
+.mermaid svg{max-width:100%;height:auto}
+.output{background:#000;border-radius:8px;padding:14px;font-family:'Fira Code','Consolas',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;max-height:400px;overflow-y:auto;border:1px solid var(--border);color:var(--text)}
+.output.ph{color:var(--dim);text-align:center;padding:40px}
+.ai-panel{background:var(--surface);border:1px solid var(--accent2);border-radius:8px;padding:16px;margin-bottom:16px;position:relative;overflow:hidden}
+.ai-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent),var(--accent2));animation:scan 3s linear infinite}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.ai-panel h3{font-size:13px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.ai-status{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:auto;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.metric{background:var(--surface2);border-radius:6px;padding:10px;text-align:center}
+.metric .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.metric .value{font-size:18px;font-weight:700;margin:4px 0}
+.metric .bar{height:4px;border-radius:2px;background:var(--border);overflow:hidden}
+.metric .bar .fill{height:100%;border-radius:2px;transition:width .5s}
+.metric .unit{font-size:10px;color:var(--dim)}
+.m-cod .value{color:var(--cyan)} .m-cod .fill{background:var(--cyan)}
+.m-bod .value{color:var(--green)} .m-bod .fill{background:var(--green)}
+.m-ph .value{color:var(--blue)} .m-ph .fill{background:var(--blue)}
+.m-ss .value{color:var(--orange)} .m-ss .fill{background:var(--orange)}
+.m-nh3 .value{color:var(--purple)} .m-nh3 .fill{background:var(--purple)}
+.m-tp .value{color:var(--red)} .m-tp .fill{background:var(--red)}
+.equip{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.eq-item{display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--surface2);border-radius:4px;font-size:11px}
+.eq-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.eq-on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.eq-warn{background:var(--orange);box-shadow:0 0 6px var(--orange)}
+.eq-off{background:var(--red)}
+.eq-name{color:var(--text);flex:1}
+.eq-val{color:var(--muted);font-size:10px}
+.alerts{display:flex;flex-direction:column;gap:6px}
+.alert{padding:8px 10px;border-radius:4px;font-size:11px;display:flex;align-items:center;gap:6px}
+.alert-info{background:rgba(33,150,243,0.1);border-left:3px solid var(--blue);color:var(--blue)}
+.alert-warn{background:rgba(255,152,0,0.1);border-left:3px solid var(--orange);color:var(--orange)}
+.alert-ok{background:rgba(76,175,80,0.1);border-left:3px solid var(--green);color:var(--green)}
+.alert-time{margin-left:auto;color:var(--dim);font-size:10px}
+.energy{display:flex;align-items:flex-end;gap:3px;height:60px}
+.energy-bar{flex:1;border-radius:2px 2px 0 0;transition:height .5s;min-height:2px}
+.energy-label{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
+.flow{display:flex;align-items:flex-end;gap:2px;height:50px}
+.flow-bar{flex:1;border-radius:2px 2px 0 0;transition:height .5s;min-height:1px}
+</style>
+</head>
+<body>
+<div class="header">
+<div><h1>污水处理厂 AI 监控仿真系统<span class="sub">基于 MoonDES 离散事件仿真引擎</span></h1></div>
+<div class="tags"><span class="tag">MoonDES</span><span class="tag">AI Monitor</span><span class="tag">Mermaid</span></div>
+</div>
+<div class="container">
+<div class="left">
+<div class="card">
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+<h3 style="margin:0">工艺流程仿真</h3>
+<button class="btn" id="run-btn" onclick="runSim()">运行仿真</button>
+</div>
+<div class="mermaid" id="mermaid-div"></div>
+</div>
+<div class="card">
+<h3>仿真输出</h3>
+<div class="output ph" id="output">点击运行仿真启动污水处理厂离散事件仿真</div>
+</div>
+</div>
+<div class="right">
+<div class="ai-panel"><h3>AI 实时监控<span class="ai-status"></span></h3><div class="metrics" id="metrics"></div></div>
+<div class="ai-panel"><h3>设备状态矩阵</h3><div class="equip" id="equip"></div></div>
+<div class="ai-panel"><h3>AI 预测告警</h3><div class="alerts" id="alerts"></div></div>
+<div class="ai-panel"><h3>能耗趋势 kWh/h</h3><div class="energy" id="energy"></div><div class="energy-label">最近 12 小时</div></div>
+<div class="ai-panel"><h3>处理流量 m3/h</h3><div class="flow" id="flow"></div><div class="energy-label">最近 30 分钟</div></div>
+</div>
+</div>
+<script>
+mermaid.initialize({startOnLoad:false,theme:'dark',themeVariables:{darkMode:true,background:'#0d0d0d',primaryColor:'#0a1a2a',primaryTextColor:'#e0e0e0',primaryBorderColor:'#00d4ff',lineColor:'#666',secondaryColor:'#0f0f1a',tertiaryColor:'#111127'},flowchart:{curve:'basis',padding:16}});
+var mermaidSrc='flowchart TB\n IN[进水 COD 350] --> S1[格栅]\n S1 --> S2[沉砂]\n S2 --> S3[初沉 SS60%]\n S3 --> S4[曝气生化 A2/O]\n S4 --> S5[二沉]\n S5 --> S6[消毒 UV]\n S6 --> OUT[排放 COD<=50]\n S4 -.->|污泥回流| S3\n S5 -.->|剩余污泥| TH[污泥脱水]\n M1[监测点] -.-> S3\n M2[监测点] -.-> S5\n M3[监测点] -.-> S6\n AI[AI 监控中心] -.-> M1\n AI -.-> M2\n AI -.-> M3\n style IN fill:#1565c0,color:#fff\n style S4 fill:#ff9800,color:#fff\n style OUT fill:#4caf50,color:#fff\n style AI fill:#9c27b0,color:#fff\n style M1 fill:#00bcd4,color:#fff\n style M2 fill:#00bcd4,color:#fff\n style M3 fill:#00bcd4,color:#fff\n style TH fill:#795548,color:#fff';
+function renderMermaid(){var d=document.getElementById('mermaid-div');d.innerHTML='';try{mermaid.render('m1',mermaidSrc).then(function(r){d.innerHTML=r.svg;}).catch(function(){});}catch(e){}}
+renderMermaid();
+function runSim(){var b=document.getElementById('run-btn'),o=document.getElementById('output');b.className='btn running';b.textContent='运行中...';o.className='output';o.textContent='正在运行仿真...';fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'sewage_treatment'})}).then(function(r){return r.text();}).then(function(t){try{var d=JSON.parse(t);if(d.success){o.textContent=d.output;b.className='btn done';b.textContent='重新运行';if(d.mermaid){mermaidSrc=d.mermaid;renderMermaid();}}else{o.textContent='错误: '+(d.error||'?');b.className='btn';b.textContent='运行仿真';}}catch(e){o.textContent='解析错误';b.className='btn';b.textContent='运行仿真';}}).catch(function(e){o.textContent='请求失败';b.className='btn';b.textContent='运行仿真';});}
+function rnd(a,b){return Math.random()*(b-a)+a;}
+var md=[{c:'m-cod',l:'COD',u:'mg/L',a:30,b:60},{c:'m-bod',l:'BOD',u:'mg/L',a:5,b:15},{c:'m-ph',l:'pH',u:'',a:6.5,b:7.8},{c:'m-ss',l:'SS',u:'mg/L',a:5,b:25},{c:'m-nh3',l:'NH3-N',u:'mg/L',a:0.5,b:3},{c:'m-tp',l:'TP',u:'mg/L',a:0.1,b:1}];
+function updMetrics(){var h='';md.forEach(function(m){var v=rnd(m.a,m.b),p=Math.round((v-m.a)/(m.b-m.a)*100);h+='<div class="metric '+m.c+'"><div class="label">'+m.l+'</div><div class="value">'+v.toFixed(2)+'</div><div class="bar"><div class="fill" style="width:'+p+'%"></div></div><div class="unit">'+m.u+'</div></div>';});document.getElementById('metrics').innerHTML=h;}
+var ed=[{n:'进水泵A',b:85},{n:'进水泵B',b:78},{n:'格栅机',b:92},{n:'沉砂池',b:88},{n:'初沉池',b:90},{n:'曝气鼓风机1',b:82},{n:'曝气鼓风机2',b:75},{n:'二沉池',b:87},{n:'污泥回流泵',b:80},{n:'消毒装置',b:93},{n:'污泥脱水机',b:70},{n:'排放泵',b:89}];
+function updEquip(){var h='';ed.forEach(function(e){var v=rnd(e.b-15,e.b+5),c='eq-on',l=v.toFixed(0)+'%';if(v<65){c='eq-warn';l='警告';}if(v<50){c='eq-off';l='故障';}h+='<div class="eq-item"><div class="eq-dot '+c+'"></div><div class="eq-name">'+e.n+'</div><div class="eq-val">'+l+'</div></div>';});document.getElementById('equip').innerHTML=h;}
+var at=[{t:'ok',i:'✓',m:'出水达标 COD 42mg/L'},{t:'info',i:'ℹ',m:'曝气池DO=2.1 工况正常'},{t:'warn',i:'⚠',m:'二沉池污泥位偏高'},{t:'info',i:'ℹ',m:'AI预测:2h后流量峰值'},{t:'ok',i:'✓',m:'能耗优化已应用 节能3.2%'},{t:'warn',i:'⚠',m:'NH3-N接近上限'}];
+function updAlerts(){var n=Math.floor(rnd(3,5)),h='';for(var i=0;i<n;i++){var a=at[Math.floor(Math.random()*at.length)],t=new Date();t.setMinutes(t.getMinutes()-Math.floor(rnd(0,30)));h+='<div class="alert alert-'+a.t+'"><span>'+a.i+'</span><span>'+a.m+'</span><span class="alert-time">'+t.getHours()+':'+String(t.getMinutes()).padStart(2,'0')+'</span></div>';}document.getElementById('alerts').innerHTML=h;}
+var eData=[];for(var i=0;i<12;i++)eData.push(rnd(120,180));
+function updEnergy(){eData.shift();eData.push(rnd(120,180));var h='';eData.forEach(function(v){var h2=Math.round(v/200*60),c=v>160?'var(--orange)':v>140?'var(--cyan)':'var(--green)';h+='<div class="energy-bar" style="height:'+h2+'px;background:'+c+'"></div>';});document.getElementById('energy').innerHTML=h;}
+var fData=[];for(var i=0;i<30;i++)fData.push(rnd(400,600));
+function updFlow(){fData.shift();fData.push(rnd(400,600));var h='';fData.forEach(function(v){var h2=Math.round(v/700*50);h+='<div class="flow-bar" style="height:'+h2+'px;background:var(--accent)"></div>';});document.getElementById('flow').innerHTML=h;}
+updMetrics();updEquip();updAlerts();updEnergy();updFlow();
+setInterval(updMetrics,2000);setInterval(updEquip,2000);setInterval(updAlerts,3000);setInterval(updEnergy,2000);setInterval(updFlow,2000);
+</script>
+</body>
+</html>
