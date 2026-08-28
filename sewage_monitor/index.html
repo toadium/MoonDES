@@ -759,6 +759,7 @@
         <button class="nav-btn" onclick="switchSection('knowledge')">📚 知识点</button>
         <button class="nav-btn" onclick="switchSection('exam')">📝 考核练习</button>
         <button class="nav-btn" onclick="switchSection('scene3d')">🏗️ 3D厂区视图</button>
+        <button class="nav-btn" onclick="switchSection('simulation')">🧪 仿真控制台</button>
     </nav>
 
     <main>
@@ -1526,6 +1527,180 @@
                 🖱️ 鼠标左键旋转 | 滚轮缩放 | 右键平移 | 点击构筑物高亮
             </div>
         </section>
+        <!-- 仿真控制台 -->
+        <section id="simulation" class="section">
+            <div style="display: flex; gap: 16px; height: calc(100vh - 200px); min-height: 600px;">
+
+                <!-- 左栏：参数调节 + 仿真控制 -->
+                <div style="width: 280px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;">
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🎛️ 仿真控制</h3>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <button id="sim-run-btn" onclick="simRun()" style="flex:1; padding: 8px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">▶ 运行</button>
+                            <button id="sim-pause-btn" onclick="simPause()" style="flex:1; padding: 8px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13px;">⏸ 暂停</button>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="simSetSpeed(1)" class="sim-speed-btn" style="flex:1; padding: 6px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;">1x</button>
+                            <button onclick="simSetSpeed(5)" class="sim-speed-btn" style="flex:1; padding: 6px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;">5x</button>
+                            <button onclick="simSetSpeed(10)" class="sim-speed-btn" style="flex:1; padding: 6px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;">10x</button>
+                            <button onclick="simSetSpeed(50)" class="sim-speed-btn" style="flex:1; padding: 6px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;">50x</button>
+                        </div>
+                        <div id="sim-status" style="margin-top: 10px; text-align: center; font-size: 12px; color: var(--text-secondary);">状态: 待运行</div>
+                    </div>
+
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">⚙️ 工艺参数调节</h3>
+                        <div class="sim-param">
+                            <label>好氧区 DO (mg/L)</label>
+                            <input type="range" id="param-do" min="0.5" max="5" step="0.1" value="2.0" oninput="updateParamDisplay(this)">
+                            <span id="param-do-val">2.0</span>
+                        </div>
+                        <div class="sim-param">
+                            <label>内回流比 (Q_r/Q)</label>
+                            <input type="range" id="param-ir" min="1" max="5" step="0.1" value="3.0" oninput="updateParamDisplay(this)">
+                            <span id="param-ir-val">3.0</span>
+                        </div>
+                        <div class="sim-param">
+                            <label>外回流比 (Q_r/Q)</label>
+                            <input type="range" id="param-er" min="0.3" max="2" step="0.1" value="1.0" oninput="updateParamDisplay(this)">
+                            <span id="param-er-val">1.0</span>
+                        </div>
+                        <div class="sim-param">
+                            <label>污泥龄 SRT (d)</label>
+                            <input type="range" id="param-srt" min="5" max="30" step="0.5" value="15.0" oninput="updateParamDisplay(this)">
+                            <span id="param-srt-val">15.0</span>
+                        </div>
+                        <div class="sim-param">
+                            <label>MLSS (mg/L)</label>
+                            <input type="range" id="param-mlss" min="2000" max="6000" step="100" value="3500" oninput="updateParamDisplay(this)">
+                            <span id="param-mlss-val">3500</span>
+                        </div>
+                        <div class="sim-param">
+                            <label>PAC投加量 (mg/L)</label>
+                            <input type="range" id="param-pac" min="0" max="20" step="0.5" value="0" oninput="updateParamDisplay(this)">
+                            <span id="param-pac-val">0.0</span>
+                        </div>
+                        <button onclick="simApplyParams()" style="width: 100%; margin-top: 8px; padding: 8px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">应用参数并仿真</button>
+                    </div>
+                </div>
+
+                <!-- 中栏：实时水质曲线 -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column;">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">📈 水质变化曲线 (实时)</h3>
+                        <div style="flex: 1; position: relative; min-height: 250px;">
+                            <canvas id="sim-chart-water"></canvas>
+                        </div>
+                    </div>
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border); flex: 1; display: flex; flex-direction: column;">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">📊 各单元出水水质</h3>
+                        <div style="flex: 1; position: relative; min-height: 200px;">
+                            <canvas id="sim-chart-units"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右栏：能耗 + AI建议 -->
+                <div style="width: 300px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;">
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">⚡ 能耗分析</h3>
+                        <div id="sim-energy" style="font-size: 13px; color: var(--text-secondary);">
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>曝气</span><span id="energy-aeration">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>提升</span><span id="energy-pumping">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>搅拌</span><span id="energy-mixing">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>污泥</span><span id="energy-sludge">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>其他</span><span id="energy-other">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--border); margin-top: 4px; font-weight: bold; color: var(--text);"><span>总计</span><span id="energy-total">--</span></div>
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>吨水电耗</span><span id="energy-per-m3">--</span></div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🤖 AI优化建议</h3>
+                        <div id="sim-suggestions" style="font-size: 13px; color: var(--text-secondary);">
+                            <p style="color: var(--text-secondary); text-align: center; padding: 20px 0;">运行仿真后显示建议</p>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                        <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🏥 工艺健康度</h3>
+                        <div style="text-align: center;">
+                            <div id="sim-health-score" style="font-size: 48px; font-weight: bold; color: var(--success);">--</div>
+                            <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">满分100分</div>
+                        </div>
+                        <div id="sim-compliance" style="margin-top: 12px; text-align: center; font-size: 13px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部面板区 -->
+            <div style="margin-top: 16px; display: flex; gap: 16px;">
+
+                <!-- 进水负荷场景选择 -->
+                <div style="flex: 1; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🌊 进水负荷场景</h3>
+                    <div id="sim-scenarios" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <p style="color: var(--text-secondary); font-size: 13px;">加载中...</p>
+                    </div>
+                </div>
+
+                <!-- 故障注入面板 -->
+                <div style="flex: 1; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">⚠️ 故障注入 <button onclick="clearFault()" style="float: right; padding: 4px 10px; background: var(--danger); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">清除故障</button></h3>
+                    <div id="sim-faults" style="display: flex; gap: 6px; flex-wrap: wrap; max-height: 120px; overflow-y: auto;">
+                        <p style="color: var(--text-secondary); font-size: 13px;">加载中...</p>
+                    </div>
+                    <div id="sim-fault-status" style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);">当前: 无故障</div>
+                </div>
+
+                <!-- AI分析面板 -->
+                <div style="flex: 1; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🤖 AI智能分析 <button onclick="loadAIAnalysis()" style="float: right; padding: 4px 10px; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">刷新分析</button></h3>
+                    <div id="sim-ai-analysis" style="font-size: 13px; color: var(--text-secondary);">
+                        <p style="text-align: center; padding: 10px 0;">点击"刷新分析"启动AI诊断</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设备监控 + 动态仿真 -->
+            <div style="margin-top: 16px; display: flex; gap: 16px;">
+                <!-- 设备监控表 -->
+                <div style="flex: 2; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">🔧 设备监控</h3>
+                    <table id="sim-equipment-table" style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <th style="text-align: left; padding: 6px; color: var(--text-secondary);">设备</th>
+                                <th style="text-align: left; padding: 6px; color: var(--text-secondary);">类型</th>
+                                <th style="text-align: center; padding: 6px; color: var(--text-secondary);">状态</th>
+                                <th style="text-align: right; padding: 6px; color: var(--text-secondary);">健康度</th>
+                                <th style="text-align: right; padding: 6px; color: var(--text-secondary);">功率(kW)</th>
+                                <th style="text-align: right; padding: 6px; color: var(--text-secondary);">运行(h)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sim-equipment-body">
+                            <tr><td colspan="6" style="text-align: center; padding: 16px; color: var(--text-secondary);">运行仿真后显示设备状态</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 动态仿真控制 -->
+                <div style="flex: 1; background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border);">
+                    <h3 style="margin: 0 0 12px; font-size: 15px; color: var(--text);">⏱️ 动态仿真</h3>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <button onclick="simRunDynamic(24)" style="flex: 1; padding: 8px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">24步</button>
+                        <button onclick="simRunDynamic(48)" style="flex: 1; padding: 8px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">48步</button>
+                        <button onclick="simRunDynamic(96)" style="flex: 1; padding: 8px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">96步</button>
+                    </div>
+                    <div id="sim-dynamic-info" style="font-size: 12px; color: var(--text-secondary);">运行动态仿真查看时间序列</div>
+                    <div style="margin-top: 12px;">
+                        <h4 style="margin: 0 0 8px; font-size: 13px; color: var(--text);">趋势分析</h4>
+                        <div id="sim-trend-analysis" style="font-size: 12px; color: var(--text-secondary);">运行动态仿真后显示趋势</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     </main>
 
     <script type="importmap">
@@ -1719,7 +1894,8 @@
         });
     </script>
 
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
         // 导航切换
         function switchSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1845,6 +2021,263 @@
                     el.style.transform = 'translateY(0)';
                 }, i * 50);
             });
+        });
+
+        // ===== 仿真控制台 =====
+        let simChartWater = null;
+        let simChartUnits = null;
+        let simRunning = false;
+        let simSpeed = 1;
+        let simTimer = null;
+        let simHistory = [];
+        let simScenarios = [];
+
+        function initSimCharts() {
+            if (simChartWater) return;
+            const ctxW = document.getElementById('sim-chart-water').getContext('2d');
+            simChartWater = new Chart(ctxW, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'COD', data: [], borderColor: '#ef6c00', backgroundColor: 'rgba(239,108,0,0.1)', tension: 0.3 },
+                        { label: 'NH₃-N', data: [], borderColor: '#1565c0', backgroundColor: 'rgba(21,101,192,0.1)', tension: 0.3 },
+                        { label: 'TN', data: [], borderColor: '#2e7d32', backgroundColor: 'rgba(46,125,50,0.1)', tension: 0.3 },
+                        { label: 'TP', data: [], borderColor: '#c62828', backgroundColor: 'rgba(198,40,40,0.1)', tension: 0.3 },
+                        { label: 'SS', data: [], borderColor: '#6a1b9a', backgroundColor: 'rgba(106,27,154,0.1)', tension: 0.3 },
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { labels: { color: '#8892b0', font: { size: 11 } } } }
+                }
+            });
+
+            const ctxU = document.getElementById('sim-chart-units').getContext('2d');
+            simChartUnits = new Chart(ctxU, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'COD (mg/L)', data: [], backgroundColor: '#ef6c00' }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { labels: { color: '#8892b0' } } }
+                }
+            });
+        }
+
+        function updateParamDisplay(el) {
+            const valEl = document.getElementById(el.id + '-val');
+            if (valEl) valEl.textContent = parseFloat(el.value).toFixed(1);
+        }
+
+        function simRun() {
+            simRunning = true;
+            document.getElementById('sim-status').textContent = '状态: 运行中 (' + simSpeed + 'x)';
+            if (!simTimer) simStep();
+        }
+
+        function simPause() {
+            simRunning = false;
+            if (simTimer) { clearTimeout(simTimer); simTimer = null; }
+            document.getElementById('sim-status').textContent = '状态: 已暂停';
+        }
+
+        function simSetSpeed(s) {
+            simSpeed = s;
+            document.querySelectorAll('.sim-speed-btn').forEach(b => b.style.background = 'var(--card-bg)');
+            event.target.style.background = 'var(--primary)';
+            event.target.style.color = '#fff';
+            if (simRunning) document.getElementById('sim-status').textContent = '状态: 运行中 (' + s + 'x)';
+        }
+
+        let simSelectedScenario = -1;
+        let simSelectedFault = -1;
+        let simFaults = [];
+
+        function simStep() {
+            const body = JSON.stringify({ scenario: simSelectedScenario, fault: simSelectedFault });
+            fetch('/api/sim/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body })
+                .then(r => r.json())
+                .then(data => {
+                    updateSimUI(data);
+                    if (simRunning) { simTimer = setTimeout(simStep, Math.max(100, 2000 / simSpeed)); }
+                })
+                .catch(err => { console.error('Sim error:', err); document.getElementById('sim-status').textContent = '状态: 错误'; });
+        }
+
+        function updateSimUI(data) {
+            const r = data.result;
+            if (!r) return;
+            const eff = r.effluent;
+            const inf = r.influent;
+            simHistory.push({ cod: eff.cod, nh4: eff.nh4_n, tn: eff.tn, tp: eff.tp, ss: eff.ss });
+            if (simHistory.length > 30) simHistory.shift();
+            if (simChartWater) {
+                simChartWater.data.labels = simHistory.map((_, i) => 'T' + i);
+                simChartWater.data.datasets[0].data = simHistory.map(h => h.cod);
+                simChartWater.data.datasets[1].data = simHistory.map(h => h.nh4);
+                simChartWater.data.datasets[2].data = simHistory.map(h => h.tn);
+                simChartWater.data.datasets[3].data = simHistory.map(h => h.tp);
+                simChartWater.data.datasets[4].data = simHistory.map(h => h.ss);
+                simChartWater.update('none');
+            }
+            if (simChartUnits) {
+                simChartUnits.data.labels = ['进水','格栅','初沉','厌氧','缺氧','好氧','二沉','滤池','消毒'];
+                simChartUnits.data.datasets[0].data = [inf.cod, r.after_screen.cod, r.after_primary.cod, r.after_anaerobic.cod, r.after_anoxic.cod, r.after_oxic.cod, r.after_secondary.cod, r.after_filter.cod, r.after_uv.cod];
+                simChartUnits.update('none');
+            }
+            if (data.energy) {
+                const e = data.energy;
+                document.getElementById('energy-aeration').textContent = e.aeration.toFixed(1) + ' kWh';
+                document.getElementById('energy-pumping').textContent = e.pumping.toFixed(1) + ' kWh';
+                document.getElementById('energy-mixing').textContent = e.mixing.toFixed(1) + ' kWh';
+                document.getElementById('energy-sludge').textContent = e.sludge.toFixed(1) + ' kWh';
+                document.getElementById('energy-other').textContent = (e.chemical + e.other).toFixed(1) + ' kWh';
+                document.getElementById('energy-total').textContent = e.total.toFixed(1) + ' kWh';
+                document.getElementById('energy-per-m3').textContent = e.per_m3.toFixed(4) + ' kWh/m³';
+            }
+            if (data.equipment) { updateEquipmentTable(data.equipment); }
+            if (data.suggestions && data.suggestions.length > 0) {
+                const html = data.suggestions.map(s => '<div style="background: rgba(255,193,7,0.1); border-left: 3px solid #ffc107; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px;"><strong style="color: var(--text);">' + s.param + '</strong>: ' + s.current.toFixed(2) + ' → ' + s.suggested.toFixed(2) + '<div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">' + s.reason + '</div></div>').join('');
+                document.getElementById('sim-suggestions').innerHTML = html;
+            } else {
+                document.getElementById('sim-suggestions').innerHTML = '<p style="color: var(--success); text-align: center; padding: 20px 0;">✅ 当前参数运行良好，无需调整</p>';
+            }
+            const hs = r.health_score || 0;
+            const hsEl = document.getElementById('sim-health-score');
+            hsEl.textContent = hs.toFixed(1);
+            hsEl.style.color = hs >= 80 ? 'var(--success)' : hs >= 60 ? '#ffc107' : '#f44336';
+            const compEl = document.getElementById('sim-compliance');
+            if (r.compliance) { compEl.innerHTML = '<span style="color: var(--success); font-weight: bold;">✅ 出水达标 (一级A标准)</span>'; }
+            else { compEl.innerHTML = '<span style="color: #f44336; font-weight: bold;">⚠️ 出水超标，需调整参数</span>'; }
+        }
+
+        function updateEquipmentTable(equipments) {
+            const tbody = document.getElementById('sim-equipment-body');
+            if (!equipments || equipments.length === 0) return;
+            tbody.innerHTML = equipments.map(e => {
+                const sc = e.status === 'running' ? '#4caf50' : e.status === 'standby' ? '#ff9800' : '#f44336';
+                const hc = e.health >= 80 ? '#4caf50' : e.health >= 60 ? '#ff9800' : '#f44336';
+                return '<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);"><td style="padding: 6px; color: var(--text);">' + e.name + '</td><td style="padding: 6px; color: var(--text-secondary);">' + e.type + '</td><td style="padding: 6px; text-align: center;"><span style="color: ' + sc + '; font-weight: bold;">' + e.status + '</span></td><td style="padding: 6px; text-align: right; color: ' + hc + ';">' + e.health.toFixed(1) + '%</td><td style="padding: 6px; text-align: right; color: var(--text);">' + e.power.toFixed(1) + '</td><td style="padding: 6px; text-align: right; color: var(--text-secondary);">' + e.runtime.toFixed(0) + '</td></tr>';
+            }).join('');
+        }
+
+        function simApplyParams() {
+            simHistory = [];
+            const params = { do: parseFloat(document.getElementById('param-do').value), internal_recycle: parseFloat(document.getElementById('param-ir').value), external_recycle: parseFloat(document.getElementById('param-er').value), srt: parseFloat(document.getElementById('param-srt').value), mlss: parseFloat(document.getElementById('param-mlss').value), pac: parseFloat(document.getElementById('param-pac').value) };
+            fetch('/api/sim/params', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(params) })
+                .then(r => r.json())
+                .then(data => { updateSimUI(data); document.getElementById('sim-status').textContent = '状态: 参数已应用'; })
+                .catch(err => console.error('Param error:', err));
+        }
+
+        function loadSimScenarios() {
+            fetch('/api/sim/scenarios').then(r => r.json()).then(data => {
+                simScenarios = data;
+                const html = data.map(s => {
+                    const c = s.category === 'shock' ? '#ef6c00' : s.category === 'seasonal' ? '#1565c0' : s.category === 'industrial' ? '#c62828' : s.category === 'emergency' ? '#f44336' : '#2e7d32';
+                    return '<button onclick="applyScenario(' + s.id + ')" style="padding: 8px 14px; background: ' + c + '22; border: 1px solid ' + c + '66; border-radius: 8px; cursor: pointer; font-size: 12px; color: var(--text);" title="' + s.description + '">' + s.name + '</button>';
+                }).join('');
+                document.getElementById('sim-scenarios').innerHTML = html;
+            }).catch(() => { document.getElementById('sim-scenarios').innerHTML = '<p style="color: #f44336;">场景加载失败</p>'; });
+        }
+
+        function applyScenario(id) {
+            const s = simScenarios.find(x => x.id === id);
+            if (!s) return;
+            simSelectedScenario = id; simHistory = [];
+            fetch('/api/sim/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario: id, fault: simSelectedFault }) })
+                .then(r => r.json()).then(data => { updateSimUI(data); document.getElementById('sim-status').textContent = '场景: ' + s.name; });
+        }
+
+        function loadSimFaults() {
+            fetch('/api/sim/faults').then(r => r.json()).then(data => {
+                simFaults = data;
+                const html = data.map(f => {
+                    const c = f.category === 'process' ? '#ef6c00' : f.category === 'equipment' ? '#f44336' : f.category === 'safety' ? '#c62828' : '#ff9800';
+                    return '<button onclick="applyFault(' + f.id + ')" style="padding: 4px 8px; background: ' + c + '22; border: 1px solid ' + c + '66; border-radius: 4px; cursor: pointer; font-size: 11px; color: var(--text);" title="' + (f.description || '') + '">' + f.name + '</button>';
+                }).join('');
+                document.getElementById('sim-faults').innerHTML = html;
+            }).catch(() => { document.getElementById('sim-faults').innerHTML = '<p style="color: #f44336;">故障加载失败</p>'; });
+        }
+
+        function applyFault(id) {
+            const f = simFaults.find(x => x.id === id);
+            if (!f) return;
+            simSelectedFault = id; simHistory = [];
+            fetch('/api/sim/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario: simSelectedScenario, fault: id }) })
+                .then(r => r.json()).then(data => { updateSimUI(data); document.getElementById('sim-fault-status').textContent = '当前: ' + f.name; document.getElementById('sim-fault-status').style.color = '#f44336'; });
+        }
+
+        function clearFault() {
+            simSelectedFault = -1;
+            document.getElementById('sim-fault-status').textContent = '当前: 无故障';
+            document.getElementById('sim-fault-status').style.color = 'var(--text-secondary)';
+            simStep();
+        }
+
+        function simRunDynamic(steps) {
+            document.getElementById('sim-dynamic-info').textContent = '运行动态仿真 (' + steps + '步)...';
+            fetch('/api/sim/dynamic', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ steps: steps }) }).then(r => r.json()).then(data => {
+                if (!data.history || data.history.length === 0) return;
+                simHistory = data.history.map(h => ({ cod: h.effluent.cod, nh4: h.effluent.nh4_n, tn: h.effluent.tn, tp: h.effluent.tp, ss: h.effluent.ss }));
+                if (simChartWater) {
+                    simChartWater.data.labels = data.history.map((h, i) => 'T' + i);
+                    simChartWater.data.datasets[0].data = data.history.map(h => h.effluent.cod);
+                    simChartWater.data.datasets[1].data = data.history.map(h => h.effluent.nh4_n);
+                    simChartWater.data.datasets[2].data = data.history.map(h => h.effluent.tn);
+                    simChartWater.data.datasets[3].data = data.history.map(h => h.effluent.tp);
+                    simChartWater.data.datasets[4].data = data.history.map(h => h.effluent.ss);
+                    simChartWater.update('none');
+                }
+                const codT = analyzeTrend(data.history.map(h => h.effluent.cod));
+                const nh4T = analyzeTrend(data.history.map(h => h.effluent.nh4_n));
+                document.getElementById('sim-trend-analysis').innerHTML = '<div style="padding: 4px 0;">COD: <span style="color:' + trendColor(codT.trend) + ';">' + codT.trend + '</span> (' + codT.change_rate.toFixed(2) + '%/step)</div><div style="padding: 4px 0;">氨氮: <span style="color:' + trendColor(nh4T.trend) + ';">' + nh4T.trend + '</span> (' + nh4T.change_rate.toFixed(2) + '%/step)</div>';
+                document.getElementById('sim-dynamic-info').textContent = '完成 ' + data.steps + ' 步动态仿真';
+            }).catch(() => { document.getElementById('sim-dynamic-info').textContent = '动态仿真失败'; });
+        }
+
+        function analyzeTrend(values) {
+            if (values.length < 2) return { trend: 'stable', change_rate: 0 };
+            const recent = values[values.length - 1], prev = values[values.length - 2];
+            const change = Math.abs(prev) > 0.001 ? (recent - prev) / Math.abs(prev) * 100 : 0;
+            return { trend: change > 5 ? 'rising' : change < -5 ? 'falling' : 'stable', change_rate: change };
+        }
+
+        function trendColor(trend) { return trend === 'rising' ? '#ef6c00' : trend === 'falling' ? '#4caf50' : '#8892b0'; }
+
+        function loadAIAnalysis() {
+            document.getElementById('sim-ai-analysis').innerHTML = '<p style="text-align: center; padding: 10px 0;">AI分析中...</p>';
+            fetch('/api/sim/ai/analyze').then(r => r.json()).then(data => {
+                let html = '';
+                const rc = data.risk_level === 'critical' ? '#f44336' : data.risk_level === 'high' ? '#ff5722' : data.risk_level === 'medium' ? '#ff9800' : '#4caf50';
+                html += '<div style="padding: 8px; background: ' + rc + '22; border-radius: 6px; margin-bottom: 8px;"><strong style="color: ' + rc + ';">风险: ' + data.risk_level + '</strong> — <span style="color: var(--text-secondary); font-size: 12px;">' + data.summary + '</span></div>';
+                if (data.anomalies && data.anomalies.length > 0) {
+                    html += '<div style="margin-bottom: 8px;"><strong style="color: var(--text); font-size: 12px;">⚠️ 异常检测 (' + data.anomaly_count + ')</strong>';
+                    data.anomalies.forEach(a => { const sc = a.severity === 'critical' ? '#f44336' : '#ff9800'; html += '<div style="padding: 4px 8px; margin: 4px 0; border-left: 3px solid ' + sc + '; font-size: 11px;"><strong>' + a.indicator + '</strong>: ' + a.value.toFixed(2) + ' / ' + a.threshold.toFixed(2) + ' — ' + a.message + '</div>'; });
+                    html += '</div>';
+                }
+                if (data.maintenance && data.maintenance.length > 0) {
+                    html += '<div style="margin-bottom: 8px;"><strong style="color: var(--text); font-size: 12px;">🔧 维护告警 (' + data.maintenance_count + ')</strong>';
+                    data.maintenance.forEach(m => { const sc = m.severity === 'urgent' ? '#f44336' : m.severity === 'warning' ? '#ff9800' : '#2196f3'; html += '<div style="padding: 4px 8px; margin: 4px 0; border-left: 3px solid ' + sc + '; font-size: 11px;"><strong>' + m.equipment + '</strong>: 故障概率' + (m.failure_prob * 100).toFixed(1) + '% — ' + m.action + '</div>'; });
+                    html += '</div>';
+                }
+                if (data.optimization && data.optimization.length > 0) {
+                    html += '<div style="margin-bottom: 8px;"><strong style="color: var(--text); font-size: 12px;">🎯 AI优化建议 (' + data.optimization_count + ')</strong>';
+                    data.optimization.forEach(o => { html += '<div style="padding: 4px 8px; margin: 4px 0; border-left: 3px solid #4caf50; font-size: 11px;"><strong>' + o.name + '</strong>: ' + o.current.toFixed(2) + ' → ' + o.suggested.toFixed(2) + ' — ' + o.reason + '</div>'; });
+                    html += '</div>';
+                }
+                if (data.anomaly_count === 0 && data.maintenance_count === 0 && data.optimization_count === 0) { html += '<p style="color: var(--success); text-align: center; padding: 10px 0;">✅ 系统运行正常，无异常</p>'; }
+                document.getElementById('sim-ai-analysis').innerHTML = html;
+            }).catch(() => { document.getElementById('sim-ai-analysis').innerHTML = '<p style="color: #f44336;">AI分析失败</p>'; });
+        }
+
+        window.addEventListener('load', function() {
+            initSimCharts();
+            loadSimScenarios();
+            loadSimFaults();
+            fetch('/api/sim/state').then(r => r.json()).then(data => { updateSimUI({ result: data, suggestions: [], energy: null }); }).catch(() => {});
         });
     </script>
 </body>

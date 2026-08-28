@@ -211,3 +211,58 @@ pub fn equipment_json(equipments : Array[EquipmentStatus]) -> String {
   }
   "[\{items.join(", ")}]"
 }
+
+///|
+/// SimState JSON导出
+pub fn sim_state_json(state : SimState) -> String {
+  "{\"time\":\{state.time},\"effluent\":\{wq_json(state.effluent)},\"reactor\":\{wq_json(state.reactor)},\"energy_total\":\{state.energy_total},\"cost_total\":\{state.cost_total},\"running\":\{state.running},\"speed\":\{state.speed},\"step_count\":\{state.step_count}}"
+}
+
+///|
+/// 动态仿真结果JSON导出
+pub fn dynamic_json(history : Array[SimState]) -> String {
+  let items : Array[String] = []
+  for s in history {
+    items.push(sim_state_json(s))
+  }
+  "{\"steps\":\{history.length()},\"history\":[\{items.join(",")}]}"
+}
+
+///|
+/// 应用参数调整 — 从键值对更新PlantConfig
+pub fn apply_params(cfg : PlantConfig, do_set : Double, internal_recycle : Double, external_recycle : Double, srt : Double, mlss : Double, pac : Double) -> PlantConfig {
+  let new_aao = {
+    ..cfg.aao,
+    do_setpoint: if do_set > 0.0 { do_set } else { cfg.aao.do_setpoint },
+    internal_recycle_ratio: if internal_recycle > 0.0 { internal_recycle } else { cfg.aao.internal_recycle_ratio },
+    external_recycle_ratio: if external_recycle > 0.0 { external_recycle } else { cfg.aao.external_recycle_ratio },
+    srt: if srt > 0.0 { srt } else { cfg.aao.srt },
+    mlss_target: if mlss > 0.0 { mlss } else { cfg.aao.mlss_target },
+  }
+  { ..cfg, aao: new_aao, pac_dose: if pac >= 0.0 { pac } else { cfg.pac_dose } }
+}
+
+///|
+/// 应用故障场景 — 修改配置模拟故障
+pub fn apply_fault(cfg : PlantConfig, fault_id : Int) -> PlantConfig {
+  let faults = fault_scenarios()
+  if fault_id < 0 || fault_id >= faults.length() {
+    return cfg
+  }
+  let fault = faults[fault_id]
+  // 根据故障类型调整配置
+  match fault.name {
+    "曝气机故障" => { ..cfg, aao: { ..cfg.aao, do_setpoint: cfg.aao.do_setpoint * 0.3 } }
+    "内回流泵故障" => { ..cfg, aao: { ..cfg.aao, internal_recycle_ratio: 0.0 } }
+    "外回流泵故障" => { ..cfg, aao: { ..cfg.aao, external_recycle_ratio: 0.0 } }
+    "DO过高" => { ..cfg, aao: { ..cfg.aao, do_setpoint: 5.0 } }
+    "DO过低" => { ..cfg, aao: { ..cfg.aao, do_setpoint: 0.5 } }
+    "MLSS过高" => { ..cfg, aao: { ..cfg.aao, mlss_target: 6000.0 } }
+    "MLSS过低" => { ..cfg, aao: { ..cfg.aao, mlss_target: 1000.0 } }
+    "SRT过长" => { ..cfg, aao: { ..cfg.aao, srt: 30.0 } }
+    "SRT过短" => { ..cfg, aao: { ..cfg.aao, srt: 3.0 } }
+    "PAC投加过量" => { ..cfg, pac_dose: 50.0 }
+    "PAC投加不足" => { ..cfg, pac_dose: 0.0 }
+    _ => cfg
+  }
+}

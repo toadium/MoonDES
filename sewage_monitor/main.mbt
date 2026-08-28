@@ -294,7 +294,6 @@ fn build_response(output : String) -> String {
   let sj = hyd_structures_json()
   "{\"success\":true,\"output\":\{oj},\"structures\":\{sj},\"name\":\"sewage_treatment\"}"
 }
-
 ///|
 async fn send_file(conn : @http.ServerConnection, path : String, headers : @http.Headers, error_msg : String) -> Unit {
   let content = try {
@@ -313,6 +312,38 @@ async fn send_file(conn : @http.ServerConnection, path : String, headers : @http
 }
 
 ///|
+/// 从JSON字符串中提取double值
+fn json_get_double(raw : String, key : String) -> Double {
+  try {
+    let j = @json.parse(raw)
+    let obj = j.as_object()
+    match obj {
+      Some(m) => {
+        match m.get(key) {
+          Some(v) => {
+            match v.as_number() {
+              Some(n) => n
+              None => -1.0
+            }
+          }
+          None => -1.0
+        }
+      }
+      None => -1.0
+    }
+  } catch {
+    _ => -1.0
+  }
+}
+
+///|
+/// 从JSON字符串中提取int值
+fn json_get_int(raw : String, key : String) -> Int {
+  let d = json_get_double(raw, key)
+  if d < 0.0 { -1 } else { d.to_int() }
+}
+
+///|
 async fn main {
   @stdio.stdout.write("Sewage AI Monitor - AAO Process - 100,000 m3/d\n")
   @stdio.stdout.write("Listening on http://127.0.0.1:10010\n")
@@ -321,7 +352,7 @@ async fn main {
     err => { @stdio.stdout.write("Failed: \{err}\n"); return }
   }
 
-  server.run_forever(async fn(request, body, conn) {
+  server.run_forever(fn(request, body, conn) {
     match (request.meth, request.path) {
       (@http.Options, _) => {
         conn.send_response(204, "NoContent", extra_headers=json_headers)
@@ -364,6 +395,121 @@ async fn main {
       }
       (@http.Get, "/api/obj") => {
         send_file(conn, "dsh-test/wastewater-plant-100score.obj", text_headers, "OBJ file not found")
+      }
+      (@http.Get, "/api/sim/state") => {
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        let result = @sim.steady_state(influent, cfg)
+        let json_str = @sim.sim_result_json(result)
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Get, "/api/sim/scenarios") => {
+        let json_str = @sim.scenarios_json()
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Get, "/api/sim/faults") => {
+        let json_str = @sim.faults_json()
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Post, "/api/sim/run") => {
+        let raw = try { body.read_all().text() } catch { _ => "{}" }
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        // 解析场景ID
+        let scenario_id = json_get_int(raw, "scenario")
+        let wq = if scenario_id >= 0 && scenario_id < 12 {
+          let scenarios = @sim.load_scenarios()
+          @sim.apply_load_scenario(influent, scenarios[scenario_id])
+        } else {
+          influent
+        }
+        // 解析故障ID
+        let fault_id = json_get_int(raw, "fault")
+        let cfg_fault = if fault_id >= 0 {
+          @sim.apply_fault(cfg, fault_id)
+        } else {
+          cfg
+        }
+        let result = @sim.steady_state(wq, cfg_fault)
+        let suggestions = @sim.optimize_suggestions(result, cfg_fault)
+        let ea = @sim.energy_analysis(result.after_primary, cfg_fault)
+        let equip = @sim.evaluate_equipment(result.after_primary, cfg_fault)
+        let json_str = "{\"result\":\{@sim.sim_result_json(result)},\"suggestions\":\{@sim.suggestions_json(suggestions)},\"energy\":\{@sim.energy_json(ea)},\"equipment\":\{@sim.equipment_json(equip)}}"
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Post, "/api/sim/params") => {
+        let raw = try { body.read_all().text() } catch { _ => "{}" }
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        // 解析参数调整
+        let do_set = json_get_double(raw, "do")
+        let ir = json_get_double(raw, "internal_recycle")
+        let er = json_get_double(raw, "external_recycle")
+        let srt = json_get_double(raw, "srt")
+        let mlss = json_get_double(raw, "mlss")
+        let pac = json_get_double(raw, "pac")
+        let new_cfg = @sim.apply_params(cfg, do_set, ir, er, srt, mlss, pac)
+        let result = @sim.steady_state(influent, new_cfg)
+        let ea = @sim.energy_analysis(result.after_primary, new_cfg)
+        let equip = @sim.evaluate_equipment(result.after_primary, new_cfg)
+        let json_str = "{\"result\":\{@sim.sim_result_json(result)},\"energy\":\{@sim.energy_json(ea)},\"equipment\":\{@sim.equipment_json(equip)},\"applied\":{\"do\":\{new_cfg.aao.do_setpoint},\"internal_recycle\":\{new_cfg.aao.internal_recycle_ratio},\"external_recycle\":\{new_cfg.aao.external_recycle_ratio},\"srt\":\{new_cfg.aao.srt},\"mlss\":\{new_cfg.aao.mlss_target},\"pac\":\{new_cfg.pac_dose}}}"
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Post, "/api/sim/dynamic") => {
+        let raw = try { body.read_all().text() } catch { _ => "{}" }
+        let steps = json_get_int(raw, "steps")
+        let n = if steps > 0 && steps < 500 { steps } else { 24 }
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        let history = @sim.run_dynamic(influent, cfg, n, 1.0)
+        let json_str = @sim.dynamic_json(history)
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Post, "/api/sim/fault") => {
+        let raw = try { body.read_all().text() } catch { _ => "{}" }
+        let fault_id = json_get_int(raw, "fault_id")
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        let cfg_fault = @sim.apply_fault(cfg, fault_id)
+        let result = @sim.steady_state(influent, cfg_fault)
+        let json_str = "{\"fault_id\":\{fault_id},\"result\":\{@sim.sim_result_json(result)}}"
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Get, "/api/sim/ai/analyze") => {
+        let influent = @sim.default_influent()
+        let cfg = @sim.default_plant_config()
+        let result = @sim.steady_state(influent, cfg)
+        let equip = @sim.evaluate_equipment(result.after_primary, cfg)
+        let analysis = @sim.ai_analyze(result, cfg, equip)
+        let json_str = @sim.ai_analysis_json(analysis)
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
+      }
+      (@http.Get, "/api/sim/control") => {
+        let cfg = @sim.default_plant_config()
+        let cs = @sim.default_control_system(cfg.aao)
+        let influent = @sim.default_influent()
+        let result = @sim.steady_state(influent, cfg)
+        let (action, _) = @sim.control_loop(cs, result.effluent.do_value, result.effluent.mlss, cfg.aao.srt, cfg.aao.external_recycle_ratio, 1.0)
+        let json_str = @sim.control_action_json(action)
+        conn.send_response(200, "OK", extra_headers=json_headers)
+        conn.write_string(json_str)
+        conn.end_response()
       }
       _ => {
         conn.send_response(404, "NotFound", extra_headers=text_headers)

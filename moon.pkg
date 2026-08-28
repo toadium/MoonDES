@@ -21,5 +21,6 @@ import {
   "walkzzz/moondes/grid2d",
   "walkzzz/moondes/ca",
   "walkzzz/moondes/mesh3d",
+  "walkzzz/moondes/sim",
   "moonbitlang/core/random" @rand,
 }

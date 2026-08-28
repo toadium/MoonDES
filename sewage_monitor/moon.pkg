@@ -6,6 +6,7 @@ import {
   "moonbitlang/async/fs" @fs,
   "moonbitlang/async/io" @io,
   "moonbitlang/core/json" @json,
+  "moonbitlang/core/strconv" @strconv,
   "walkzzz/moondes/core",
   "walkzzz/moondes/process",
   "walkzzz/moondes/random",
@@ -16,6 +17,7 @@ import {
   "walkzzz/moondes/pipeline",
   "walkzzz/moondes/simbuf",
   "walkzzz/moondes/mesh3d",
+  "walkzzz/moondes/sim" @sim,
 }
 
 supported_targets = "native"
