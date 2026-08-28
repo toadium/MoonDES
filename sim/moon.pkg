@@ -1,0 +1,5 @@
+// sim package — AAO工艺生产级仿真引擎
+// 水力仿真 + 生化仿真(ASM2d) + 设备仿真 + 环境干扰 + 能耗分析
+import {
+  "moonbitlang/core/json" @json,
+}
