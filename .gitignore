@@ -26,3 +26,11 @@ Thumbs.db
 # 临时文件
 tmp/
 temp/
+# Node dependencies
+node_modules/
+
+# OBJ backup
+*.obj.bak
+
+# Test screenshots (binary, large)
+test/screenshots/

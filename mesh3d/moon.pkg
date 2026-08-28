@@ -1,0 +1,5 @@
+// mesh3d package — 3D mesh data model + OBJ parser + scene management
+import {
+  "moonbitlang/core/json" @json,
+  "moonbitlang/core/string" @str,
+}

@@ -20,5 +20,6 @@ import {
   "walkzzz/moondes/markov",
   "walkzzz/moondes/grid2d",
   "walkzzz/moondes/ca",
+  "walkzzz/moondes/mesh3d",
   "moonbitlang/core/random" @rand,
 }

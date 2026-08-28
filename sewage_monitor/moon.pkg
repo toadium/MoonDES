@@ -15,6 +15,7 @@ import {
   "walkzzz/moondes/eventbus",
   "walkzzz/moondes/pipeline",
   "walkzzz/moondes/simbuf",
+  "walkzzz/moondes/mesh3d",
 }
 
 supported_targets = "native"
