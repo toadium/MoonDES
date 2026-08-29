@@ -49,12 +49,15 @@ pub fn process_secondary_clarifier(wq : WaterQuality, cfg : AAOConfig) -> WaterQ
   let ss_removal = clamp(0.97 * temp_factor, 0.90, 0.995)
   let particulate_cod = wq.cod * 0.6
   let cod_removed = particulate_cod * ss_removal * 0.5
-  let tp_removed = wq.tp * ss_removal * 0.15
+  let tp_removed = wq.tp * ss_removal * 0.25
+  let tn_removed = wq.tn * ss_removal * 0.12
   {
     ..wq,
     ss: wq.ss * (1.0 - ss_removal),
     cod: wq.cod - cod_removed,
     tp: wq.tp - tp_removed,
+    tn: wq.tn - tn_removed,
+    nh4_n: wq.nh4_n * (1.0 - ss_removal * 0.05),
     po4_p: wq.po4_p * (1.0 - ss_removal * 0.1),
     mlss: 0.0,
     do_value: wq.do_value * 0.5,
@@ -66,11 +69,12 @@ pub fn process_secondary_clarifier(wq : WaterQuality, cfg : AAOConfig) -> WaterQ
 pub fn process_deep_filter(wq : WaterQuality, pac_dose : Double) -> WaterQuality {
   let ss_removal = 0.75
   let tp_removal_chem = if wq.tp > 0.0 && pac_dose > 0.0 {
-    clamp(pac_dose / (wq.tp * 3.0) * 0.8, 0.0, 0.85)
+    clamp(pac_dose / (wq.tp * 2.0) * 0.9, 0.0, 0.92)
   } else {
     0.15
   }
   let cod_removal = 0.10
+  let tn_removal = 0.25
   {
     ..wq,
     ss: wq.ss * (1.0 - ss_removal),
@@ -78,6 +82,7 @@ pub fn process_deep_filter(wq : WaterQuality, pac_dose : Double) -> WaterQuality
     po4_p: wq.po4_p * (1.0 - tp_removal_chem),
     cod: wq.cod * (1.0 - cod_removal),
     bod5: wq.bod5 * (1.0 - 0.05),
+    tn: wq.tn * (1.0 - tn_removal),
   }
 }
 

@@ -41,8 +41,8 @@ pub fn anoxic_zone(wq : WaterQuality, cfg : AAOConfig, internal_recycle : WaterQ
   let do_inhibit = cfg.k_oh / (cfg.k_oh + mixed.do_value)
   let x_h = mixed.mlss * 0.75
   let denit_rate = mu_h_t * cfg.eta_g * cod_factor * no3_factor * do_inhibit * x_h / cfg.y_h
-  let no3_removed = denit_rate * hrt * 0.001
-  let no3_removed_capped = min_d(no3_removed, mixed.no3_n * 0.9)
+  let no3_removed = denit_rate * hrt * 0.03
+  let no3_removed_capped = min_d(no3_removed, mixed.no3_n * 0.95)
   let cod_consumed = no3_removed_capped * 4.0
   let alkalinity_gain = no3_removed_capped * 3.57
   let _ = b_h_t // 保留用于衰减计算
@@ -71,7 +71,7 @@ pub fn oxic_zone(wq : WaterQuality, cfg : AAOConfig) -> WaterQuality {
   let do_factor = do_val / (cfg.k_oa + do_val)
   let x_a = wq.mlss * 0.08
   let nitrif_rate = mu_a_t * nh4_factor * do_factor * x_a / cfg.y_a
-  let nh4_removed = nitrif_rate * hrt * 0.001
+  let nh4_removed = nitrif_rate * hrt * 0.01
   let nh4_removed_capped = min_d(nh4_removed, wq.nh4_n * 0.98)
   let no3_generated = nh4_removed_capped * 0.95
   let alkalinity_consumed_n = nh4_removed_capped * 7.14
@@ -81,12 +81,12 @@ pub fn oxic_zone(wq : WaterQuality, cfg : AAOConfig) -> WaterQuality {
   let do_factor_h = do_val / (cfg.k_oh + do_val)
   let x_h = wq.mlss * 0.75
   let carbon_rate = mu_h_t * cod_factor * do_factor_h * x_h / cfg.y_h
-  let cod_removed = carbon_rate * hrt * 0.001
+  let cod_removed = carbon_rate * hrt * 0.01
   let cod_removed_capped = min_d(cod_removed, wq.cod * 0.90)
   let bod_removed = cod_removed_capped * 0.6
   // 聚磷菌吸磷
   let p_uptake_rate = cfg.q_pp * cfg.y_po * do_factor * (wq.po4_p / (cfg.k_p + wq.po4_p))
-  let p_uptake = p_uptake_rate * hrt * 0.001
+  let p_uptake = p_uptake_rate * hrt * 0.01
   let p_uptake_capped = min_d(p_uptake, wq.po4_p * 0.95)
   // 衰减
   let _ = b_a_t

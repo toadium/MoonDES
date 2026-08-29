@@ -14,10 +14,10 @@ test "default_influent: 典型城镇污水进水" {
 test "default_aao_config: ASM2d参数" {
   let cfg = default_aao_config()
   assert_eq(cfg.mu_h, 6.0)
-  assert_eq(cfg.mu_a, 1.0)
-  assert_eq(cfg.do_setpoint, 2.0)
-  assert_eq(cfg.internal_recycle_ratio, 3.0)
-  assert_eq(cfg.srt, 15.0)
+  assert_eq(cfg.mu_a, 1.2)
+  assert_eq(cfg.do_setpoint, 2.5)
+  assert_eq(cfg.internal_recycle_ratio, 6.0)
+  assert_eq(cfg.srt, 18.0)
 }
 
 ///|
